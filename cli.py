@@ -8,6 +8,7 @@ gene set enrichment, and annotation.
 Functionality:
     - run_experiment: Main function for processing spatial data and saving outputs.
     - plot_programs: Visualize inferred topics on spatial tissue maps.
+    - plot_networks: Plot networks of gene programs.
     - annotate_programs: Perform enrichment and annotation of gene programs.
     - main: Command-line interface to execute various modes (deconvolution, plotting, annotation).
 """
@@ -21,7 +22,7 @@ pd.options.display.float_format = '{:f}'.format
 
 from spotnmf import run_spotnmf
 from spotnmf.gscore import calculate_marker_genes_topics_df
-from spotnmf import io, pl, annotate, enrichment, hvg
+from spotnmf import io, pl, annotate, enrichment, hvg, niche_networks
 
 
 def plot_programs(results_dir, sample_name, adata_spatial, is_visium=True, genome=None, is_xenograft=False, is_aggr = True):
@@ -104,6 +105,50 @@ def annotate_programs(results_dir, sample_name, genome):
         )
 
 
+def plot_networks(results_dir, sample_name, adata_spatial, is_visium=True, genome=None, is_xenograft=False, is_aggr = True):
+    usage_threshold = 0
+    cond2 = None
+    n_bins = 1000
+    edge_threshold = "gt02"
+    metadata = spotmetadata_all
+    cond1 = "CRC"
+
+    # Compute pairwise statistics
+    stats_df = niche_networks.compute_pairwise_stats(usage_norm_dynamic_thresh, usage_threshold, cond1)
+    stats_df[f"{cond1}_val"] = (stats_df[f"{cond1}_P2pos"] + 1) / (stats_df[f"{cond1}_P2pos"] + stats_df[f"{cond1}_P2neg"] + 2)
+
+    # Generate binary columns for different thresholds
+    for i in range(1, 6):
+        stats_df[f"gt0{i}"] = (stats_df[f"{cond1}_val"].abs() > ((i/10) - 0.001))
+
+    # Subset the stats_df for the specified edge threshold
+    stats_df = stats_df[stats_df[edge_threshold] == 1]
+
+    # Generate node attributes
+    node_attrs = niche_networks.generate_node_attributes(usage_norm_dynamic_thresh.copy(), usage_threshold, cond1)
+
+    # Build the network graph
+    graph, graph_filtered = niche_networks.build_network_graph(stats_df, node_attrs, cond1, n_bins)
+
+    # Cluster the graph using Infomap and save the results
+    graph = niche_networks.detect_communities_infomap(graph)
+    pos = niche_networks.get_node_positions(graph, layout_algorithm='graphopt')
+
+    fig1, _, fig2, _ = niche_networks.plot_network_analysis(graph=graph, pos=pos, sample=cond1, 
+                                                            n_bins=n_bins, edge_threshold=edge_threshold, 
+                                                            usage_threshold=usage_threshold, cond1=cond1,
+                                                            save=False)
+
+    # Cluster the filtered graph (no nodes lacking any edges) using Infomap and save the results
+    graph_filtered = niche_networks.detect_communities_infomap(graph_filtered)
+    pos_filtered = niche_networks.get_node_positions(graph_filtered, layout_algorithm='graphopt')
+
+    fig1, _, fig2, _ = niche_networks.plot_network_analysis(graph=graph_filtered, pos=pos_filtered, sample=cond1, 
+                                                            n_bins=n_bins, edge_threshold=edge_threshold, 
+                                                            usage_threshold=usage_threshold, cond1=cond1,
+                                                            save=False)
+    
+
 def run_experiment(
     adata_spatial,
     k: int,
@@ -113,7 +158,8 @@ def run_experiment(
     filter_genes=True,
     hvg_file=None,
     annotate=False,
-    plot=False,
+    plot_program=False,
+    plot_network=False,
     is_visium=True,
     is_aggr = True,
     is_xenograft=False,
@@ -185,9 +231,13 @@ def run_experiment(
             genome = adata_spatial.uns.params["genome"]
         annotate_programs(results_dir, sample_name, genome)
 
-            # Plot spatial maps
-    if plot:
+    # Plot spatial maps
+    if plot_program:
         plot_programs(results_dir, sample_name, adata_spatial, is_visium=is_visium, genome=genome, is_xenograft=is_xenograft, is_aggr = is_aggr)
+
+    # Plot networks
+    if plot_network:
+        plot_networks(results_dir, sample_name, adata_spatial, is_visium=is_visium, genome=genome, is_xenograft=is_xenograft, is_aggr = is_aggr)
         
     # Save timing
     duration = time.time() - start_time
@@ -201,7 +251,7 @@ def main():
     Command-line interface for running spotnmf experiments.
     """
     parser = argparse.ArgumentParser(description="Run spatial transcriptomics experiments with spotnmf.")
-    parser.add_argument("run_type", choices=["spotnmf", "deconvolve", "plot", "annotate"], help="Type of operation to perform.")
+    parser.add_argument("run_type", choices=["spotnmf", "deconvolve", "plot_programs", "annotate", "plot_networks"], help="Type of operation to perform.")
     parser.add_argument("--sample_name", required=True, help="Sample identifier.")
     parser.add_argument("--results_dir", required=True, help="Directory for saving results.")
 
@@ -228,8 +278,10 @@ def main():
         parser.error("--adata_path and --k are required for 'spotnmf' or 'deconvolve'.")
     if args.run_type == "annotate" and not args.genome:
         parser.error("--genome is required for 'annotate'.")
-    if args.run_type == "plot" and not args.adata_path:
-        parser.error("--adata_path is required for 'plot'.")
+    if args.run_type == "plot_programs" and not args.adata_path:
+        parser.error("--adata_path is required for 'plot_programs'.")
+    if args.run_type == "plot_networks" and not args.adata_path:
+        parser.error("--adata_path is required for 'plot_networks'.")
     
     is_visium = args.data_mode in {"visium", "visium_hd"}
 
@@ -265,7 +317,7 @@ def main():
         run_experiment(
             adata_spatial, args.k, args.sample_name, args.results_dir,
             genome=args.genome, hvg_file=args.hvg_file,
-            annotate=True, plot=True,
+            annotate=True, plot_program=True, plot_network=True,
             is_visium=is_visium, is_xenograft=args.is_xeno, is_aggr=args.is_aggr,
             model_params=model_params
         )
@@ -273,14 +325,16 @@ def main():
         run_experiment(
             adata_spatial, args.k, args.sample_name, args.results_dir,
             genome=args.genome, hvg_file=args.hvg_file,
-            annotate=False, plot=False,
+            annotate=False, plot_program=False, plot_network=False,
             is_visium=is_visium, is_xenograft=args.is_xeno, is_aggr=args.is_aggr,
             model_params=model_params
         )
-    elif args.run_type == "plot":
+    elif args.run_type == "plot_programs":
         plot_programs(args.results_dir, args.sample_name, adata_spatial, is_visium=is_visium, genome=args.genome, is_xenograft=args.is_xeno, is_aggr=args.is_aggr)
     elif args.run_type == "annotate":
         annotate_programs(args.results_dir, args.sample_name, genome=args.genome)
+    elif args.run_type == "plot_networks":
+        plot_networks(args.results_dir, args.sample_name, adata_spatial, is_visium=is_visium, genome=args.genome, is_xenograft=args.is_xeno, is_aggr=args.is_aggr)
 
 
 if __name__ == "__main__":

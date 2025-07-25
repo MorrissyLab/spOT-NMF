@@ -1,0 +1,1201 @@
+0001__CLA-EPd-CTX__Car3__Glut_1	YaoZ_2023	Car3	Nrg3	Gm34567	Itga8
+0002__CLA-EPd-CTX__Car3__Glut_2	YaoZ_2023	Ccnb1	Tcf7l1	Egr2
+0003__IT__EP-CLA__Glut_1	YaoZ_2023	Osr1	Satb2	Gpr88	Ccdc80	Lhfp	Sema5b	Tll2	5330416C01Rik	Oprk1
+0004__IT__EP-CLA__Glut_2	YaoZ_2023	Osr1	Lcp1	Nrg1	Arhgef26	Dlk1	Lcp1	Adcy8	Nell1
+0005__IT__EP-CLA__Glut_3	YaoZ_2023	Abca8a	Npsr1	Adam33	Gpx3
+0006__IT__EP-CLA__Glut_4	YaoZ_2023	Blnk	Adamts4	Rspo2	Myl4	Pdzrn3	Meis2
+0007__L5/6__IT__TPE-ENT__Glut_1	YaoZ_2023	Susd5	Cyp26b1	Inhbb	Gpc4	Thsd7a
+0008__L5/6__IT__TPE-ENT__Glut_2	YaoZ_2023	Tnfaip6	Ovol2	Etv1	Tnfaip6	Ccnd1	Sema3e	Hpcal1
+0009__L5/6__IT__TPE-ENT__Glut_3	YaoZ_2023	1700023F02Rik	Lpl	Smoc2	Plekha2
+0010__L5/6__IT__TPE-ENT__Glut_4	YaoZ_2023	Dcn	Susd5	Fibcd1	Stra6	Fibcd1	Rorb	St5
+0011__L5/6__IT__TPE-ENT__Glut_5	YaoZ_2023	Susd5	Met	Trhr	Chn2	Itga8	Lypd1
+0012__L5/6__IT__TPE-ENT__Glut_6	YaoZ_2023	Osr1	S100a1	Grin2b	Unc13c
+0013__L6__IT__CTX__Glut_1	YaoZ_2023	Osr1	Satb2	Cd34	Prss35	Whrn	Arhgap15	Wscd1	Osr1	Rftn1	Egfem1
+0014__L6__IT__CTX__Glut_2	YaoZ_2023	Igfbp6	Plekha2	Pld5	Satb2	Syndig1	Sulf1	Ighm	Pld5	Epb41
+0015__L6__IT__CTX__Glut_3	YaoZ_2023	Dkkl1	Fst	Grin2a	Pou3f1	Bmpr1b	Fst	Cpne4	Cpne9
+0016__L6__IT__CTX__Glut_4	YaoZ_2023	Dnah14	Gcnt4	Cbln4	C1ql3	Ptgs2	Osbpl3	Slc26a4	Tmem163	Tnfaip6	Col23a1	Ntng1
+0017__L6__IT__CTX__Glut_5	YaoZ_2023	Ccnb1	Arhgap25	Stxbp6	Ccdc3	Ccdc3	Cpne4	Tmem150c	Cpne9
+0018__L5__IT__CTX__Glut_1	YaoZ_2023	Colq	Trbc2	Rmst	Pld5
+0019__L5__IT__CTX__Glut_2	YaoZ_2023	Dkkl1	Shc4	Npnt	Fezf2	Nkain3	Pcsk5	Ptprm
+0020__L5__IT__CTX__Glut_3	YaoZ_2023	Myl4	Masp1	Arhgap31	Ccnd1	Stxbp6	Stxbp6	Sema3e	Col6a1
+0021__L5__IT__CTX__Glut_4	YaoZ_2023	Myl4	Hsd11b1	Col12a1	Rnf152	Slc17a6	Slc17a6	Rorb
+0022__L5__IT__CTX__Glut_5	YaoZ_2023	Dnah14	Gm34567	Cd24a	Adamts18
+0023__L4/5__IT__CTX__Glut_1	YaoZ_2023	Dkkl1	Hsd11b1	Nrg1	Gm20752	Exph5	Barx2	Aldh1l1	Rgs8	Raver2	Whrn
+0024__L4/5__IT__CTX__Glut_2	YaoZ_2023	Ddit4l	Gm20752	Kcnh7	Tmem215	Cpne9	Pld5	Rspo1	Ddit4l	Kcnab3
+0025__L4/5__IT__CTX__Glut_3	YaoZ_2023	Dkkl1	Arhgap25	Rorb	Trbc2	S100b	Dpp10	Lmo3	Thsd7a	Grik3	Chrna4	Rprm	Myl4
+0026__L4/5__IT__CTX__Glut_4	YaoZ_2023	Hkdc1	Scn7a	Dlgap2	Stard8	Prdm8	Cacng4	Lypd1	Stard8	Bmp3
+0027__L4/5__IT__CTX__Glut_5	YaoZ_2023	Il12a	Adam33	Rspo1	Kcnq5	Adam33	Grm8	Cbln2	Adra1a
+0028__L4/5__IT__CTX__Glut_6	YaoZ_2023	Dkkl1	Rspo1	Gpr88	Marcksl1	Vwc2l	Scnn1a	Rspo1	Marcksl1	Igfn1
+0029__L2/3__IT__CTX__Glut_1	YaoZ_2023	Smoc2	Grp	S100a6	Ankrd63	March1	Rspo2	Zfpm2	Olfm3	Fbxl7
+0030__L2/3__IT__CTX__Glut_2	YaoZ_2023	A830009L08Rik	Otof	Npnt	Dpp10	Npnt	Tmem215	Adamts2
+0031__L2/3__IT__CTX__Glut_3	YaoZ_2023	Ccdc3	Dio3	Pou3f2	Grik4	Lrrtm4	Ankfn1	Ankfn1	Dio3	Rprm	Ano4
+0032__L2/3__IT__CTX__Glut_4	YaoZ_2023	Stard8	Egr2	Ccdc3	Grik4	Ankrd63	Nptx2	Nptx2	Gpc4	Thsd7a	Nr4a3
+0033__L2/3__IT__ENT__Glut_1	YaoZ_2023	Slc13a5	Cyp26b1	Fign	Megf11	Htr2a	Sncaip	Syt17
+0034__L2/3__IT__ENT__Glut_2	YaoZ_2023	Mybpc1	Lacc1	Lingo2	Mas1	Nptx2	Cldn1	Stpg1
+0035__L2/3__IT__ENT__Glut_3	YaoZ_2023	Ccdc3	5830418P13Rik	Mob3b	Zar1l	Ntf3	Glis3	Stxbp6	Trhr	Egfem1
+0036__L2/3__IT__ENT__Glut_4	YaoZ_2023	Fermt1	Cxcl14	Rerg	Nrtn
+0037__L2/3__IT__ENT__Glut_5	YaoZ_2023	Fermt1	Qrfpr	Kcnip2	Ovol2	Gpc6	Nrep	Dsc3
+0038__L2/3__IT__ENT__Glut_6	YaoZ_2023	Igfn1	Pde3a	Adra1b	Rxfp1	Zfp536	Adarb2	Grik1	Gucy1a1
+0039__L2/3__IT__PIR-ENTl__Glut_1	YaoZ_2023	Ccdc3	Plk5	Slc30a3	Frzb	Fign	Ccbe1	Cux2	Htr2c	Smoc2	Smoc2	Zfpm2	Gm13986	Nos1
+0040__L2/3__IT__PIR-ENTl__Glut_2	YaoZ_2023	Trim54	Slc17a7	Foxo1	Pcsk9	Necab1	Abi3bp	Sox2ot	Cdkn1a
+0041__L2/3__IT__PIR-ENTl__Glut_3	YaoZ_2023	Igfn1	Zfp536	Cbln2	C1ql3	Abi3bp	Arc	Plcxd3	Gm11549	Abi3bp	Ptgs2	Prr16
+0042__L2/3__IT__PIR-ENTl__Glut_4	YaoZ_2023	Igfn1	Endou	Bcl11b	Boc	Pamr1	Cpne7	Erbb4	Endou
+0043__L2/3__IT__PIR-ENTl__Glut_5	YaoZ_2023	Cdc25c	Scn5a	Rxfp1	Rorb
+0044__L2/3__IT__PIR-ENTl__Glut_6	YaoZ_2023	Igfn1	Adamts9	C730002L08Rik	Htr2c	Ptpn14	Col23a1	Gm34466	Lpl	Cpne7
+0045__L2/3__IT__PIR-ENTl__Glut_7	YaoZ_2023	Tfap2d	Antxr2	Unc13c	Antxr2	Deptor
+0046__IT__AON-TT-DP__Glut_1	YaoZ_2023	Ccdc3	Zic1	Cntnap5a	Stard8	Reln	Acvr1c	Stard8
+0047__IT__AON-TT-DP__Glut_2	YaoZ_2023	Samd9l	C1ql3	Plekha2	Crym	Adamtsl1	Eya1	Inpp4b
+0048__IT__AON-TT-DP__Glut_3	YaoZ_2023	Abi3bp	C1ql1	Bmp6	Klhdc8a	Erbb4
+0049__IT__AON-TT-DP__Glut_4	YaoZ_2023	Gask1b	Nmbr	Gm11549	Nxph3	Adgrd1	Rmst
+0050__IT__AON-TT-DP__Glut_5	YaoZ_2023	Abi3bp	Prss23	C1ql1	Itpka	Npnt	Adcyap1	Gabrg1	Rasgrf2
+0051__L2__IT__ENT-po__Glut_1	YaoZ_2023	Cldn1	Gm40518	Scn4b	Hs3st2	Sorcs1
+0052__L2__IT__ENT-po__Glut_2	YaoZ_2023	Ush2a	Dcn	Hmcn1
+0053__L2__IT__ENT-po__Glut_3	YaoZ_2023	Igfn1	Clspn	Gm34466	Penk
+0054__L2__IT__ENT-po__Glut_4	YaoZ_2023	Tmem255b	Ntf3	Ddit4l
+0055__MEA__Slc17a7__Glut_1	YaoZ_2023	Krt2	Vgll3	Unc5d	Igfbpl1	Dio3	Slc1a3	Esr1
+0056__MEA__Slc17a7__Glut_2	YaoZ_2023	A830036E02Rik	Prox1	Neurod2	Scn5a	Ptk2b	Rims3	Scn5a	Cobl
+0057__MEA__Slc17a7__Glut_3	YaoZ_2023	Trabd2b	Zic5	Dab1	Ntf3	Ntf3	Rassf3	Krt12	Trabd2b
+0058__COAp__Grxcr2__Glut_1	YaoZ_2023	Dio3	Adam33	Pld5	Matn2	Matn2
+0059__COAp__Grxcr2__Glut_2	YaoZ_2023	Trh	Gm34466	Met	Rab3b
+0060__LA-BLA-BMA-PA__Glut_1	YaoZ_2023	1700018A04Rik	Lrrc7	Dcn	1700018A04Rik	Zic5
+0061__LA-BLA-BMA-PA__Glut_2	YaoZ_2023	Dcn	Tfap2d	Lrrtm4	G630016G05Rik	Tmem215	Meis2	Igfbp6	Sertm1
+0062__LA-BLA-BMA-PA__Glut_3	YaoZ_2023	Ccdc3	Cyp26b1	Grp	Csmd1	Ddit4l	Zdhhc22	Col12a1	Rmst
+0063__LA-BLA-BMA-PA__Glut_4	YaoZ_2023	Ptprc	Nlgn1	Vgll3	Spata13	Grp	Chst9	Chrm3
+0064__LA-BLA-BMA-PA__Glut_5	YaoZ_2023	Ptprc	Syn2	Cyp26b1	Ptprc	Cdkn1a
+0065__LA-BLA-BMA-PA__Glut_6	YaoZ_2023	Dcn	Col12a1	Mei1	Drd1	Sema5a	Gpr88
+0066__ENTmv-PA-COAp__Glut_1	YaoZ_2023	Dcn	Il16	Ano2	Tenm2	Tpbg	Htr2c	Sulf1
+0067__ENTmv-PA-COAp__Glut_2	YaoZ_2023	Dcn	Ntn5	Abca8a	Ccn3	Satb2	Zdhhc22
+0068__ENTmv-PA-COAp__Glut_3	YaoZ_2023	Slc23a3	Dcn	Tekt5
+0069__CA1-ProS__Glut_1	YaoZ_2023	Lefty1	Fibcd1	Pcp4l1	Onecut2	Kcnk2	Akain1	Rgs8
+0070__CA1-ProS__Glut_2	YaoZ_2023	Dcn	Pou3f1	Slc2a9	Serinc2	Sorcs1	Necab1	Stac	Nbl1
+0071__CA1-ProS__Glut_3	YaoZ_2023	Dcn	Serpina3g	Spink8	Dlk1	Tmem91	Cdh13	Dio3
+0072__CA1-ProS__Glut_4	YaoZ_2023	Lefty1	Dio3	Hs6st3	Lefty1	Dio3	Necab1	Camk2d
+0073__CA1-ProS__Glut_5	YaoZ_2023	Dcn	Fbln1	Gm26644	AW551984	Arhgap36	Togaram2
+0074__CA1-ProS__Glut_6	YaoZ_2023	Dcn	Rtkn2	Cdc14a	Trpc6
+0075__CA3__Glut_1	YaoZ_2023	Spink8	St18	Ccdc3	Tox	Strip2	St18
+0076__CA3__Glut_2	YaoZ_2023	Mndal	St18	Vgll3	Rprm	St18	Bcl2	Gpr101
+0077__CA3__Glut_3	YaoZ_2023	Homer3	Smoc2	Car12	Dpp10	Kcnq5	Tafa1	Epha3	Kcnc4	Oxtr	Rnd2
+0078__CA3__Glut_4	YaoZ_2023	Homer3	Cldn22	Rph3a	Ptgs2	Cntn3
+0079__CA3__Glut_5	YaoZ_2023	Rcn3	Csf2rb2	Tmem132c
+0080__L2__IT__PPP-APr__Glut_1	YaoZ_2023	Erg	Fgd6	Tenm2	Cux2	Sema3a
+0081__L2__IT__PPP-APr__Glut_2	YaoZ_2023	Teddm3	Otof	Gucy2g	Dab1	Zfp385b	Sox2ot	Adcy2	Galnt14	Chst9
+0082__L2__IT__PPP-APr__Glut_3	YaoZ_2023	Teddm3	Phgdh	Rmst
+0083__L2__IT__PPP-APr__Glut_4	YaoZ_2023	Teddm3	S100a6	Trabd2b	Gm2694
+0084__L2/3__IT__PPP__Glut_1	YaoZ_2023	Gm34466	Cfap58	Angpt1
+0085__L2/3__IT__PPP__Glut_2	YaoZ_2023	Dsc3	Npsr1	Gpc6	Doc2b
+0086__L2/3__IT__PPP__Glut_3	YaoZ_2023	Ntn5	Itga1	Hs6st3	Sgcd	Prlr	Dcc
+0087__L2/3__IT__RSP__Glut_1	YaoZ_2023	Ddit4l	Igfn1	Cpa6	Npnt
+0088__L2/3__IT__RSP__Glut_2	YaoZ_2023	Itprid1	Cxcl14	Zeb2	Rnf152
+0089__L4__RSP-ACA__Glut_1	YaoZ_2023	Dkkl1	Teddm3	Il22	Cbln1
+0090__L5__ET__CTX__Glut_1	YaoZ_2023	Fezf2	Stk17b	Layn	Npnt	Cbln2	Trpc7	Sema3c	Ptprk
+0091__L5__ET__CTX__Glut_2	YaoZ_2023	Fezf2	Lratd2	Plekha2	Plekha2	Rgs5	Lypd1	Nnat
+0092__L5__ET__CTX__Glut_3	YaoZ_2023	Erg	Igf2bp2	Tafa1	Erg	Pdlim1	Baz1a	Fstl5
+0093__L5__ET__CTX__Glut_4	YaoZ_2023	Ddit4l	Chrnb3	Zdhhc22	Myo1b
+0094__L5__ET__CTX__Glut_5	YaoZ_2023	Gm6260	Hpgd	Lingo2	Ccdc3	Grp	Cdh13	Ednra
+0095__L5__ET__CTX__Glut_6	YaoZ_2023	Gm6260	C1ql2	Igfbp4	C1ql2	Chst9
+0096__SUB-ProS__Glut_1	YaoZ_2023	Fn1	Rxfp1	Fyb2	Trib2
+0097__SUB-ProS__Glut_2	YaoZ_2023	Dcn	Teddm3	Lrrtm4	Tafa2	Wnt7b	Dcn
+0098__SUB-ProS__Glut_3	YaoZ_2023	Gm6260	Scn5a	Epha6	Sox2ot	Glra3	Kcnip1	A330008L17Rik
+0099__L5__PPP__Glut_1	YaoZ_2023	Lipm	Satb2	Ptgfr
+0100__CA2-FC-IG__Glut_1	YaoZ_2023	Lefty1	Il16	Etv1
+0101__CA2-FC-IG__Glut_2	YaoZ_2023	Il16	Ramp3	Gria1	Zfp536
+0102__NLOT__Rho__Glut_1	YaoZ_2023	Rgs13	Sim1	C1ql1	Lypd1
+0103__L6b__EPd__Glut_1	YaoZ_2023	Olfr111	Sla	Moxd1	Adgrg6
+0104__L6b__EPd__Glut_2	YaoZ_2023	Ccn2	Tmem215	Pde1a	Adamts18
+0105__L6b__EPd__Glut_3	YaoZ_2023	Ccn2	Slc38a4	Rgma	Myocd	Fras1	Hcrtr2	St6galnac5
+0106__L6b/CT__ENT__Glut_1	YaoZ_2023	Lefty2	Grik3	Gm10754	C1ql3	Fndc5
+0107__L6b/CT__ENT__Glut_2	YaoZ_2023	Ccn2	Pappa2	Ifi27l2a	Ror1	Pde1c
+0108__L6b/CT__ENT__Glut_3	YaoZ_2023	Ccn2	Prph	Ror2	Bmp3	Bmpr1b
+0109__L6b/CT__ENT__Glut_4	YaoZ_2023	A630023P12Rik	Cobll1	Rnd3	Tshz2	Nrn1
+0110__L6b__CTX__Glut_1	YaoZ_2023	Ccn2	Trbc2	Sla	Ramp3	Col12a1	Gm40518
+0111__L6b__CTX__Glut_2	YaoZ_2023	Ccn2	Adgrg6	Npy1r	Nav3	Ndst3	Arhgap31	Cobll1
+0112__L6b__CTX__Glut_3	YaoZ_2023	Ccn2	Olfr111	Adgrg6	Serpine2	Col25a1
+0113__L6b__CTX__Glut_4	YaoZ_2023	Krt80	Rxfp2	Tmem255a
+0114__L6__CT__CTX__Glut_1	YaoZ_2023	Trbc2	Serpinb8	Foxp2	Marcksl1	Gm3294	Fstl4	Marcksl1	Htr4	Gm3294
+0115__L6__CT__CTX__Glut_2	YaoZ_2023	Krt80	Igfbp6	Hs3st4	Igfbp6	Gm10635	Cryab	Acvr1c
+0116__L6__CT__CTX__Glut_3	YaoZ_2023	Raet1e	Rxfp1	Cpa6	Ikzf2	Cpa6	Rxfp1
+0117__L6__CT__CTX__Glut_4	YaoZ_2023	Urah	Pdlim1	Trabd2b	Htr2c	Camk2d
+0118__L6__CT__CTX__Glut_5	YaoZ_2023	Prss35	Ccn4	Foxp2	Cxcl12	Prr16	Myocd	Col23a1	Rab3b
+0119__L6__CT__CTX__Glut_6	YaoZ_2023	Gm35853	Acaa1b	Nkx1-2
+0120__CT__SUB__Glut_1	YaoZ_2023	Gm40518	Cobll1	Igfbp4	Lpar1	Rxfp1
+0121__CT__SUB__Glut_2	YaoZ_2023	Prss35	Sntb1	Arhgap25	Wnt7b	Slit2
+0122__L5__NP__CTX__Glut_1	YaoZ_2023	Hmga2	Gm40518	Alk	Syndig1
+0123__L5__NP__CTX__Glut_2	YaoZ_2023	Sla2	Satb2	Clic5	Cntnap5a	9330158H04Rik	Cntnap5a	Stard13	Inpp4b
+0124__L5__NP__CTX__Glut_3	YaoZ_2023	Myl4	Dkk2	Col12a1	Tmem163	Tmem163	Ptger3	Dkk2
+0125__L5__NP__CTX__Glut_4	YaoZ_2023	A830009L08Rik	Svil	Trbc2	Ephb1	Ephb1	Vxn
+0126__L5__NP__CTX__Glut_5	YaoZ_2023	Susd5	Spink8	Xkr6	Alcam	Fras1
+0127__NP__SUB__Glut_1	YaoZ_2023	Ly6g6e	Klhl1	Myocd	Zeb2
+0128__NP__SUB__Glut_2	YaoZ_2023	Pirt	Ly6g6e	Sgcd	Cntn6
+0129__NP__PPP__Glut_1	YaoZ_2023	Tmem255b	Rxfp1	Tmem255b	Nts
+0130__OB__Eomes__Ms4a15__Glut_1	YaoZ_2023	Ms4a15	Fst	Vmn1r209	Fst	Ptchd4
+0131__OB__Eomes__Ms4a15__Glut_2	YaoZ_2023	Eomes	Ly6g6e	Igfbp2
+0132__OB__Eomes__Ms4a15__Glut_3	YaoZ_2023	Vmn1r209	Trp73	Ptprk
+0133__OB__Eomes__Ms4a15__Glut_4	YaoZ_2023	Ms4a15	Olfr111	Vdr
+0134__OB__Eomes__Ms4a15__Glut_5	YaoZ_2023	Tfap2c	Rbp7	Ebf1
+0135__HPF__CR__Glut_1	YaoZ_2023	Trp73	Cd274	Trp73	Bhlhe22
+0136__DG__Glut_1	YaoZ_2023	Il33	Lrfn5	Cntn6	Cntn6
+0137__DG__Glut_2	YaoZ_2023	Dsp	Kcnh3	Syndig1	Spata13	Gprc5b	Syndig1	Adamts17
+0138__DG__Glut_3	YaoZ_2023	Lct	Atf3	Arl4d
+0139__DG__Glut_4	YaoZ_2023	Vwa3b	Ntn5	Ntn5	Smoc2
+0140__DG-PIR__Ex__IMN_1	YaoZ_2023	Draxin	Lama2	Runx1t1	Meis1
+0141__DG-PIR__Ex__IMN_2	YaoZ_2023	Draxin	Mndal	Grik4	Nfia	Flrt1
+0142__DG-PIR__Ex__IMN_3	YaoZ_2023	Tfap2d	Igfbpl1	Csrp2	Tafa1
+0143__OB__Meis2__Thsd7b__Gaba_1	YaoZ_2023	Mdfic	Gm5087	Dscam	Calb1
+0144__OB__Meis2__Thsd7b__Gaba_2	YaoZ_2023	BC051408	Eya4	Sp8
+0145__OB__Meis2__Thsd7b__Gaba_3	YaoZ_2023	4930523C07Rik	Gm38505	Cachd1
+0146__OB__Meis2__Thsd7b__Gaba_4	YaoZ_2023	Lmcd1	Gm5087	Plxna4	Nectin3
+0147__OB__Meis2__Thsd7b__Gaba_5	YaoZ_2023	Otogl	Cdh23	Cck
+0148__OB__Trdn__Gaba_1	YaoZ_2023	Trdn	Prok2	Zic1	Grik1
+0149__OB__Trdn__Gaba_2	YaoZ_2023	Trdn	Neb	Kcnq3	Kcnq3
+0150__OB-in__Frmd7__Gaba_1	YaoZ_2023	Lgr6	Ccn4	Sema3e	Csgalnact1	Sema3e	Crhbp	Gabra3	2700038G22Rik
+0151__OB-in__Frmd7__Gaba_2	YaoZ_2023	Dnah11	Vipr2	Scn1b	Ptprk	Tmod1	Nrgn	Dnah11	Igfbp6	Acvr1c
+0152__OB-in__Frmd7__Gaba_3	YaoZ_2023	Ctxn3	Rasl11b	Lgr5	Lmo7	Kcnt2	Pcdh20	Deptor	Kctd8
+0153__OB-in__Frmd7__Gaba_4	YaoZ_2023	Frmd7	Nog	Cpa6	Mpped1	Stmn2	Adamtsl1	Camk4
+0154__OB-in__Frmd7__Gaba_5	YaoZ_2023	Frmd7	Trhr	Syt17	Trhr	March1	Ankfn1	Grm2
+0155__OB-in__Frmd7__Gaba_6	YaoZ_2023	Scgn	Car12	Cpa6	Egfem1	Cntnap5b	Fos
+0156__OB-in__Frmd7__Gaba_7	YaoZ_2023	Lgr6	Ndnf	Cpa6	Ndnf	Alcam	Cpa6	Utrn
+0157__OB-in__Frmd7__Gaba_8	YaoZ_2023	Scgn	Gcnt1	Gm5087	Fbxl7	Npy
+0158__OB-out__Frmd7__Gaba_1	YaoZ_2023	Apold1	Egf	Rasgrf1	Tspan15	Hs3st4
+0159__OB-out__Frmd7__Gaba_2	YaoZ_2023	Apold1	Creb5	Il1rapl2
+0160__OB-out__Frmd7__Gaba_3	YaoZ_2023	Tgfbi	Igfbpl1	Dpysl3
+0161__OB-mi__Frmd7__Gaba_1	YaoZ_2023	Vip	Tcap	Frmd7	Vip	Tcap
+0162__OB__Dopa-Gaba_1	YaoZ_2023	Trh	Slc6a3	Shisa8	Shisa8	Angpt1	Sncb
+0163__OB__Dopa-Gaba_2	YaoZ_2023	Nfatc1	Trh	Cntnap3	Cntnap3	Fstl5	Ptprd
+0164__OB__Dopa-Gaba_3	YaoZ_2023	Tnni1	Pax6	Ntng1
+0165__OB__Dopa-Gaba_4	YaoZ_2023	A930009A15Rik	Svep1	Daam2	Spon1
+0166__OB-STR-CTX__Inh__IMN_1	YaoZ_2023	Pclaf	Egfr	Cdk6
+0167__OB-STR-CTX__Inh__IMN_2	YaoZ_2023	Frmd7	2610307P16Rik	Slc1a3	Fbn2	Sybu	Klhl1
+0168__OB-STR-CTX__Inh__IMN_3	YaoZ_2023	Draxin	Gm38505	Sox6	Cacna1c	Stmn2	St18	Trpc4	Sp8	Ccnd2
+0169__OB-STR-CTX__Inh__IMN_4	YaoZ_2023	Mex3a	Grid2ip	2610307P16Rik	Mapk10	Nxph1	Sp8	Mapk10	Parm1
+0170__OB-STR-CTX__Inh__IMN_5	YaoZ_2023	2610307P16Rik	Igfbpl1	Masp1	Dscam	Gucy1a1	Cpne4	Foxp2	Islr2
+0171__OB-STR-CTX__Inh__IMN_6	YaoZ_2023	Gpc2	Lhx6	Lhx6
+0172__OB-STR-CTX__Inh__IMN_7	YaoZ_2023	Draxin	Met	Met	Nr2f2
+0173__Vip__Gaba_1	YaoZ_2023	Nr2e1	Prss12	Prkd3	Cobll1	Stxbp6	Gria3
+0174__Vip__Gaba_2	YaoZ_2023	Vip	Igfbp4	Nrp2	Maf	Cbln4	Itga4	Hs3st2	Nacc2
+0175__Vip__Gaba_3	YaoZ_2023	Vip	Sox5	Dach2	Slit1	Cxcl14	Htr2c	Sox5	Gcnt2	Cxcl14	Kirrel3
+0176__Vip__Gaba_4	YaoZ_2023	Vip	Sntb1	Tpbg	Sntb1	Gpc3	Lin7a
+0177__Vip__Gaba_5	YaoZ_2023	Vip	Creb5	Ostf1	Hs3st2	Creb5	Chat	Ostf1	Sp8
+0178__Vip__Gaba_6	YaoZ_2023	Vip	Mybpc1	Cxcl14	Crispld2	Sp8	Unc5b	Sgcd
+0179__Vip__Gaba_7	YaoZ_2023	Vip	Qrfpr	Stk32a	Igfbp4	Qrfpr	Ntn1	Cadps2
+0180__Vip__Gaba_8	YaoZ_2023	Vip	Sfrp2	Grpr	Sfrp2	St6galnac5
+0181__Vip__Gaba_9	YaoZ_2023	Htr3a	Nptx2	Gpr139	Pdzrn3	Gm39185	Gpr139	Plpp4	Csgalnact1
+0182__Vip__Gaba_10	YaoZ_2023	Htr3a	Vgll3	Pllp	Esr1	Ntng1
+0183__Vip__Gaba_11	YaoZ_2023	Vip	A830036E02Rik	Grm8	A830036E02Rik	Grm8	Npy
+0184__Vip__Gaba_12	YaoZ_2023	Vip	A830036E02Rik	Shisa8	Htr1f	Rxfp1
+0185__Sncg__Gaba_1	YaoZ_2023	Sln	Frem2	Zfp521	Igfbp5	Zfp521	Wnt7b
+0186__Sncg__Gaba_2	YaoZ_2023	Col14a1	Vip	Egfr	Sox5	Sox5	Enpp2	Shisa8
+0187__Sncg__Gaba_3	YaoZ_2023	Vip	Megf10	Plpp4	Rspo3	Plpp4	Itga8	Npy2r
+0188__Sncg__Gaba_4	YaoZ_2023	Krt73	Nr1h4	Nr1h4
+0189__Sncg__Gaba_5	YaoZ_2023	Krt73	Vip	Lmo1	Krt73	Nrp2
+0190__Sncg__Gaba_6	YaoZ_2023	5330429C05Rik	Gldn	Dchs2	Cxcl14	Pax6	Ccn3	Gulp1
+0191__Sncg__Gaba_7	YaoZ_2023	Krt73	Pax6	Pde11a	Pax6	Bcl11b
+0192__Sncg__Gaba_8	YaoZ_2023	Col14a1	Apbb1ip	Npy2r	Fbn2	Bcl11b
+0193__RHP-COA__Ndnf__Gaba_1	YaoZ_2023	Rarres1	Ndnf	Ptger3	Rarres1
+0194__RHP-COA__Ndnf__Gaba_2	YaoZ_2023	Tcim	Clrn1	Apbb1ip	Cdh20	Rgs10
+0195__RHP-COA__Ndnf__Gaba_3	YaoZ_2023	6530411M01Rik	Ndnf	Ror2	Tgfbr2	Tgfbr2	Scube1	C130074G19Rik	Ror2
+0196__RHP-COA__Ndnf__Gaba_4	YaoZ_2023	Sln	Pdzph1	Sytl4
+0197__RHP-COA__Ndnf__Gaba_5	YaoZ_2023	Scrg1	Edaradd	Scrg1	Ccbe1
+0198__RHP-COA__Ndnf__Gaba_6	YaoZ_2023	Edaradd	Htr3a	Adgrg6	9330158H04Rik
+0199__Lamp5__Gaba_1	YaoZ_2023	Cplx3	Has2os	Htr2a	Samd5	Cort	Pdlim5
+0200__Lamp5__Gaba_2	YaoZ_2023	Cplx3	Ntn1	Npas1	Trhde	Hs6st3	Zfp804b
+0201__Lamp5__Gaba_3	YaoZ_2023	Teddm3	Tgfbi	Col26a1	Fbn2	Adamtsl1	Crim1	Ltbp1
+0202__Lamp5__Gaba_4	YaoZ_2023	Col14a1	Scrg1	Cplx3	Pax6	Ptn
+0203__Lamp5__Lhx6__Gaba_1	YaoZ_2023	Hapln1	Mctp2	Cryab	Lamp5	Lhx6	Igf1
+0204__Pvalb__chandelier__Gaba_1	YaoZ_2023	Pthlh	St6galnac2	Pvalb	Vipr2
+0205__Pvalb__Gaba_1	YaoZ_2023	Tcap	Pth2r	Shisa8	Gpc4	Gsg1l
+0206__Pvalb__Gaba_2	YaoZ_2023	Cort	Adamts15	Vwc2l	Ets1	Plxdc1	Rgs10	Nfib
+0207__Pvalb__Gaba_3	YaoZ_2023	Mybpc1	Eya4	Barx2	Syndig1	Sema5a	Gabrd	Reln
+0208__Pvalb__Gaba_4	YaoZ_2023	Cort	Prss23	Sema3e	Pdzrn3	Rspo2	Sema3e	Eya4	Dcc	Cdh9
+0209__Pvalb__Gaba_5	YaoZ_2023	Pdlim3	Dsc3	Nxph1	Kit	Pdlim3	Nkain3
+0210__Pvalb__Gaba_6	YaoZ_2023	Cort	Rab38	Frmd6	Cox6a2	Rab38	Prkg2	Eya4
+0211__Pvalb__Gaba_7	YaoZ_2023	Corin	Pth2r	Stxbp6	Penk	Ptprk
+0212__Pvalb__Gaba_8	YaoZ_2023	Tcap	Hapln1	Dscam	Prss12	Prss12	Lama3	Cartpt	Hs6st3
+0213__Pvalb__Gaba_9	YaoZ_2023	Galnt5	Lhx6	Lmo1
+0214__Sst__Gaba_1	YaoZ_2023	Crh	Sox6	Egln3	Rxfp1	Crh	Myo1b	Gabrd	Antxr2
+0215__Sst__Gaba_2	YaoZ_2023	Moxd1	Edaradd	Prokr2	Nr2f2	Ntng1	L3mbtl4	Tshz2	Nr2f2	Ntng1
+0216__Sst__Gaba_3	YaoZ_2023	Gm31218	Npffr1	Rbp4	Reln	Sp9	Sp9	Nr2f2	Vav3	Eya1
+0217__Sst__Gaba_4	YaoZ_2023	Rbp4	B130024G19Rik	Lhx6	Nckap5	Npas1	Plpp4	Chrna2	Cntn6	Pld5
+0218__Sst__Gaba_5	YaoZ_2023	Lgals1	Crhr2	Rspo2	Egln3	Rspo2	Crhr2	Stk32a	Gxylt2
+0219__Sst__Gaba_6	YaoZ_2023	Id3	Sst	Adamtsl1	Sp9	Tnfaip8l3	Neb	Fgf10	Epb41l4a
+0220__Sst__Gaba_7	YaoZ_2023	Hpse	Prdm1	Npnt	Cort	Hpse	Col11a1	Sertm1	Npnt
+0221__Sst__Gaba_8	YaoZ_2023	Tnni3k	Sfrp2	Necab1	Sox6	Prkg2	Fstl4	Eya1	Cdh7
+0222__Sst__Gaba_9	YaoZ_2023	Prdm1	C1qtnf7	Pdyn	Syndig1l	Prdm1	B3gat2	C1qtnf7
+0223__Sst__Gaba_10	YaoZ_2023	Lama4	Edaradd	Sfrp2	Ano3	Daam2	Pcsk5	Pdyn	Ano3	Atp2b4
+0224__Sst__Gaba_11	YaoZ_2023	Tnni3k	Anxa2	Fbn2	Nrtn	Moxd1	Kcnmb4
+0225__Sst__Gaba_12	YaoZ_2023	Gm31218	Crh	Sema3d	Calb1	Crh	Rspo2	Slit3	Csgalnact1
+0226__Sst__Gaba_13	YaoZ_2023	Lgals1	Crybg1	Sst	Rprml	Crybg1	Nr2f2	Cort	Pou6f2
+0227__Sst__Gaba_14	YaoZ_2023	Cort	Slc26a4	Crhr2	Th	Calb1	Zmat4
+0228__Sst__Gaba_15	YaoZ_2023	Dmrt2	Emilin2	Pdyn	Wnt7a	Dmrt2	Pdyn	Wnt7a	Cox6a2
+0229__Sst__Gaba_16	YaoZ_2023	Cort	Tnni3k	Fam114a1	Pdyn	Adra1a	Tnni3k	Dmrt2	Eya4	Alkal2
+0230__Sst__Gaba_17	YaoZ_2023	Gm31218	Kitl	Eya1	Atp2b4	Ndst4	Sox5	Zmat4
+0231__Sst__Gaba_18	YaoZ_2023	Tnni3k	Edaradd	Daam2	Heg1	L3mbtl4	Pcsk5	Kcnh1	Gabra4
+0232__Sst__Gaba_19	YaoZ_2023	Mageb18	Selenop	Selenop	Grem1
+0233__STR__Prox1__Lhx6__Gaba_1	YaoZ_2023	Moxd1	St18	Sytl5	Cplx3	Igfbp5	Cntn4
+0234__STR__Prox1__Lhx6__Gaba_2	YaoZ_2023	Gna14	Gdnf	Opn3
+0235__STR__Prox1__Lhx6__Gaba_3	YaoZ_2023	Gna14	Car4	Daam2
+0236__STR__Lhx8__Gaba_1	YaoZ_2023	Lhx8	Hmcn2	Th
+0237__STR__Lhx8__Gaba_2	YaoZ_2023	Lhx8	Egfr	Moxd1	Plcxd3
+0238__Sst__Chodl__Gaba_1	YaoZ_2023	Arhgap28	Sfta3-ps	Rreb1	Adora1	Ecel1	Sfta3-ps
+0239__Sst__Chodl__Gaba_2	YaoZ_2023	Hhip	Lhx6	Adgrg6	Galr1	Hhip	Adgrg6	St6galnac2
+0240__Sst__Chodl__Gaba_3	YaoZ_2023	Lhx8	Colec12	Lama4	Ptprk	Sfrp2	Tac1	Tshr
+0241__Sst__Chodl__Gaba_4	YaoZ_2023	Cort	Chodl	Lgals1
+0242__Sst__Chodl__Gaba_5	YaoZ_2023	Nxph2	Wnt2	Pth2r	Cpne7	Cbln4	Barx2	Parm1
+0243__Sst__Chodl__Gaba_6	YaoZ_2023	Cox6a2	Gpr139	Sox6	Pvalb
+0244__NDB-SI-MA-STRv__Lhx8__Gaba_1	YaoZ_2023	Lhx6	Itga8	Tacr3	Ankfn1	Necab1	Ptprk	Tacr3	Corin
+0245__NDB-SI-MA-STRv__Lhx8__Gaba_2	YaoZ_2023	Gbx1	Lmo7	Meis1	Adra1a	Avpr1a	Galntl6	Meis1	Lhfp	Htr2a	Plpp4
+0246__NDB-SI-MA-STRv__Lhx8__Gaba_3	YaoZ_2023	2610028E06Rik	Gbx1	Sp9	Satb1	Tshz3	Sp9	Plch1	2610028E06Rik
+0247__NDB-SI-MA-STRv__Lhx8__Gaba_4	YaoZ_2023	Gpr174	Sox6	Sfta3-ps	Epb41l4a	Zic1	Prokr2	Qrfprl
+0248__NDB-SI-MA-STRv__Lhx8__Gaba_5	YaoZ_2023	Lhx8	Sfrp1	Pcdh20	Sema3c	Sox6	Sfrp1	Dpf3	Ptprk	Lypd1
+0249__NDB-SI-MA-STRv__Lhx8__Gaba_6	YaoZ_2023	Gbx1	Th	Nr4a2	Nr4a2	Meis1	Tacr3
+0250__NDB-SI-MA-STRv__Lhx8__Gaba_7	YaoZ_2023	Gbx1	Eya4	Sox6	Bmp6	Grin2a
+0251__NDB-SI-MA-STRv__Lhx8__Gaba_8	YaoZ_2023	Gbx1	Npr3	Npas1	Mboat1	Gdf10	Npr3
+0252__NDB-SI-MA-STRv__Lhx8__Gaba_9	YaoZ_2023	Chrna2	Sfta3-ps	Rxfp2	Ly75	Ptger3
+0253__NDB-SI-MA-STRv__Lhx8__Gaba_10	YaoZ_2023	Lhx6	Lama4	Tac1	Zfp804b	Cdh20	Sox2	Ano5	Oxtr	Ryr3
+0254__NDB-SI-MA-STRv__Lhx8__Gaba_11	YaoZ_2023	D7Ertd443e	Ngf	Asic2	D7Ertd443e	Slc5a7
+0255__NDB-SI-MA-STRv__Lhx8__Gaba_12	YaoZ_2023	Gbx1	Slc10a4	Gbx2	Igf1	Tgfb2
+0256__NDB-SI-MA-STRv__Lhx8__Gaba_13	YaoZ_2023	Lhx8	Npsr1	Frem3	Frem3	Zfp536
+0257__GPe-SI__Sox6__Cyp26b1__Gaba_1	YaoZ_2023	Col14a1	Hhip	Sox6	Cldn1
+0258__GPe-SI__Sox6__Cyp26b1__Gaba_2	YaoZ_2023	Cyp26b1	Npy	Sox6	Ntsr1
+0259__PAL-STR__Gaba-Chol_1	YaoZ_2023	Chat	Adgrf5	Sncg
+0260__PAL-STR__Gaba-Chol_2	YaoZ_2023	Chat	Gdnf	Gdnf
+0261__PAL-STR__Gaba-Chol_3	YaoZ_2023	Lhx8	Nfib	Pard3b	Slc5a7	Htr4	Lypd6
+0262__OT__D3__Folh1__Gaba_1	YaoZ_2023	Folh1	Lrrc38	Stac
+0263__OT__D3__Folh1__Gaba_2	YaoZ_2023	Folh1	Gap43	Npy2r
+0264__OT__D3__Folh1__Gaba_3	YaoZ_2023	Sh3rf2	Ascl1	A830036E02Rik	Fign
+0265__STR__D1__Gaba_1	YaoZ_2023	Drd3	Carhsp1	Adam12	Grin3a	Sez6l	Stmn1	Gabra3	Ano5	Marcksl1	Glt8d2
+0266__STR__D1__Gaba_2	YaoZ_2023	Sh3rf2	Drd3	Lancl3	Pdyn	Fos	Tshz2	Rnd3	Prok2
+0267__STR__D1__Gaba_3	YaoZ_2023	Sh3rf2	Acvrl1	Lingo2	Acvrl1	Sgpp2
+0268__STR__D1__Gaba_4	YaoZ_2023	Sh3rf2	Clspn	Drd1	Prkg1	Car10	Itga9
+0269__STR__D1__Gaba_5	YaoZ_2023	1700003D09Rik	Mkx	Pdyn	Mkx
+0270__STR__D1__Gaba_6	YaoZ_2023	Sh3rf2	Nts	Drd1	Htr2a	Col11a1	Htr2a	Rprm	Impg1
+0271__STR__D1__Gaba_7	YaoZ_2023	Sh3rf2	Synm	Atp6ap1l	Cd36
+0272__STR__D1__Gaba_8	YaoZ_2023	1700003D09Rik	Ebf1	Cartpt	Bach2	Arhgap36	Dlk1	Tbc1d4	Pou3f1
+0273__STR__D1__Gaba_9	YaoZ_2023	Sh3rf2	D7Ertd443e	Cachd1	Gja5
+0274__STR__D2__Gaba_1	YaoZ_2023	Adora2a	Prkch	Gpr150	Cntnap2	Pou3f1	Cnih3	Glra3	Tmem132c	Edil3	Gpr83
+0275__STR__D2__Gaba_2	YaoZ_2023	Adora2a	Ntn1	Lrrc7	Sox1	Btg2	Itga9	Cbln4
+0276__STR__D2__Gaba_3	YaoZ_2023	Adora2a	Gpr6	Esr1	Esr1	Grm8	Dach1
+0277__STR__D2__Gaba_4	YaoZ_2023	Adora2a	Clspn	Stk32a	Coch	Stk32a	Cyp2s1
+0278__STR__D2__Gaba_5	YaoZ_2023	Sh3rf2	P2ry1	Myo3b	Crym	Drd2	Rgs6	Ano5	Myo3b	P2ry1
+0279__STR__D2__Gaba_6	YaoZ_2023	Adora2a	Tac1	Agtr1a
+0280__STR__D2__Gaba_7	YaoZ_2023	Adora2a	Adgrd1	Ecel1	Upk1b	Rnf128
+0281__STR__D1__Sema5a__Gaba_1	YaoZ_2023	Cd4	Nxph4	Phactr1	Robo3
+0282__STR__D1__Sema5a__Gaba_2	YaoZ_2023	Rbp1	Gm10754	Mdfic	Crym	Fosl2	Ntn1	Foxo1	Shisa9
+0283__STR__D1__Sema5a__Gaba_3	YaoZ_2023	Rbp1	Scn4b	Kcnc2	Efna5	Fstl5
+0284__STR__D1__Sema5a__Gaba_4	YaoZ_2023	Rbp1	Drd1	Rmst	Ppp1r1b	Gm10754	Zfp608	Grm8	Vwc2l	Kcnj6	Rmst
+0285__STR-PAL__Chst9__Gaba_1	YaoZ_2023	Npffr2	Chst9	Igfbpl1	Cdh12	Rspo3	Shisa8	Plpp4	Zfpm2
+0286__STR-PAL__Chst9__Gaba_2	YaoZ_2023	Npffr2	Chst9	Pax6	Dscaml1	Fbxl7	Nfix	Rai14	Kcnh8
+0287__STR-PAL__Chst9__Gaba_3	YaoZ_2023	Pdyn	Sp9	Nfib	Drd1	Gfra1	Gfra1	Tpbg	Baiap3
+0288__STR-PAL__Chst9__Gaba_4	YaoZ_2023	Npffr2	A730046J19Rik	Calb1	Adcy8	Btg2	Vwc2l
+0289__STR-PAL__Chst9__Gaba_5	YaoZ_2023	A730046J19Rik	Pax6	Adgrv1	6430628N08Rik	Htr4	A730046J19Rik
+0290__IA__Mgp__Gaba_1	YaoZ_2023	Slc12a8	Kcnh3	Gad2	Fbn2	Slc12a8	Npffr2	Mdfic
+0291__IA__Mgp__Gaba_2	YaoZ_2023	Ifi27l2a	Mgp	Dpp6	Sntb1	4930555F03Rik
+0292__IA__Mgp__Gaba_3	YaoZ_2023	Mgp	Htr3a	Car8	Fibcd1
+0293__IA__Mgp__Gaba_4	YaoZ_2023	Pax6	Crlf1	Arx	Crlf1	Syt2
+0294__IA__Mgp__Gaba_5	YaoZ_2023	Cyp26b1	Sox6	Gm10754	Stac	Arhgap36
+0295__NDB-SI-ant__Prdm12__Gaba_1	YaoZ_2023	Prdm12	Pax6	Nts	Rprml	Lmo7	Tshz2	Adarb2	Klhl1
+0296__NDB-SI-ant__Prdm12__Gaba_2	YaoZ_2023	Lgr6	Prkcd	Lrfn5	Igfbpl1
+0297__NDB-SI-ant__Prdm12__Gaba_3	YaoZ_2023	Ntn1	Zic3	Foxp2	Lancl3	Meis2	Plpp4	Sox1ot	Foxp2
+0298__NDB-SI-ant__Prdm12__Gaba_4	YaoZ_2023	1700001F09Rik	Prdm12	1700001F09Rik
+0299__LSX__Sall3__Pax6__Gaba_1	YaoZ_2023	Pax6	Pth2r	Zic1	Kcnmb2
+0300__LSX__Sall3__Pax6__Gaba_2	YaoZ_2023	Prdm12	Eya4	Prdm12
+0301__LSX__Otx2__Gaba_1	YaoZ_2023	Slc10a4	Calcr	Zic5	Isl1	Cdh20	Tox	Cntnap5b
+0302__LSX__Otx2__Gaba_2	YaoZ_2023	Otx2	Ptk2b	9530026P05Rik	B3glct	Dab1	L3mbtl4	Prkcd	Sulf1
+0303__LSX__Otx2__Gaba_3	YaoZ_2023	Clic6	Sfta3-ps	Otx2os1	Fbn2	Nkx2-1	Thsd7b	Irs4	AW551984
+0304__LSX__Otx2__Gaba_4	YaoZ_2023	Arhgef38	Sall3	Esr1	Arhgef38	Sall3	Gm10714
+0305__LSX__Otx2__Gaba_5	YaoZ_2023	Ano1	Otx2	Gm41414	Csgalnact1	Pcdh20	Otx2os1	Csgalnact1	Atp6ap1l	Shisa9	Cdh9
+0306__LSX__Nkx2-1__Gaba_1	YaoZ_2023	Ano2	Sox3	Arhgap36	Sp8	Igfbpl1	Sostdc1	Alk	Ano2	Arap2
+0307__LSX__Nkx2-1__Gaba_2	YaoZ_2023	Ano1	Lhx2	Grid2ip	Lama3	Lhx2	Mob3b	Tafa1	Adamtsl1
+0308__LSX__Nkx2-1__Gaba_3	YaoZ_2023	Lhx8	Sp8	Gpr101	Zic1	Gpr101	Slc44a5	Marcksl1	Parm1
+0309__LSX__Nkx2-1__Gaba_4	YaoZ_2023	Ano1	Sfta3-ps	Sp8	Sntg2	Prkcd	Tyro3	Pth2r	Pou6f2	Sntg2	Rreb1
+0310__LSX__Nkx2-1__Gaba_5	YaoZ_2023	Ano1	Npy2r	Cpa6	Pde3a	Sfta3-ps	Maob	Rtl4	Sntb1	Egfem1
+0311__LSX__Nkx2-1__Gaba_6	YaoZ_2023	Styk1	Sst	Six3	Synm	Meis2	Sst	Six3	Zfp804b	Drd3
+0312__LSX__Nkx2-1__Gaba_7	YaoZ_2023	Chat	Atp6v1c2	Lamp5	Moxd1	Chat	6430628N08Rik
+0313__LSX__Nkx2-1__Gaba_8	YaoZ_2023	Lhx8	Itpka	Lhx6	Slc10a4	Lhx6	Fosb	Foxp2
+0314__LSX__Nkx2-1__Gaba_9	YaoZ_2023	Ctsc	Crhr2	Six3os1	Grm5	Chrna4	Six3	Crhr2
+0315__LSX__Nkx2-1__Gaba_10	YaoZ_2023	Ddr2	Anxa10	Sp8	Cobll1	Dab2
+0316__LSX__Nkx2-1__Gaba_11	YaoZ_2023	Arhgef38	Crhr2	Fibin	Fibin	Met
+0317__LSX__Prdm12__Slit2__Gaba_1	YaoZ_2023	Prdm12	Foxp2	Fgd5	Adarb2	Foxp2	Adarb2	Ndst4	Prr16
+0318__LSX__Prdm12__Slit2__Gaba_2	YaoZ_2023	Prdm12	Plpp4	Cxcl14	Zmat4	Grm5	Plpp4	Fhad1	Rfx4	Gpx3
+0319__LSX__Prdm12__Slit2__Gaba_3	YaoZ_2023	Prdm12	Nts	Col23a1	Cntn5	Glp1r	Col23a1	Il1rapl2	Fos
+0320__LSX__Prdm12__Slit2__Gaba_4	YaoZ_2023	Prdm12	Ppp1r1b	Rprml	Pnoc	Parm1	Gm5089	Rprml	Gpr88	Ankrd33b
+0321__LSX__Prdm12__Slit2__Gaba_5	YaoZ_2023	Nts	Clic4	Ccdc141	Meis2	Stac2	Cartpt	Sox5	Ccdc141
+0322__LSX__Prdm12__Slit2__Gaba_6	YaoZ_2023	Spp1	Six3	Spp1
+0323__LSX__Prdm12__Slit2__Gaba_7	YaoZ_2023	Prdm12	Rab38	Sst	Met	Met	Styk1
+0324__LSX__Prdm12__Slit2__Gaba_8	YaoZ_2023	Fbxw13	Foxp2	C1ql3	9330158H04Rik
+0325__LSX__Prdm12__Slit2__Gaba_9	YaoZ_2023	Bub1b	Mogat1	Dgkb	Mc4r	Isl1
+0326__LSX__Prdm12__Zeb2__Gaba_1	YaoZ_2023	Col6a3	Glp1r	Cxcl14	Sv2b	Fgf10	Col15a1	Cxcl14	Unc5b
+0327__LSX__Prdm12__Zeb2__Gaba_2	YaoZ_2023	Col6a3	Tmem215	Slc10a4	Sall3	Tmem215
+0328__LSX__Prdm12__Zeb2__Gaba_3	YaoZ_2023	Prdm12	Col15a1	Zbbx	Six3	Zeb2	Adra1a	Pde8b	Ntf3	Zeb2
+0329__LSX__Prdm12__Zeb2__Gaba_4	YaoZ_2023	Tec	Ntf3	Sostdc1	Arhgef38	Fat1
+0330__LSX__Prdm12__Zeb2__Gaba_5	YaoZ_2023	Prdm12	Tll1	Sntb1	Satb1	Slit2	Gfra1
+0331__LSX__Sall3__Lmo1__Gaba_1	YaoZ_2023	Slco1c1	Slc32a1	Fam163a	Rai14	Gpr101	Fam163a	Fosl2
+0332__LSX__Sall3__Lmo1__Gaba_2	YaoZ_2023	Slco1c1	Col6a3	Mob3b	Syn2	Kcng1	Six3os1	Dlk1
+0333__LSX__Sall3__Lmo1__Gaba_3	YaoZ_2023	Ttr	Slc12a8	Sall3	Pcsk6
+0334__LSX__Sall3__Lmo1__Gaba_4	YaoZ_2023	Ttr	Mfsd13b	Fmo1
+0335__LSX__Sall3__Lmo1__Gaba_5	YaoZ_2023	Col6a3	Ecel1	Tmem132c	Cobl	Calb2	Ecel1
+0336__LSX__Sall3__Lmo1__Gaba_6	YaoZ_2023	Prdm12	Gm39185	Col6a3	Clic6	Lncenc1	Chrm3
+0337__MEA-BST__Sox6__Gaba_1	YaoZ_2023	Tnfaip8l3	Prox1	Kcng1	Pou3f3	Nbl1	Nfia	Shisa6	Cplx3
+0338__MEA-BST__Sox6__Gaba_2	YaoZ_2023	Sox6	Gm10754	Nfib	Kcng1	Dlx1	Tnfaip8l3	Gm10754	Gfra1	Nfix	Pcp4l1
+0339__MEA-BST__Sox6__Gaba_3	YaoZ_2023	Sox6	Prox1os	Fign	Meis2	Meis2	Prox1os	Stac	Syndig1
+0340__MEA-BST__Sox6__Gaba_4	YaoZ_2023	Sox6	Kcng1	Cxcl14	Arx	Npy1r	Bcl11b	Csmd3	Pde3a	Npy1r	Il1rapl2	Fign
+0341__MEA-BST__Sox6__Gaba_5	YaoZ_2023	Nr2e1	Rprml	Bcl6	Cdh6	Mpped2	Sgcz	Nr2e1	Mpped2	Gpr101	Gabrq
+0342__MEA-BST__Sox6__Gaba_6	YaoZ_2023	Sp8	Sox6	Lamb3	Dscaml1	Gpr149	Sp8	Meis2	Adamts18
+0343__MEA-BST__Sox6__Gaba_7	YaoZ_2023	Cyp19a1	Qrfpr	Frem3	Syt10	Sp9
+0344__MEA-BST__Sox6__Gaba_8	YaoZ_2023	5830418P13Rik	Sp8	Pdyn	Zfp536	Dach1	Sp8
+0345__MEA-BST__Sox6__Gaba_9	YaoZ_2023	5830418P13Rik	Gm38505	Sox6	Vcan	Tmem176a
+0346__MEA-BST__Sox6__Gaba_10	YaoZ_2023	Tll2	Htr3a	Mylk	St18	Tac2
+0347__MEA-BST__Lhx6__Sp9__Gaba_1	YaoZ_2023	Frem3	Esr2	Nr2e1	Sox6	Sox6	Greb1	Esr2	Ddc
+0348__MEA-BST__Lhx6__Sp9__Gaba_2	YaoZ_2023	Frem3	Greb1	Sp9	Esr1	Dchs2	Runx1t1	Trhr	Sntb1	Dgkk	Greb1	Pde1c
+0349__MEA-BST__Lhx6__Sp9__Gaba_3	YaoZ_2023	Frem3	Ptgs1	Megf11	Crhr2	Arhgap36	Syt6	Megf11	Maf
+0350__MEA-BST__Lhx6__Sp9__Gaba_4	YaoZ_2023	Nr2e1	Lpl	Fosl2	Foxp2	Sox6	Tgfbr2	Sox6	Kit	Tmtc2
+0351__MEA-BST__Lhx6__Sp9__Gaba_5	YaoZ_2023	Nxph2	Nts	Gm38505	Nts	Tacr1	Tox	Lbhd2
+0352__MEA-BST__Lhx6__Sp9__Gaba_6	YaoZ_2023	Nr2e1	Six3	Dscam	Dgkk	Lpl	Lix1	Tmem132c
+0353__MEA-BST__Lhx6__Sp9__Gaba_7	YaoZ_2023	Satb2	Sp8	Satb2	Thsd7b
+0354__MEA-BST__Lhx6__Nr2e1__Gaba_1	YaoZ_2023	Calcr	Nr2e1	Lpl	Lamb3	Slit3
+0355__MEA-BST__Lhx6__Nr2e1__Gaba_2	YaoZ_2023	Nr2e1	A2ml1	Drd2	Stac	Cbln4
+0356__MEA-BST__Lhx6__Nr2e1__Gaba_3	YaoZ_2023	Nr2e1	Prkcq	Gldn	Tmem132c
+0357__MEA-BST__Lhx6__Nfib__Gaba_1	YaoZ_2023	Esr2	Sox6	Sulf1	Alkal2	Oprk1	Ppp1r17	Lmo1
+0358__MEA-BST__Lhx6__Nfib__Gaba_2	YaoZ_2023	Cyp19a1	St18	Cck	Plpp4	Rtn4rl1	St18	Cyp19a1
+0359__MEA-BST__Lhx6__Nfib__Gaba_3	YaoZ_2023	Esr2	Nxph2	Bmpr1b	Nxph2	Trpc6	Irs4
+0360__MEA-BST__Lhx6__Nfib__Gaba_4	YaoZ_2023	Gldn	St18	Npas1	Lhx6	Dnah10	Prox1	Pdyn
+0361__MEA-BST__Lhx6__Nfib__Gaba_5	YaoZ_2023	Moxd1	Frem3	St18	Rab3b	Dpf3	Frem3	Igsf21	Chst9
+0362__MEA-BST__Lhx6__Nfib__Gaba_6	YaoZ_2023	Moxd1	Ano2	Sst	Prox1	Sst	Ano2	Ubash3b	Reln
+0363__CEA-BST__Gal__Avp__Gaba_1	YaoZ_2023	Avp	Pgm5	Gal	Avp
+0364__SI-MA-ACB__Ebf1__Bnc2__Gaba_1	YaoZ_2023	Bnc2	Arx	Tacr1	Stac	Arhgef26	Ebf1
+0365__SI-MA-ACB__Ebf1__Bnc2__Gaba_2	YaoZ_2023	Bnc2	Gad1	Cntnap3	9330158H04Rik	Sema3d	Tox	Fign	Sox2ot
+0366__SI-MA-ACB__Ebf1__Bnc2__Gaba_3	YaoZ_2023	Aldh1a3	Gm32828	Tshz2	Zeb2
+0367__CEA-BST__Six3__Cyp26b1__Gaba_1	YaoZ_2023	Upk1b	Bmpr1b	Mafb	Dio3	Pkib	Spon1	Mafb
+0368__CEA-BST__Six3__Cyp26b1__Gaba_2	YaoZ_2023	Ifi27l2a	Fst	Cyp26b1	Sox13
+0369__CEA-BST__Six3__Cyp26b1__Gaba_3	YaoZ_2023	Upk1b	Tacr3	Pcdh10	Tacr3	Htr7	6430628N08Rik	Zfp423
+0370__CEA-BST__Six3__Cyp26b1__Gaba_4	YaoZ_2023	Upk1b	Eya4	Sp8	Eya4	Sp8	Gfra1
+0371__CEA-BST__Six3__Cyp26b1__Gaba_5	YaoZ_2023	Upk1b	Pde11a	Meis2	Pifo	Pde11a	Crym	Drd2
+0372__CEA-BST__Six3__Cyp26b1__Gaba_6	YaoZ_2023	Upk1b	Sp8	Ahi1	Glp1r	Nefl	Gulp1	Gpr101	Glp1r
+0373__CEA-AAA-BST__Six3__Sp9__Gaba_1	YaoZ_2023	Nts	Prox1	Foxg1	Meis2	B130024G19Rik	Slit2	Nr4a3	Sema6a
+0374__CEA-AAA-BST__Six3__Sp9__Gaba_2	YaoZ_2023	Pax6	6430628N08Rik	Col11a1	Npy2r	Mpped2	Foxp2	Tacr1	Rftn1	Esr1	Trhr
+0375__CEA-AAA-BST__Six3__Sp9__Gaba_3	YaoZ_2023	Nts	Six3os1	Dach2	Dlk1	Meis2	Dlk1	Drd2
+0376__CEA-AAA-BST__Six3__Sp9__Gaba_4	YaoZ_2023	Adora2a	Ctxn3	Dach1	Pcp4	Cyp26b1	Adora2a	Pax6	Zfp536
+0377__CEA-AAA-BST__Six3__Sp9__Gaba_5	YaoZ_2023	Glis3	6430628N08Rik	Pax6	Glis3	B130024G19Rik	6430628N08Rik
+0378__CEA-AAA-BST__Six3__Sp9__Gaba_6	YaoZ_2023	Adora2a	C1ql1	C1ql1
+0379__CEA-AAA-BST__Six3__Sp9__Gaba_7	YaoZ_2023	Six3	C1ql3	Tll1	Zbbx	Mgat4c	C1ql3	Csrp2
+0380__CEA-AAA-BST__Six3__Sp9__Gaba_8	YaoZ_2023	Pax6	Klhl14	Rprml	Ust	Rmst	Klhl14	Col8a1
+0381__ACB-BST-FS__D1__Gaba_1	YaoZ_2023	Pdyn	Ankrd63	Dgkk	Sox1ot	Cartpt	Six3	Dlk1	Tox3
+0382__ACB-BST-FS__D1__Gaba_2	YaoZ_2023	Isl1	Tmem215	Foxp2	Nr2f1	Gpr83	Scn5a	Syndig1l	Scn5a
+0383__ACB-BST-FS__D1__Gaba_3	YaoZ_2023	Slc17a8	A730046J19Rik	Meis2	Mbnl3	Nxph1	Barx2
+0384__CEA-BST__Ebf1__Pdyn__Gaba_1	YaoZ_2023	6430628N08Rik	Isl1	Ebf1	Tshz2	Adora1	Six3	Npy1r	Synpr	Parm1	Slc16a10
+0385__CEA-BST__Ebf1__Pdyn__Gaba_2	YaoZ_2023	Fst	Tac1	Asb4	Dgkk	Asb4
+0386__CEA-BST__Ebf1__Pdyn__Gaba_3	YaoZ_2023	Spink8	Vipr2	Meis2	Crym	Ebf1
+0387__CEA-BST__Ebf1__Pdyn__Gaba_4	YaoZ_2023	Tac2	Six3	Ebf1	Camk2n2	Kcnj5	Six3os1	Ebf1
+0388__CEA-BST__Ebf1__Pdyn__Gaba_5	YaoZ_2023	Isl1	Igfbp6	Col12a1	Prkd1	9530026P05Rik	Col12a1	Gpx3
+0389__CEA-BST__Ebf1__Pdyn__Gaba_6	YaoZ_2023	Vdr	Slc32a1	Vdr	Ptprk
+0390__CEA-BST__Ebf1__Pdyn__Gaba_7	YaoZ_2023	Glp1r	Pax6	Ntn1	Angpt1
+0391__CEA-BST__Ebf1__Pdyn__Gaba_8	YaoZ_2023	Pdyn	Cdhr1	Isl1	Rai14	Pde11a
+0392__CEA-BST__Rai14__Pdyn__Crh__Gaba_1	YaoZ_2023	Impg1	Drd2	Impg1
+0393__CEA-BST__Rai14__Pdyn__Crh__Gaba_2	YaoZ_2023	Pgm5	Crh	Gad2	Crh
+0394__BST-SI-AAA__Six3__Slc22a3__Gaba_1	YaoZ_2023	Slc22a3	Pou3f1	Tmem132c	Isl1	Dchs2	Kl
+0395__BST-SI-AAA__Six3__Slc22a3__Gaba_2	YaoZ_2023	Pthlh	Slc22a3	Npas1	Stac2	Egflam	Dach2
+0396__SI-MPO-LPO__Lhx8__Gaba_1	YaoZ_2023	Lhx8	Gbx2	Pou6f2	Slc32a1	Bcl11b	Pou6f2	S100a10	Tafa1
+0397__SI-MPO-LPO__Lhx8__Gaba_2	YaoZ_2023	Nr2e1	Dgkk	Crh	Meis1	Crh	Otof	Meis1	Trhr
+0398__SI-MPO-LPO__Lhx8__Gaba_3	YaoZ_2023	Nmu	Lhx8	D630024D03Rik	9530026P05Rik
+0399__SI-MPO-LPO__Lhx8__Gaba_4	YaoZ_2023	Lhx8	A730046J19Rik	Kcnk13	Zic4	Dlx1	Slc10a4	Sp9
+0400__SI-MPO-LPO__Lhx8__Gaba_5	YaoZ_2023	Gbx1	Nts	Gbx2	Megf10	Zic1	Ecel1	Dpf3
+0401__SI-MPO-LPO__Lhx8__Gaba_6	YaoZ_2023	Nup62cl	Lhx6	Gm31938
+0402__MPO-ADP__Lhx8__Gaba_1	YaoZ_2023	Lhx8	B130024G19Rik	Pou3f1	Nr2f2	Cntnap3	Lypd6b
+0403__MPO-ADP__Lhx8__Gaba_2	YaoZ_2023	Lhx8	Ermn	Kcnh8	Zfp536	Bcl11b	Zic1	Cacng3
+0404__MPO-ADP__Lhx8__Gaba_3	YaoZ_2023	Lhx8	Cdh23	Cartpt	Cdh23	Cartpt	Ptger3	Gpr101
+0405__MPO-ADP__Lhx8__Gaba_4	YaoZ_2023	Lhx8	Pde11a	Sox1ot	Gda	Ntn1	Masp1	Rgs6	Pde11a
+0406__MPO-ADP__Lhx8__Gaba_5	YaoZ_2023	Lhx8	Col15a1	Isl1	Dgkk	Necab1	Prdm16	Cpne8
+0407__MPN-MPO-LPO__Lhx6__Zfhx3__Gaba_1	YaoZ_2023	Lhx6	Pde11a	B130024G19Rik	Zfhx4	Sv2c	Glra2	Asb4	Gabre
+0408__MPN-MPO-LPO__Lhx6__Zfhx3__Gaba_2	YaoZ_2023	Tac2	Satb2	Lhx6	Hs3st2	Sorcs3
+0409__BST__Tac2__Gaba_1	YaoZ_2023	Tac2	Satb2	Isl1	Gm29683
+0410__BST__Tac2__Gaba_2	YaoZ_2023	Crh	Spata13	C1ql3	Slc32a1	Pou3f3	Pou3f3
+0411__PVR__Six3__Sox3__Gaba_1	YaoZ_2023	Sox3	Onecut1	Sox6	Ano1	Ptger3	Gpc4	Irs4	Cbln2
+0412__PVR__Six3__Sox3__Gaba_2	YaoZ_2023	Sox3	Ptger3	Six3os1	Nr2f2	Nr2f2	Vwa5b1	Rasgrp1	Csta2
+0413__PVR__Six3__Sox3__Gaba_3	YaoZ_2023	Six3os1	Thrsp	Drd1	Zic5	Gabre	Gm29683	Nfix
+0414__PVR__Six3__Sox3__Gaba_4	YaoZ_2023	Ano1	Six3os1	Nr4a2	Vstm2b	Kcnmb2	Drd2	Crhr1	Tmem163
+0415__PVR__Six3__Sox3__Gaba_5	YaoZ_2023	Lhx8	Fezf1	Fezf1
+0416__PVR__Six3__Sox3__Gaba_6	YaoZ_2023	Prdm12	Otx2	Kcnh8	A630012P03Rik	Prdm12
+0417__PVR__Six3__Sox3__Gaba_7	YaoZ_2023	Pmaip1	Sfta3-ps	Runx1t1	Ttn	Sfta3-ps	Arx	Lhx5
+0418__PVR__Six3__Sox3__Gaba_8	YaoZ_2023	Pmaip1	Hmx2	Glp1r	Hmx2	Sfta3-ps	Lhx5	Pmaip1
+0419__PVR__Six3__Sox3__Gaba_9	YaoZ_2023	Hmx2	Ano1	Scn5a	Zfp536	Hmx2	Hs3st4	Isl1
+0420__BST-MPN__Six3__Nrgn__Gaba_1	YaoZ_2023	Dock5	Arhgap36	Six3	Gpr149	Gpr149	Tmem215	Prlr
+0421__BST-MPN__Six3__Nrgn__Gaba_2	YaoZ_2023	Isl1	Zan	Glp1r	Tmem163	Prkcd	Six3	C130074G19Rik	A730046J19Rik
+0422__BST-MPN__Six3__Nrgn__Gaba_3	YaoZ_2023	Six3os1	Nr4a2	Zic1	Gpc4	Nr4a2	Dab2	Zic1	Trhde
+0423__BST-MPN__Six3__Nrgn__Gaba_4	YaoZ_2023	Sp8	H2-Q2	Pou6f2	Sp8	Lypd1	Calb1
+0424__BST-MPN__Six3__Nrgn__Gaba_5	YaoZ_2023	Isl1	Ntn1	Pgpep1l	Meis2	Adarb2	Scn5a	Ntn1	Mpped2	Zic1
+0425__BST-MPN__Six3__Nrgn__Gaba_6	YaoZ_2023	Sytl4	Arx	Arhgap36	Aldh3b2	Plpp4	Sp9	D030068K23Rik	Glra1
+0426__BST-MPN__Six3__Nrgn__Gaba_7	YaoZ_2023	Igfbpl1	Prox1	Csgalnact1	Sox1ot	Prox1
+0427__ARH-PVi__Six6__Dopa-Gaba_1	YaoZ_2023	Slc6a3	Satb2	Calcr
+0428__ARH-PVi__Six6__Dopa-Gaba_2	YaoZ_2023	Platr21	Sncg
+0429__TMv-PMv__Tbx3__Hist-Gaba_1	YaoZ_2023	Hdc	Slc18a2	Hdc
+0430__TMv-PMv__Tbx3__Hist-Gaba_2	YaoZ_2023	Bsx	Has2os	Npsr1
+0431__RT-ZI__Gnb3__Gaba_1	YaoZ_2023	Gm5532	Zeb2	Il1rap	Lrrc4c	Htr1a	Il1rap	Kctd12	Gm5532
+0432__RT-ZI__Gnb3__Gaba_2	YaoZ_2023	Slc22a3	Pvalb	Fgf10	Pou6f2	Angpt1	Hmcn1	Tacr3	Nrgn
+0433__RT-ZI__Gnb3__Gaba_3	YaoZ_2023	Cplx3	Cdc14a	Grin2c	Fam163a	Prlr	Cdc14a	Sema3e
+0434__RT-ZI__Gnb3__Gaba_4	YaoZ_2023	Piezo2	Isl1	Tiam2	Sst	Kcnq5	Masp1	Ctxn3
+0435__RT-ZI__Gnb3__Gaba_5	YaoZ_2023	Cplx3	Kcng4	Kcns3	Trh	Kcns3	Pcdh11x	Avp
+0436__SCH__Six6__Cdc14a__Gaba_1	YaoZ_2023	Avp	Vipr2	Kcnj6	Gem	Prlr	Avp
+0437__SCH__Six6__Cdc14a__Gaba_2	YaoZ_2023	Prr5l	Dlk1	Ptprk	Prokr2	Ptprk	Sgpp2
+0438__SCH__Six6__Cdc14a__Gaba_3	YaoZ_2023	Six6	Cd24a	Lhx1	Tmem132c
+0439__DMH__Prdm13__Gaba_1	YaoZ_2023	Prdm13	Pou3f4	St18	Pbx3
+0440__DMH__Prdm13__Gaba_2	YaoZ_2023	Bsx	Ppp1r17	Glra2	Prox1	Bsx
+0441__PVHd__Gsc__Gaba_1	YaoZ_2023	Gsc	Col23a1	Gsc	Pcsk5
+0442__PVHd-SBPV__Six3__Prox1__Gaba_1	YaoZ_2023	Piezo2	Isl1	Prox1	Pgr15l	Sox2ot	Pou3f3	Piezo2	Kcnmb2	Gm20646
+0443__PVHd-SBPV__Six3__Prox1__Gaba_2	YaoZ_2023	Sall3	Isl1	Prox1	Cd24a	Myh7	Adarb2
+0444__PVHd-SBPV__Six3__Prox1__Gaba_3	YaoZ_2023	Isl1	Sema3d	Gm38505	Pou6f2	Meis2	Slc18a2	Slc18a2	Meis2	Cpne4
+0445__PVHd-SBPV__Six3__Prox1__Gaba_4	YaoZ_2023	Six3	Col15a1	Prox1	Gck	Nr2f2	Zic5	Zic5	Gabrg1	Cntnap3
+0446__AHN-SBPV-PVHd__Pdrm12__Gaba_1	YaoZ_2023	Prdm12	Gm29683	Sp8	Arx	Syt10	Sulf1	Cntnap5b	Col25a1
+0447__AHN-SBPV-PVHd__Pdrm12__Gaba_2	YaoZ_2023	C1ql2	Six3os1	Gad1	C1ql2	Six3os1	Il1rap	Kcnmb2
+0448__AHN-SBPV-PVHd__Pdrm12__Gaba_3	YaoZ_2023	Prdm12	Gm29683	Drd2	Sox1ot	Tenm2	Cpne4	Zic1	Gulp1	Drd2
+0449__AHN-SBPV-PVHd__Pdrm12__Gaba_4	YaoZ_2023	Prdm12	Qrfprl	Esr1	Qrfprl	L3mbtl4	Sox1ot	Nell2
+0450__AHN-SBPV-PVHd__Pdrm12__Gaba_5	YaoZ_2023	Prdm12	Onecut1	Slc24a4	Zic5	Chd7
+0451__AHN-SBPV-PVHd__Pdrm12__Gaba_6	YaoZ_2023	Prdm12	Cdh23	Sox2	Cdh23	Zfp503	Six3	Gm10754
+0452__AHN-SBPV-PVHd__Pdrm12__Gaba_7	YaoZ_2023	Sp8	Sox6	Slc30a3	Sst	Slc30a3	Cdh6	Sox6	Pnoc
+0453__SBPV-PVa__Six6__Satb2__Gaba_1	YaoZ_2023	Six6	Chst9	Chst9
+0454__SBPV-PVa__Six6__Satb2__Gaba_2	YaoZ_2023	Six6	Adra1b	Tspan18	Rorb	Six3os1	Cdh6	Stac	Adra1b
+0455__SBPV-PVa__Six6__Satb2__Gaba_3	YaoZ_2023	Six6	Sp9	Cntn4	Satb2	Cpne4	Gpc5	Penk	Tent5a
+0456__AHN__Onecut3__Gaba_1	YaoZ_2023	Six6	Onecut3	Zic1	Zfhx3	Sox1	Six6	Etv1	Zic1
+0457__AHN__Onecut3__Gaba_2	YaoZ_2023	Onecut3	Arx	Galr1	Cntnap5c	Rxrg	Plscr4	Six3
+0458__AHN__Onecut3__Gaba_3	YaoZ_2023	Gm16551	Gm38505	Foxg1	Ddc	Asb4	Pld5	Irs4
+0459__ZI__Pax6__Gaba_1	YaoZ_2023	Lhx1	Sp9	Fbn2	9530026P05Rik	Fam155a	Nrgn	Sv2b	Galr1	Lncenc1	Fbn2	Slc5a5
+0460__ZI__Pax6__Gaba_2	YaoZ_2023	Onecut1	Isl1	Slc30a3	Arx	Sema3c	Onecut1	Sema3c	Irs4	Meis2
+0461__ZI__Pax6__Gaba_3	YaoZ_2023	Cdh23	Pax6	Gm29683	Sst	Slc9a9	St3gal1	9330158H04Rik	Tmem132c	Pcp4l1
+0462__ZI__Pax6__Gaba_4	YaoZ_2023	Cdh23	Sp8	Lhx1os	Pax6	Sp8	Kcns3	Pappa	Cgnl1
+0463__ZI__Pax6__Gaba_5	YaoZ_2023	Scrg1	Tafa4	Elavl2	Zeb2	C1ql1	Bmp2	Meis2
+0464__ZI__Pax6__Gaba_6	YaoZ_2023	Pax6os1	Pmfbp1	Onecut3	Pde11a	Pax6	Zfp536
+0465__ZI__Pax6__Gaba_7	YaoZ_2023	Cdh23	Coch	Pax6	Npffr1	Coch	Mctp2	Kitl	Reln
+0466__ZI__Pax6__Gaba_8	YaoZ_2023	Pax6	Pgr15l	Dlx1	St18	Tmem176a	Synpr	Ecel1
+0467__ZI__Pax6__Gaba_9	YaoZ_2023	Gm5532	Npy	Mctp2	Npy	Il1rapl2
+0468__ZI__Pax6__Gaba_10	YaoZ_2023	Lhx8	Onecut1	Sfta3-ps	Lancl3	Lhx8	Baiap3
+0469__ZI__Pax6__Gaba_11	YaoZ_2023	Pax6	Lhx1os	Cnih3	Pou6f2	Mdga1	Slc32a1	Dpf3	Zic1	Zic4	Nox4	Dpf3	Tmc1
+0470__DMH-LHA__Gsx1__Gaba_1	YaoZ_2023	Gsx1	Nkx2-4	Gpr179	Lingo2	Gpr179	Stk32b	Nfix	Plekhg1
+0471__DMH-LHA__Gsx1__Gaba_2	YaoZ_2023	Gal	Prox1os	Isl1	Pou3f3	Gm29683	Nptx1	B130024G19Rik	Fign
+0472__DMH-LHA__Gsx1__Gaba_3	YaoZ_2023	Ghrh	Isl1	Slc18a3
+0473__DMH-LHA__Gsx1__Gaba_4	YaoZ_2023	Foxd2os	Glp1r	Ebf1	Slc26a7
+0474__PVHd-DMH__Lhx6__Gaba_1	YaoZ_2023	Lhx6	Lhx1os	Lingo2	Lhx1os	Kcnmb2	Col11a1
+0475__PVHd-DMH__Lhx6__Gaba_2	YaoZ_2023	Lhx6	Bhlhe22	Nfix	Nfix
+0476__PVHd-DMH__Lhx6__Gaba_3	YaoZ_2023	Nkx2-2	Lhx6	D5Ertd615e	Rspo2	Zfp462	Nkx2-2	D5Ertd615e
+0477__PVHd-DMH__Lhx6__Gaba_4	YaoZ_2023	Foxd2os	Lhx6	Bcl11b	Slit3	Nkx2-4	Bcl11b
+0478__TU-ARH__Otp__Six6__Gaba_1	YaoZ_2023	Tbx3	Otp	Zfhx3	Tmem163	Kcnh8	Ptprk	Angpt1
+0479__TU-ARH__Otp__Six6__Gaba_2	YaoZ_2023	Six6	Otp	Prox1	Bcl11b	Prox1	Trhde	Acvr1c
+0480__TU-ARH__Otp__Six6__Gaba_3	YaoZ_2023	Bsx	Pthlh	Asic2	6430628N08Rik	Bsx	Bcl11b
+0481__TMd-DMH__Foxd2__Gaba_1	YaoZ_2023	Foxd2os	Sox14	Foxd2	Sox14	Foxp2
+0482__PVpo-VMPO-MPN__Hmx2__Gaba_1	YaoZ_2023	Csta2	Isl1	Nts	Zic1	Isl1	Lgi1	Kcnk9	Gpr139
+0483__PVpo-VMPO-MPN__Hmx2__Gaba_2	YaoZ_2023	Csta2	Nts	Vxn	Dlx1	Gm27199	Glra2	Rgs6	Hs3st4
+0484__PVpo-VMPO-MPN__Hmx2__Gaba_3	YaoZ_2023	Insm2	Prok2	Cck	Cck	Prox1	Atp8b1	Gpr88
+0485__PVpo-VMPO-MPN__Hmx2__Gaba_4	YaoZ_2023	Apoc3	Oprd1	Csta2	Isl1	Foxp2	Stac	Arhgef28
+0486__PVpo-VMPO-MPN__Hmx2__Gaba_5	YaoZ_2023	Apoc3	Insm2	Prok2	Esr1	Bmp3	Rarb	Lhx5	Slc18a2
+0487__DMH__Hmx2__Gaba_1	YaoZ_2023	Tmem114	Isl1	Hmx2	Lingo2	Adgrg2	Wnt5a	Bcl11a	L3mbtl4
+0488__DMH__Hmx2__Gaba_2	YaoZ_2023	Isl1	Foxp2	Asb4	Npy1r	Mir124-2hg	Dlk1	Gad2	Hs3st4	Rorb	Mpped2	Zfp521	Mme	Sox5
+0489__DMH__Hmx2__Gaba_3	YaoZ_2023	Hmx2	Atp8b1	Syt16	Gm29683	Gm4876	Atp8b1	St18	Ppp1r17	Galr1
+0490__DMH__Hmx2__Gaba_4	YaoZ_2023	Bsx	Rspo2	Gal	Rspo2	Bsx	Lgr5	Pcdh18
+0491__DMH__Hmx2__Gaba_5	YaoZ_2023	Hmx2	Islr2	Lepr	Npy2r	Serpina3n	Islr2	Kcnk9	Plpp4
+0492__DMH__Hmx2__Gaba_6	YaoZ_2023	Gpr50	Tac2	Gpr50	Calcr	Pgr15l
+0493__ARH-PVp__Tbx3__Gaba_1	YaoZ_2023	Tbx3	Sytl4	Dlk1	Sytl4	Grem2
+0494__ARH-PVp__Tbx3__Gaba_2	YaoZ_2023	Tbx3	Nkx2-4	Sntg1	Bcl11a	Sema3e	Trh
+0495__ARH-PVp__Tbx3__Gaba_3	YaoZ_2023	Tbx3	Tbx19	Gpc3	Tbx19	Gda
+0496__LGv-ZI__Otx2__Gaba_1	YaoZ_2023	Otx2os1	Sp9	B130024G19Rik	Calb1	Calb1	Medag	Npy2r
+0497__LGv-ZI__Otx2__Gaba_2	YaoZ_2023	Ctxn3	Ngf	Fam155a	Sema5a	6720468P15Rik	Bcl11a
+0498__LGv-ZI__Otx2__Gaba_3	YaoZ_2023	Slc10a4	Ctxn3	Lhx1os	Egr3
+0499__LGv-ZI__Otx2__Gaba_4	YaoZ_2023	Otx2os1	Sp9	Lhx1os	Pou6f2	Tspan18	Kcns3	Pou6f2
+0500__LGv-ZI__Otx2__Gaba_5	YaoZ_2023	Otx2	Pax6	Slc32a1	Kctd8	Arx	Flrt2	Vgll3	Slc10a4
+0501__BST-po__Iigp1__Glut_1	YaoZ_2023	Iigp1	Ebf2
+0502__TRS-BAC__Sln__Glut_1	YaoZ_2023	Sln	Lbhd2	Eomes
+0503__TRS-BAC__Sln__Glut_2	YaoZ_2023	Sln	Ebf2	Fam129a	Sfrp2
+0504__GPi__Tbr1__Cngb3__Gaba-Glut_1	YaoZ_2023	Cngb3	Tbr1	Tbr1	Cngb3
+0505__MEA-COA-BMA__Ccdc42__Glut_1	YaoZ_2023	Krt9	Galr1	Neurod2	Rmst	C1ql3	Nxph3
+0506__MEA-COA-BMA__Ccdc42__Glut_2	YaoZ_2023	Lmntd1	5830418P13Rik	Mafb	Nrg3	Mafb
+0507__MEA-COA-BMA__Ccdc42__Glut_3	YaoZ_2023	Fezf1	Krt9	Pdyn	Fezf1	Man1a	Kctd8
+0508__MEA-COA-BMA__Ccdc42__Glut_4	YaoZ_2023	Barhl2	Pdyn	Tnfrsf8	Gm41414	Fam155a	Barhl2
+0509__COAa-PAA-MEA__Barhl2__Glut_1	YaoZ_2023	Tbr1	Meis1	Scn5a	Ebf1	Col23a1	Fam155a	Lmo4	B130024G19Rik	9530026P05Rik	Ebf1	Otof
+0510__COAa-PAA-MEA__Barhl2__Glut_2	YaoZ_2023	Runx1	Barhl2	S1pr3	Cd34	Vegfc	Pde11a	Abi3bp
+0511__COAa-PAA-MEA__Barhl2__Glut_3	YaoZ_2023	Vmn1r206	Sox6	Lhx9	Sox6	Lhx9
+0512__COAa-PAA-MEA__Barhl2__Glut_4	YaoZ_2023	Tfap2c	Rbfox3	Tfap2c	Klhl14
+0513__COAa-PAA-MEA__Barhl2__Glut_5	YaoZ_2023	Trdn	Drd2	Drd3	Drd2	Fgf10	Klhl14
+0514__COAa-PAA-MEA__Barhl2__Glut_6	YaoZ_2023	Pappa2	Trdn	Prkcq	Prkcq	Adra1a
+0515__COAa-PAA-MEA__Barhl2__Glut_7	YaoZ_2023	Emx2	Galr1	Nr4a2	Cntn5	Nr4a2	Ankrd55	Nell1	Kcnh8
+0516__COAa-PAA-MEA__Barhl2__Glut_8	YaoZ_2023	Barhl2	Kcng1	Sema3a	Kcnmb2	Mpped2	Ptprk	Lrrc9	Col12a1	Kcnh8
+0517__COAa-PAA-MEA__Barhl2__Glut_9	YaoZ_2023	Barhl2	Glipr1	Cntnap3	Col5a1
+0518__MS-SF__Bsx__Glut_1	YaoZ_2023	Bsx	Onecut1	Galntl6	Bsx	Isl1
+0519__AVPV-MEPO-SFO__Tbr1__Glut_1	YaoZ_2023	Fezf1	C1ql1	Dlk1	Tmem132b	Rgs6	Nrgn	Trhr	Nxph1
+0520__AVPV-MEPO-SFO__Tbr1__Glut_2	YaoZ_2023	Samd3	Opn5	C1ql1	Onecut3	Rspo3	Fibcd1	Arhgap36
+0521__AVPV-MEPO-SFO__Tbr1__Glut_3	YaoZ_2023	Gng8	Agtr1a	Nfix	Ecel1	Zfp536	S100a10	Sox2
+0522__AVPV-MEPO-SFO__Tbr1__Glut_4	YaoZ_2023	Elf4	Radx	Map3k15	Elf4
+0523__AVPV-MEPO-SFO__Tbr1__Glut_5	YaoZ_2023	Dmrta2	Gchfr	Ebf1	Tnfrsf8
+0524__LHA__Barhl2__Glut_1	YaoZ_2023	Barhl2	Lhx1os	G630016G05Rik	Fstl5	Magi2	C130071C03Rik	Nxph4	Cbln2
+0525__LHA__Barhl2__Glut_2	YaoZ_2023	Samd3	Galr1	Nr2f2	Zic1	Lingo2	Lhx9	Calb1	Adamts18	Gpr101	Zic1
+0526__LHA__Barhl2__Glut_3	YaoZ_2023	Samd3	Slc38a11	Pax6	Zfp536
+0527__ADP-MPO__Trp73__Glut_1	YaoZ_2023	Trp73	Sncg	Lingo2	Hspb8	Trhr	Onecut2	Prlr
+0528__ADP-MPO__Trp73__Glut_2	YaoZ_2023	Trp73	Glra3	Mpped2	Nr2f1	Stac	C130071C03Rik	Emx2os	Tshz3
+0529__ADP-MPO__Trp73__Glut_3	YaoZ_2023	Trp73	Nppc	Zfhx3	Nr2f2	Elfn1	Megf11
+0530__SI-MA-LPO-LHA__Skor1__Glut_1	YaoZ_2023	Samd3	Fezf2	Car10	Ccn3	Fezf2	Lbhd2	Megf11	Coch
+0531__SI-MA-LPO-LHA__Skor1__Glut_2	YaoZ_2023	Dmrta2	Piezo2	Sntg2	Reln	Rspo3	Lef1	Slit3
+0532__SI-MA-LPO-LHA__Skor1__Glut_3	YaoZ_2023	Samd3	Skor1	Six3	Megf11	Dpf3	Megf11	Sulf1	Samd3
+0533__SI-MA-LPO-LHA__Skor1__Glut_4	YaoZ_2023	Il31ra	Galr1	G630016G05Rik	Dmrta2	St8sia6	Galr1	Rgma	D030068K23Rik
+0534__SI-MA-LPO-LHA__Skor1__Glut_5	YaoZ_2023	Dmrta2	Cnga3	Zeb2	Six3	Eya4	Tcf7l2	Fezf1
+0535__SI-MA-LPO-LHA__Skor1__Glut_6	YaoZ_2023	Samd3	Cxcl12	Tmem132c	Cck	Galntl6	Kcng2	Cck	Dock1	Lypd6
+0536__SI-MA-LPO-LHA__Skor1__Glut_7	YaoZ_2023	Dmrta2	Egflam	Tcf7l2	Egflam	Pde3a	Rgs6
+0537__SI-MA-LPO-LHA__Skor1__Glut_8	YaoZ_2023	Tgfbi	Cnga3	Lama1	Dab2	Rgma	Dmrta2
+0538__MEA__Otp__Foxp2__Glut_1	YaoZ_2023	Fezf1	Megf10	Foxp2	Otp	Foxp2	Bcl11a
+0539__MEA-BST__Otp__Zic2__Glut_1	YaoZ_2023	Fezf1	Cxcl14	Zic1	Nxph1	Whrn	Zic1
+0540__MEA-BST__Otp__Zic2__Glut_2	YaoZ_2023	Cd36	Zic1	Lpl	Gm2694	Cd36
+0541__MEA-BST__Otp__Zic2__Glut_3	YaoZ_2023	Fezf1	Slc17a7	Sntb1	Ebf3
+0542__LHA-MEA__Otp__Glut_1	YaoZ_2023	Sim1	Pth2r	Nrgn	Pgr15l	Dlk1
+0543__LHA-MEA__Otp__Glut_2	YaoZ_2023	Cd36	Qrfpr	Gpr88	Otp	Asic4
+0544__DMH__Nkx2-4__Glut_1	YaoZ_2023	Mbnl3	Tafa4	Gfra1	Nup62cl
+0545__DMH__Nkx2-4__Glut_2	YaoZ_2023	Bsx	Tafa4	Nfix	Igf1	Slc35f4
+0546__MPN-MPO-PVpo__Hmx2__Glut_1	YaoZ_2023	Eomes	Baiap3	Clca3a1	Gpr83	Trhr	Tmem215	Crb1	Gpr83
+0547__MPN-MPO-PVpo__Hmx2__Glut_2	YaoZ_2023	Sfta3-ps	Gldn	Lncenc1	Foxg1	Slc17a6	Lncenc1	Cartpt	Tac2	9530026P05Rik
+0548__MPN-MPO-PVpo__Hmx2__Glut_3	YaoZ_2023	Eomes	Isl1	Adcyap1	Isl1	Cacng3	Pcdh20
+0549__MPN-MPO-PVpo__Hmx2__Glut_4	YaoZ_2023	Skor2	Clca3a1	Epha6	Sox14	Nr2f1	Rprml	Clca3a1
+0550__MPN-MPO-PVpo__Hmx2__Glut_5	YaoZ_2023	Radx	Hmx2	C1ql2	Nts	Nts	Shisal2a
+0551__MPN-MPO-PVpo__Hmx2__Glut_6	YaoZ_2023	Skor2	Sox1ot	Bmp3	Ust	4933406B17Rik	Mafa
+0552__DMH__Hmx2__Glut_1	YaoZ_2023	Hmx2	Onecut3	Rorb	Skap1	Skap1	Sfta3-ps
+0553__DMH__Hmx2__Glut_2	YaoZ_2023	Fli1	Slc17a6	Onecut1	Npy2r
+0554__ARH-PVp__Tbx3__Glut_1	YaoZ_2023	Bsx	H2-Q2	Trhr	Isl1	Tspan18	Gpr139
+0555__ARH-PVp__Tbx3__Glut_2	YaoZ_2023	Tbx3	Prdm12	Six3
+0556__ARH-PVp__Tbx3__Glut_3	YaoZ_2023	Nr5a2	Tac2	Tac2
+0557__ARH-PVp__Tbx3__Glut_4	YaoZ_2023	Tnfsf11	Prdm13	Adcyap1
+0558__ARH-PVp__Tbx3__Glut_5	YaoZ_2023	Ros1	Bsx	Lef1
+0559__DMH-LHA__Vgll2__Glut_1	YaoZ_2023	Vgll2	Mdfic	Bnc2
+0560__DMH-LHA__Vgll2__Glut_2	YaoZ_2023	Hcrt	Csta2	Avpr1a
+0561__DMH-LHA__Vgll2__Glut_3	YaoZ_2023	Qrfp
+0562__DMH-LHA__Vgll2__Glut_4	YaoZ_2023	Vgll2	Cnga3	Npvf
+0563__VMH__Fezf1__Glut_1	YaoZ_2023	Fezf1	Atp8b1	Isl1	Megf11	Sntb1	Dscaml1
+0564__VMH__Fezf1__Glut_2	YaoZ_2023	Fezf1	Sox14	Lncenc1	Dlk1	Sox14
+0565__VMH__Fezf1__Glut_3	YaoZ_2023	4933406B17Rik	Satb2	Npy2r	Tnnt2
+0566__VMH__Nr5a1__Glut_1	YaoZ_2023	Nr5a1	Mob3b	Nfix	Tmem176b	Gm10863	Bcl11b	Nrp1
+0567__VMH__Nr5a1__Glut_2	YaoZ_2023	Nr5a1	Tcf7l2	Tcf7l2	Rprm	Prdm12
+0568__VMH__Nr5a1__Glut_3	YaoZ_2023	Nr5a1	Nkx2-2	Rbfox1	Ccnjl	Nkx2-2	H2-Q2
+0569__VMH__Nr5a1__Glut_4	YaoZ_2023	Nr5a1	Scn5a	Adcy8	Pld5	Kcnh8	Fgf2	Rorb	Tpbg
+0570__VMH__Nr5a1__Glut_5	YaoZ_2023	Nr5a1	Reln	Dscaml1	Reln	St18	Dscaml1
+0571__VMH__Nr5a1__Glut_6	YaoZ_2023	Nr5a1	Slc5a7	Slc5a7
+0572__LHA__Pmch__Glut_1	YaoZ_2023	Pmch	Parpbp	A730046J19Rik
+0573__LHA__Pmch__Glut_2	YaoZ_2023	Foxd2os	Otx1	Vwc2
+0574__LHA-AHN-PVH__Otp__Trh__Glut_1	YaoZ_2023	Trh	Ascl1	Gpc3	Angpt1	Nxph4	Vcan	Cckar	Nxph4	Ebf1
+0575__LHA-AHN-PVH__Otp__Trh__Glut_2	YaoZ_2023	Sim2	Omp	1700012B09Rik	D430036J16Rik	Npy2r
+0576__LHA-AHN-PVH__Otp__Trh__Glut_3	YaoZ_2023	Sim2	Acvr1c	Acvr1c	Pmfbp1
+0577__LHA-AHN-PVH__Otp__Trh__Glut_4	YaoZ_2023	Sim2	Shisal2a	Plce1	Fgd5
+0578__LHA-AHN-PVH__Otp__Trh__Glut_5	YaoZ_2023	Trh	Pamr1	Ascl1	Pamr1
+0579__AHN-RCH-LHA__Otp__Fezf1__Glut_1	YaoZ_2023	Fezf1	4930438E09Rik	Hmcn2	4930438E09Rik	Stxbp6	Bnc2	Cd36
+0580__AHN-RCH-LHA__Otp__Fezf1__Glut_2	YaoZ_2023	Fezf1	Ebf1	Zic5	Lingo2	Zic5	Mkx	Syt6	Myo16
+0581__AHN-RCH-LHA__Otp__Fezf1__Glut_3	YaoZ_2023	Sim1	Zic5	Col15a1	Dlk1	Zfp536	Pgr15l	Col15a1	Dlk1
+0582__AHN-RCH-LHA__Otp__Fezf1__Glut_4	YaoZ_2023	Gsc	Ebf1	Npffr1	Adgrf5	Omp	Gda	Qrfprl
+0583__AHN-RCH-LHA__Otp__Fezf1__Glut_5	YaoZ_2023	Fezf1	St8sia3os	Zic1	Lancl3
+0584__AHN-RCH-LHA__Otp__Fezf1__Glut_6	YaoZ_2023	Gm27239	Fezf1	Gm27239
+0585__PVH-SO-PVa__Otp__Glut_1	YaoZ_2023	Sim1	Nkx2-2	Npy2r	Sox5	Npy2r	Nrgn	Sntb1	Esr1
+0586__PVH-SO-PVa__Otp__Glut_2	YaoZ_2023	Cckar	Nkx2-2	Sim1	Glp1r	Islr2	Lhx2	Zfhx4	Glp1r
+0587__PVH-SO-PVa__Otp__Glut_3	YaoZ_2023	Rufy4	Agtr1a	Ppp1r17	Calcr
+0588__PVH-SO-PVa__Otp__Glut_4	YaoZ_2023	Oxt	Avp	Vim	Oxt
+0589__PVH-SO-PVa__Otp__Glut_5	YaoZ_2023	Agtr1a	Hhip	Prdm8	Sst	Col12a1
+0590__PVH-SO-PVa__Otp__Glut_6	YaoZ_2023	Ucn3	Trh	Ucn3
+0591__PH-ant-LHA__Otp__Bsx__Glut_1	YaoZ_2023	Bsx	Lhx1os	Nos1	Gfra1	Lhx1	Onecut2	Gfra1	Fat1
+0592__PH-ant-LHA__Otp__Bsx__Glut_2	YaoZ_2023	Bsx	Npas1	Npas1	Fign	Arhgap15	Foxp2
+0593__PH-ant-LHA__Otp__Bsx__Glut_3	YaoZ_2023	Bsx	Lhx1os	Penk	Foxp2	Foxp2	Rspo1	Cbln1	C1ql3
+0594__PH-ant-LHA__Otp__Bsx__Glut_4	YaoZ_2023	Bsx	Wnt7a	Ebf3	Insyn2a	Kit	Wnt7a	Cpne5	Kctd16
+0595__PH-ant-LHA__Otp__Bsx__Glut_5	YaoZ_2023	Bsx	Htr1d	Nxph3	Htr1d	Adamtsl1	Asb4	Nr2f2
+0596__PH-ant-LHA__Otp__Bsx__Glut_6	YaoZ_2023	Nkx2-2	Neurod2	Grp	Grp
+0597__PH-ant-LHA__Otp__Bsx__Glut_7	YaoZ_2023	Bsx	Chrna3	Grid2	Nfib	Sox6	Arhgap31	Col13a1
+0598__STN-PSTN__Pitx2__Glut_1	YaoZ_2023	Lmx1a	Gpr88	Ntng2	Gpr88	Npr3	Frem1	Rspo2
+0599__STN-PSTN__Pitx2__Glut_2	YaoZ_2023	Pitx2	C1ql2	Cdh23	C1ql2	Prkd1	Gpr101	Cnih3
+0600__STN-PSTN__Pitx2__Glut_3	YaoZ_2023	Lmx1a	Kcp	Cdh23	Slc10a4	Scn7a	Dpf3	Tns1
+0601__STN-PSTN__Pitx2__Glut_4	YaoZ_2023	Lmx1a	Angpt1	Col14a1	Irx5	Irx5	Syndig1
+0602__STN-PSTN__Pitx2__Glut_5	YaoZ_2023	Pitx2	Col24a1	Cdh23	Col24a1	Nts	Frmpd1	Kcnk9
+0603__STN-PSTN__Pitx2__Glut_6	YaoZ_2023	Lmx1a	Cdh23	Tgfb2	Ntng2	Wnt5a	Gfra2	Kit
+0604__STN-PSTN__Pitx2__Glut_7	YaoZ_2023	Pirt	Pitx2	Pirt
+0605__PMv-TMv__Pitx2__Glut_1	YaoZ_2023	Lmx1a	Aldh3b2	Nxph1	Ttc6	Nkain3	Barhl2	Ube2u	Pitx2
+0606__PMv-TMv__Pitx2__Glut_2	YaoZ_2023	Irx6	Cckar	Tmem132cos	Cckar
+0607__PMv-TMv__Pitx2__Glut_3	YaoZ_2023	Gucy2c	Tac1	Slc6a3	1700042O10Rik	Slc18a2	Gfra1	Oxtr
+0608__PH-an__Pitx2__Glut_1	YaoZ_2023	Nkx2-4	Ndnf	Ndnf
+0609__PH-an__Pitx2__Glut_2	YaoZ_2023	Pax7	Calcr	Pax7
+0610__PH__Pitx2__Glut_1	YaoZ_2023	Lmx1a	Fgf10	Barhl1	Nr4a2	Fgf10	Sema3c
+0611__PH__Pitx2__Glut_2	YaoZ_2023	Lmx1a	Dmrta2	Pitx2	Ttc6	Zfhx4	Lncenc1	Dmrta2	Slc18a2
+0612__PH-LHA__Foxb1__Glut_1	YaoZ_2023	Foxb1	Gad2	Foxp2	Sfta3-ps	Grid2	Foxp2	Dach1	Sema5a	Sfta3-ps
+0613__PH-LHA__Foxb1__Glut_2	YaoZ_2023	Foxb1	Cbln4	Slitrk6	Onecut2	Tac1	Htr1a	Rorb	Sntg2
+0614__PH-LHA__Foxb1__Glut_3	YaoZ_2023	Foxb1	Ntsr1	4930509J09Rik	Lhx1	Ntsr1	4930509J09Rik	Rprm	Csgalnact1
+0615__PH-LHA__Foxb1__Glut_4	YaoZ_2023	Foxb1	Sema3a	Ctxn3	Pou6f2	Ctxn3	Cdh6
+0616__PH-LHA__Foxb1__Glut_5	YaoZ_2023	Foxb1	C1ql2	Eya4	C1ql2	Npffr1
+0617__PH-LHA__Foxb1__Glut_6	YaoZ_2023	Myo1a	Sfta3-ps	Tac2
+0618__PH-LHA__Foxb1__Glut_7	YaoZ_2023	Nkx2-4	Rspo3	Cntnap5a	Fezf2
+0619__PMd-LHA__Foxb1__Glut_1	YaoZ_2023	Foxb1	Egflam	Gpr101	Glra1
+0620__PMd-LHA__Foxb1__Glut_2	YaoZ_2023	Foxb1	Emx2	Cck	Sfta3-ps	Cck
+0621__PMd-LHA__Foxb1__Glut_3	YaoZ_2023	Foxb1	Has2os	Id2	9330158H04Rik
+0622__PH-SUM__Foxa1__Glut_1	YaoZ_2023	Dmrta2	Barhl1	Nfix	Lmx1a	Dmrta2	Prox1
+0623__PH-SUM__Foxa1__Glut_2	YaoZ_2023	Nkx2-4	Lmx1a	Nkx2-4	Grik3	Ttc6
+0624__PH-SUM__Foxa1__Glut_3	YaoZ_2023	Pitx2	Neurod2	Myh7	Nr2f2	Gpr101	Neurod2	Il1rapl2	Gpc5
+0625__PH-SUM__Foxa1__Glut_4	YaoZ_2023	Dmrta2	Calcrl	Chrdl1	Chrdl1	Dmrta2
+0626__PH-SUM__Foxa1__Glut_5	YaoZ_2023	Pitx2	Antxr2	Antxr2	A730049H05Rik	C1ql1	Pappa
+0627__PH-SUM__Foxa1__Glut_6	YaoZ_2023	Irx6	Neurod6	Adamts2	Irx6	Tpbg	Barhl2	Pde3a
+0628__HY__Gnrh1__Glut_1	YaoZ_2023	Gnrh1
+0629__MM-ant__Foxb1__Glut_1	YaoZ_2023	Foxb1	Tacstd2	Gda	Foxb1	Lncenc1
+0630__MM__Foxb1__Glut_1	YaoZ_2023	Foxb1	Npy	Sall3	Epha8
+0631__MM__Foxb1__Glut_2	YaoZ_2023	Foxb1	Sall3	Gldn	Gldn
+0632__MH__Tac2__Glut_1	YaoZ_2023	Chrnb4	Chrnb3	Epha3	Cdh20	Tpbgl	Fgf10
+0633__MH__Tac2__Glut_2	YaoZ_2023	Gng8	Calcrl	Cck	Onecut1
+0634__MH__Tac2__Glut_3	YaoZ_2023	Gng8	Gpr4	Kcnmb4	Syt15	Nrgn	Prkch	Chrna3
+0635__MH__Tac2__Glut_4	YaoZ_2023	Gng8	Cdk6	Prr16	Gpc6	Cartpt
+0636__MH__Tac2__Glut_5	YaoZ_2023	Gpr151	D030025E07Rik	Ltbp1
+0637__LH__Pou4f1__Sox1__Glut_1	YaoZ_2023	Gng8	Rgcc	Zic5	Fam163a	Lbhd2
+0638__LH__Pou4f1__Sox1__Glut_2	YaoZ_2023	D130079A08Rik	Sox1	Kcnh1	Evc2	Gfra2	Atp10a	Il1rapl2	Lbhd2
+0639__LH__Pou4f1__Sox1__Glut_3	YaoZ_2023	Gpr151	Pmfbp1	Lpar1	D030068K23Rik	Sulf2
+0640__LH__Pou4f1__Sox1__Glut_4	YaoZ_2023	Ptprq	Shox2	Nr4a2	Ptprq	B130024G19Rik	Htr5b
+0641__AD__Serpinb7__Glut_1	YaoZ_2023	Eps8l2	C1ql2	Serpinb7	C1ql2
+0642__AV__Col27a1__Glut_1	YaoZ_2023	Trpm6	Npsr1	Col27a1	Col27a1	Npsr1
+0643__PVT-PT__Ntrk1__Glut_1	YaoZ_2023	Gng8	Cox6a2	Rprml	Npy2r	Dscaml1	Npy2r	Tacr3	Il1rapl2
+0644__PVT-PT__Ntrk1__Glut_2	YaoZ_2023	Igkc	Kcnj5	Osbpl3	Mylk	Ntng1	Slc30a3	Npy2r	Nhsl1	Snx31
+0645__PVT-PT__Ntrk1__Glut_3	YaoZ_2023	Ntrk1	Shox2	Satb2	Tnfaip8l3	Sulf2	Crhbp
+0646__PVT-PT__Ntrk1__Glut_4	YaoZ_2023	Snx31	Tmem215	Gda	Igf1	Nr2f2	Adarb2
+0647__PVT-PT__Ntrk1__Glut_5	YaoZ_2023	Igkc	Gda	Cd247	Prokr2	Cadps2	Ptchd1	Drd3	Slc22a3
+0648__PVT-PT__Ntrk1__Glut_6	YaoZ_2023	Gm28822	Tnfaip8l3	Smoc2	B930025P03Rik
+0649__CM-IAD-CL-PCN__Sema5b__Glut_1	YaoZ_2023	Gm28822	Rxfp1	Igkc	Adgrf2	Ntng1	Prkcd	Rxfp1	Cwh43	Adcyap1
+0650__CM-IAD-CL-PCN__Sema5b__Glut_2	YaoZ_2023	Igkc	Tafa4	Ltbp1	Fbxl7	Tafa4	Ppfibp1
+0651__CM-IAD-CL-PCN__Sema5b__Glut_3	YaoZ_2023	Gm6213	Crybg1	Cntnap2	Plcg2	Slc17a8
+0652__CM-IAD-CL-PCN__Sema5b__Glut_4	YaoZ_2023	Trpm6	Prokr2	Prrxl1	Calca	Prrxl1	Calca	Col8a1	Cmtm7
+0653__CM-IAD-CL-PCN__Sema5b__Glut_5	YaoZ_2023	Igkc	Chrdl1	Tcf7l2	Syt2	Lpar1
+0654__TH__Prkcd__Grin2c__Glut_1	YaoZ_2023	Eps8l2	Kcne4	Zfp385c	Npy	Adgrf5
+0655__TH__Prkcd__Grin2c__Glut_2	YaoZ_2023	Eps8l2	Sp9	Pik3c2g	Sp9	Eps8l2	Gabrg3
+0656__TH__Prkcd__Grin2c__Glut_3	YaoZ_2023	Tnnt1	Epsti1	Pappa	Pth2r	Rasd1	Pappa	Abtb2	Tafa1	Pde1c
+0657__TH__Prkcd__Grin2c__Glut_4	YaoZ_2023	Mrvi1	Wnt9b	Fzd6	Calb2	Pcdh7	Hpca	Sntg2	Npnt	Zfp521
+0658__TH__Prkcd__Grin2c__Glut_5	YaoZ_2023	Mrvi1	Fgf10	Ramp3	Car4	Fkbp9	Pnoc	Fstl1	Kcnq5	Dab1
+0659__TH__Prkcd__Grin2c__Glut_6	YaoZ_2023	Adgrf5	Ramp3	Tnc	Cnih3	Usp43	Tnc	Npnt	Glra3	Cnih3
+0660__TH__Prkcd__Grin2c__Glut_7	YaoZ_2023	Endou	Epsti1	Defb1	Nppc	Kirrel	Klhl14	Chrna3	P2ry1
+0661__TH__Prkcd__Grin2c__Glut_8	YaoZ_2023	Endou	Drd3	Trhde	March1	Marcksl1	Unc5b	Bcl11a	Vat1l	Adcy2
+0662__TH__Prkcd__Grin2c__Glut_9	YaoZ_2023	Trpm6	Irf5	C1ql3	Calca	Klhl14
+0663__TH__Prkcd__Grin2c__Glut_10	YaoZ_2023	Mrvi1	Hspb1	Gm28822	D030068K23Rik	Cdh20	Pcdh7	D030068K23Rik	Sox3	Hs3st1	Ankrd6
+0664__TH__Prkcd__Grin2c__Glut_11	YaoZ_2023	Adgrf5	Bnc2	Gpr4	Pth1r	Adgrf5	Lbh	Gpr88
+0665__TH__Prkcd__Grin2c__Glut_12	YaoZ_2023	Snx31	Eln	Rxfp1	Fbln1	Tspear
+0666__TH__Prkcd__Grin2c__Glut_13	YaoZ_2023	Abhd12b	Col12a1	Cbln2	Rxfp1	Col12a1	Sv2c	Bace2	Rxfp1
+0667__TH__Prkcd__Grin2c__Glut_14	YaoZ_2023	Endou	Ano3	Ccdc141	Gpr4	Snx31	Casq2	Unc5b	Chst9	Gm28822
+0668__RE-Xi__Nox4__Glut_1	YaoZ_2023	Gbx2	Gda	Plekhg1	Synpr	Hs3st4	Zic1	Il1rapl2	Cox6a2
+0669__RE-Xi__Nox4__Glut_2	YaoZ_2023	Gpr4	Hs3st3a1	Angpt1	Nxph1	Adgrf5
+0670__RE-Xi__Nox4__Glut_3	YaoZ_2023	Tnnt1	Nox4	Mdga1	Cemip	Rxfp1	Arhgap6
+0671__RE-Xi__Nox4__Glut_4	YaoZ_2023	Gbx2	Slc35d3	Jam2	Cpne8
+0672__MG-POL-SGN__Nts__Glut_1	YaoZ_2023	Endou	Crh	Endou
+0673__MG-POL-SGN__Nts__Glut_2	YaoZ_2023	Gbx2	Slc1a3	Tcf7l2	AW551984
+0674__PF__Fzd5__Glut_1	YaoZ_2023	Ctxn3	Fzd5	Fxyd6	Adgrg2	Nrgn	Rasal1	Tafa2
+0675__PF__Fzd5__Glut_2	YaoZ_2023	Ctxn3	Fzd5	Acvr1c	Acvr1c	Plcl1	Gprc5b
+0676__PRC-PAG__Pax6__Glut_1	YaoZ_2023	Barhl1	Lhx1os	Ebf3	Tcf7l2	Nr2f2	A330008L17Rik	D030068K23Rik	Necab1
+0677__PRC-PAG__Pax6__Glut_2	YaoZ_2023	Barhl1	Gm5089	Grp	Tenm2	Zic5	Hpcal1	Slc5a7
+0678__PRC-PAG__Pax6__Glut_3	YaoZ_2023	Barhl1	Pax5	Pax6	Lhx5	Pax5	Bcl11b
+0679__PRC-PAG__Pax6__Glut_4	YaoZ_2023	Pax6	Serpinb1b	Chst9	Chst9	Epb41l4a	Nr2f2
+0680__PRC-PAG__Pax6__Glut_5	YaoZ_2023	Crhbp	Pax6	Tcf7l2	Chat
+0681__MB-ant-ve__Dmrta2__Glut_1	YaoZ_2023	Dmrta2	Lhx1	Pou3f2	Id4	Slc17a6	Dmrta2	Lhx5	Cda	Emx2os
+0682__RN__Spp1__Glut_1	YaoZ_2023	NA	Spp1	Ttc6
+0683__MRN-PAG__Nkx6-1__Glut_1	YaoZ_2023	Nkx6-1	Pappa2	Sim1	Penk
+0684__MRN-PAG__Nkx6-1__Glut_2	YaoZ_2023	4933429O19Rik	Shisal2b	4933429O19Rik
+0685__IF-RL-CLI-PAG__Foxa1__Glut_1	YaoZ_2023	9030622O22Rik	Dmrta2	Lmx1a	Dach2	Lmx1a	Trhr	4930438E09Rik
+0686__IF-RL-CLI-PAG__Foxa1__Glut_2	YaoZ_2023	9030622O22Rik	Hmcn2	Cacna2d1	Hmcn2	Tafa1
+0687__IF-RL-CLI-PAG__Foxa1__Glut_3	YaoZ_2023	9030622O22Rik	Pitx2	Nfib	Bcl11b	Crhbp	Zfp114
+0688__IF-RL-CLI-PAG__Foxa1__Glut_4	YaoZ_2023	9030622O22Rik	Neurod1	Chrnb3	Chrnb3	9030622O22Rik
+0689__IF-RL-CLI-PAG__Foxa1__Glut_5	YaoZ_2023	Dmrta2	Slc5a7	Sim1	Slc5a7
+0690__PAG-SC__Neurod2__Meis2__Glut_1	YaoZ_2023	Barhl1	Neurod2	Pou4f2	Pappa	Asic2	Hgf	Gfra1
+0691__PAG-SC__Neurod2__Meis2__Glut_2	YaoZ_2023	Otx2os1	Neurod2	Arhgap15	Irx2	Fign	Cdh9	Fign	Defb1
+0692__PAG-SC__Neurod2__Meis2__Glut_3	YaoZ_2023	Barhl1	Gm32828	Lef1	Dpf3	Gm32828
+0693__PAG-SC__Neurod2__Meis2__Glut_4	YaoZ_2023	Mybpc1	Otx2os1	Sox6	Otx2	Pgm5
+0694__PAG__Pou4f3__Glut_1	YaoZ_2023	Pou4f3	Bhlhe22	Lrrtm4	Nfix	Cntnap3	Bhlhe23
+0695__PAG__Pou4f3__Glut_2	YaoZ_2023	Pou4f3	Glis3	Ebf2	Glis3	Gli3	Chrdl1
+0696__PAG__Pou4f3__Glut_3	YaoZ_2023	C1ql4	Tfap2d	Meis2	C1ql4
+0697__CUN__Evx2__Lhx2__Glut_1	YaoZ_2023	Evx2	Otx2	Rspo1	Barhl1	Stc1	Col15a1	Otx2
+0698__CUN__Evx2__Lhx2__Glut_2	YaoZ_2023	Pitx1	Tenm2	Pitx1	Onecut1	Drd2
+0699__CUN__Evx2__Lhx2__Glut_3	YaoZ_2023	Evx2	Rspo2	Igfbp4	Neurod2	H2-Q2	Igfbp4
+0700__CUN__Evx2__Lhx2__Glut_4	YaoZ_2023	Evx1os	Otx2	Zeb2	Zfp536	Arhgap15	Qrfprl	Nppc	Col12a1
+0701__CUN__Evx2__Lhx2__Glut_5	YaoZ_2023	Evx1os	Acvr1c	Npas1	Ebf2	Piezo2	Npas1	Wnt5a	Gpr149
+0702__APN__C1ql2__Glut_1	YaoZ_2023	C1ql2	Tfap2d	Foxp2	C1ql2	Tfap2d	Esrrb
+0703__APN__C1ql4__Glut_1	YaoZ_2023	C1ql4	Ctxn3	Tcf7l2	C1ql4	Tfap2d	Nr2f2	Lhfp
+0704__PAG-MRN__Pou3f1__Glut_1	YaoZ_2023	C1ql4	Shox2	Calb1	Dlk1	Krt73	Sulf1	Calb1
+0705__PAG-MRN__Pou3f1__Glut_2	YaoZ_2023	4930438E09Rik	Pde5a	Ntn1	Shox2	Antxr2
+0706__PAG-MRN__Pou3f1__Glut_3	YaoZ_2023	Csta2	Shox2	Cmah
+0707__PAG-MRN__Pou3f1__Glut_4	YaoZ_2023	D130009I18Rik	C1ql2	Mab21l2	Gm29683
+0708__PAG-MRN__Pou3f1__Glut_5	YaoZ_2023	C1ql4	4930438E09Rik	Foxp2	En2	Adamts19	En1	Zfhx4	Ndst4
+0709__PAG-MRN__Pou3f1__Glut_6	YaoZ_2023	C1ql4	C1ql2	Tcf7l2	Onecut2	Zfhx4	Nr2f2	Zfhx4	Galnt18	Adamts2
+0710__MRN__Pou3f1__C1ql4__Glut_1	YaoZ_2023	C1ql4	Tcf7l2	Crispld1	Pou6f2	Cpne7	Asb4	Arhgap6	Cbln2
+0711__MRN__Pou3f1__C1ql4__Glut_2	YaoZ_2023	C1ql4	Shox2	Onecut1	Tcf7l2	Onecut1	Ebf2	Dgkk	Calb2
+0712__MRN__Pou3f1__C1ql4__Glut_3	YaoZ_2023	Tfap2d	Gm32828	Tfap2b	Bcl11a	Ebf3	Tfap2b
+0713__PRC-PAG__Tcf7l2__Irx2__Glut_1	YaoZ_2023	Tfap2d	Zic5	Prox1	Galnt18	Zfpm2	Zic5	D030068K23Rik	Scn7a
+0714__PRC-PAG__Tcf7l2__Irx2__Glut_2	YaoZ_2023	Tfap2d	Zic5	Tfap2b	Mgat4c	Onecut2	Tacr3	Onecut1	Fbln1	Fbn2
+0715__PRC-PAG__Tcf7l2__Irx2__Glut_3	YaoZ_2023	Tfap2d	Adam12	Foxp2	Shox2	Adam12	Wif1	Hs3st2
+0716__PRC-PAG__Tcf7l2__Irx2__Glut_4	YaoZ_2023	Tfap2d	C1ql2	Pou4f1	Meis2
+0717__PRC-PAG__Tcf7l2__Irx2__Glut_5	YaoZ_2023	Tfap2d	Irx2	Nr2f2	Reln	Ngb	D030068K23Rik	Galnt18	Gm20063	Bcl11a	Gm20754	Irx5
+0718__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_1	YaoZ_2023	Shox2	Neurod6	Gm29683	Tcf7l2	Bcl11b	Ebf1	Irx2	Bcl11b	L3mbtl4
+0719__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_2	YaoZ_2023	Gbx2	BC039966	Arhgap36	Ebf1	Hs6st2	Arhgap36	Dlk1	Ebf1	Tac1
+0720__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_3	YaoZ_2023	Gbx2	Sp9	Sox5	Hopx	Foxp2	Gm41414	Gm41414	Zic5	C1ql3	Kcnj5
+0721__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_4	YaoZ_2023	Gbx2	Npsr1	Chrm1	Il1rapl2	Kirrel3	Chrm1	Igf1	Sox2	P2ry1
+0722__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_5	YaoZ_2023	Gng8	Gbx2	1110015O18Rik	Cdh18	Npsr1	Tent5a	Gpr156	Npsr1	Tacr1	Gpc3
+0723__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_6	YaoZ_2023	Gbx2	Ntng2	Neurod2	Neurod2	Gbx2	Prdm8
+0724__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_7	YaoZ_2023	Gbx2	BC039966	Angpt1	Etv1	Ptk2b	Moxd1	Bnc2	Gulp1
+0725__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_8	YaoZ_2023	Gng8	Nkx2-2	Shox2	Ntng2	Nkx2-2	Gng8	Gda	Nxph4
+0726__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_9	YaoZ_2023	Nkx2-2	Ebf3	Zic1	Ebf3	Zic4	St14	Prlr
+0727__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_10	YaoZ_2023	Pth2	Th	Popdc3	Nxph4
+0728__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_11	YaoZ_2023	Gm12128	Lgr6	Trabd2b	Gm12128
+0729__SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut_12	YaoZ_2023	Foxa1	Zic1	Sim1
+0730__PAG-SC__Pou4f1__Zic1__Glut_1	YaoZ_2023	Barhl1	Zic4	Shox2	Tacr3	Epha4	Meis2	Ebf3	Ptprk	Esr1	Dgkk
+0731__PAG-SC__Pou4f1__Zic1__Glut_2	YaoZ_2023	Tcf7l2	G630016G05Rik	Lhx9	Rnf207	Tmem132d	Fras1	Arap2	Htr2c	Irx2	G630016G05Rik	Arap2	Slc5a5	Npnt
+0732__PAG-SC__Pou4f1__Zic1__Glut_3	YaoZ_2023	Bnc2	Cpa6	Barhl1	Shox2	Ror2	Bnc2
+0733__PAG-MRN__Tfap2b__Glut_1	YaoZ_2023	Tfap2b	Bnc2	Shox2	Arhgap36	En1	Pmfbp1	Cdh20	Me3	En1
+0734__PAG-MRN__Tfap2b__Glut_2	YaoZ_2023	Tfap2b	Bnc2	Nr2f2	Dpp6	Cbln1	D030068K23Rik	Irs4	Gm29683
+0735__PAG__Pou4f1__Bnc2__Glut_1	YaoZ_2023	Bnc2	Onecut3	D130079A08Rik	Sema3d	Gabrg3	Nr2f1	Tfap2d	D130079A08Rik	Slit2
+0736__PAG__Pou4f1__Bnc2__Glut_2	YaoZ_2023	Bnc2	Irx5	Pou4f1	4930438E09Rik	Sncg	Irx5	Pou3f1	En1	Kcnmb2
+0737__PAG__Pou4f1__Ebf2__Glut_1	YaoZ_2023	D130079A08Rik	Ntn1	Shox2	Hs3st2	Ntn1	En1	Hs3st2	Shb
+0738__PAG__Pou4f1__Ebf2__Glut_2	YaoZ_2023	Barhl1	Tnnt2	Ebf2	Fign	4930438E09Rik	Scube2	Gm41414	9530026P05Rik	Fign
+0739__PAG__Pou4f1__Ebf2__Glut_3	YaoZ_2023	Pou4f2	Barhl1	D130079A08Rik	S100a10	Ebf3	Pou4f2	Ramp3	Zfp521	Lncenc1
+0740__PAG__Pou4f1__Ebf2__Glut_4	YaoZ_2023	Barhl1	Atp8b1	Hmcn1	Dpp6	Bcl11a	Prss12	Fbln5	Arhgap36	Lbhd2
+0741__PAG__Pou4f1__Ebf2__Glut_5	YaoZ_2023	Barhl1	Scube2	Sst	Nrgn	Pmfbp1	Cdh6	H2-Q2	Irx6
+0742__PAG__Pou4f1__Ebf2__Glut_6	YaoZ_2023	Barhl1	Atp8b1	Gm41414	Npsr1	Sostdc1	Npsr1	Kcnk13	Pard3b
+0743__PAG__Pou4f1__Ebf2__Glut_7	YaoZ_2023	Barhl1	Gm29683	D130079A08Rik	Pou3f1	Nr2f2	Tpbg	D7Ertd443e
+0744__PAG__Pou4f1__Ebf2__Glut_8	YaoZ_2023	AA387883	Shox2	Pth2r	Medag	Klhl14
+0745__PAG__Pou4f2__Glut_1	YaoZ_2023	Pou4f2	Bnc2	Adamts18	Cdh18	Barhl1	Gli3	Sncg	Onecut2	Adamts18	Bnc2	Gda
+0746__PAG__Pou4f2__Glut_2	YaoZ_2023	Pou4f2	Npsr1	Sox6	Cdh20	D030068K23Rik	Adamts19	Npsr1	Adamts12
+0747__PAG__Pou4f2__Glut_3	YaoZ_2023	Barhl1	Gm29683	D130079A08Rik	Cdh18	Lef1	Nr2f2
+0748__PAG__Pou4f2__Glut_4	YaoZ_2023	Irx6	Pou4f2	Barhl1	Cartpt	Prokr2	Qrfprl
+0749__PAG__Pou4f2__Glut_5	YaoZ_2023	Barhl1	Drd5	Sox6	Crb1	Megf11	Tmem132c	Cck	Cd24a
+0750__PAG__Pou4f2__Mesi2__Glut_1	YaoZ_2023	Syk	Shox2	Sox5	Syk	Zic1	Scube2	Barhl1
+0751__PAG__Pou4f2__Mesi2__Glut_2	YaoZ_2023	Pou4f2	Glis3	Iqgap2	Tenm2	Wnt5a	Zeb2	Wnt5a	Iqgap2	Sv2c
+0752__PAG__Pou4f2__Mesi2__Glut_3	YaoZ_2023	Pou4f2	Npas1	Megf11	Zfhx4	Nr2f2	B130024G19Rik	Tacr3	Bcl11a
+0753__PAG__Pou4f2__Mesi2__Glut_4	YaoZ_2023	Tfap2d	Sox6	Glis3	Cnr1	Zeb2	Cnr1	Bnc2
+0754__PAG__Pou4f2__Mesi2__Glut_5	YaoZ_2023	Sult3a2	Chrdl1	Cartpt	Etv1	Fgf11
+0755__PAG__Pou4f2__Mesi2__Glut_6	YaoZ_2023	Pou4f2	Tafa4	En1	G630016G05Rik	Gulp1	En1	Pou4f3	Zfp521	Vwa5b1
+0756__SC__Bnc2__Glut_1	YaoZ_2023	Tfap2d	Sox6	Lhfp	Hgf	Meis2	Lhfp
+0757__SC__Bnc2__Glut_2	YaoZ_2023	Gli3	Mc4r	Hmcn1	Tcf7l2	Mc4r
+0758__SC__Bnc2__Glut_3	YaoZ_2023	Dkk2	Hmcn1	St3gal1	Ccser1	Nxph4	Dkk2
+0759__SC__Bnc2__Glut_4	YaoZ_2023	Onecut3	Sox6	Slc17a6	Onecut3
+0760__SCig__Foxb1__Glut_1	YaoZ_2023	Foxb1	Arhgap15	Sox6	Ebf2	Sox6	Fam20a	Bcl11b
+0761__SCig__Foxb1__Glut_2	YaoZ_2023	Foxb1	Tcf7l2	Bcl11b	Tox	Tcf7l2	Tacr3	Nos1	Tfap2a
+0762__SCig__Foxb1__Glut_3	YaoZ_2023	Foxb1	D130009I18Rik	Piezo2	Kitl	Cpne7	Pvalb	D130009I18Rik	Ramp3
+0763__SCig__Foxb1__Glut_4	YaoZ_2023	Foxb1	Plscr5	Tenm2	Kcnmb2	Plscr5	Slit2	Grik3
+0764__SCig-an-PPT__Foxb1__Glut_1	YaoZ_2023	Foxb1	Tcf7l2	Nr2f2	Foxb1	B130024G19Rik	Il1rapl2	Htr1b
+0765__SCig__Foxb1__Otx2__Glut_1	YaoZ_2023	Foxb1	Otx2os1	Foxb1	Otx2	Tfap2b
+0766__SCdg-PAG__Tfap2b__Glut_1	YaoZ_2023	D130079A08Rik	Tfap2b	Penk	Bnc2	Tfap2b	Sox5	Sema3e	Plscr5
+0767__SCiw__Pitx2__Glut_1	YaoZ_2023	Pitx2	Bmp7	Onecut2	Ndst4	Cadps2	Sncg	Fstl4
+0768__SCiw__Pitx2__Glut_2	YaoZ_2023	Pitx2	Gli3	D130009I18Rik	D130009I18Rik	Igfbp4	Gsg1l
+0769__SCiw__Pitx2__Glut_3	YaoZ_2023	Fgf7	Tfap2d	Fgf7
+0770__IC__Tfap2d__Maf__Glut_1	YaoZ_2023	Tfap2d	Cxcl14	Plekhd1	Irx2	Pvalb	Plekhd1	Npy1r	En1
+0771__IC__Tfap2d__Maf__Glut_2	YaoZ_2023	Tfap2d	En1	Tpbg	Epb41l4a	Gfra2	Nxph4	Lbhd2	Epb41l4a	Adamts19	Adamtsl1
+0772__IC__Tfap2d__Maf__Glut_3	YaoZ_2023	Tfap2d	Cxcl14	Barhl1	Lmo7	Neto1	Neto1	Tspear	Lmo3	Gulp1
+0773__IC__Tfap2d__Maf__Glut_4	YaoZ_2023	Tfap2d	Barhl1	Rprml	Irx2	Nxph1	Nr2f1	Syndig1l	Nxph1	Nrp2	Nr2f1	Npffr1
+0774__IC__Tfap2d__Maf__Glut_5	YaoZ_2023	Tfap2d	Tcf7l1	Col18a1	Sntb1
+0775__IC__Tfap2d__Maf__Glut_6	YaoZ_2023	Tfap2d	En1	Irx1	Syt10	Fosl2	Tspear	Htr7	Syt10
+0776__CUN-PPN__Evx2__Meis2__Glut_1	YaoZ_2023	C1ql4	Bnc2	Trhr	Cpne4	Pax5	Gpr149	Trhr	Pax5	Chst15
+0777__CUN-PPN__Evx2__Meis2__Glut_2	YaoZ_2023	Irx4	C1ql4	Slc5a7	Pax5	Bcl11a	Irx4	Ccnd1	Lypd6b
+0778__CUN-PPN__Evx2__Meis2__Glut_3	YaoZ_2023	Slc18a3	Crispld2	Egflam	Chat
+0779__CUN-PPN__Evx2__Meis2__Glut_4	YaoZ_2023	Prdm6	En1	Prdm6	Lmo3	Zmat4
+0780__CUN-PPN__Evx2__Meis2__Glut_5	YaoZ_2023	C1ql4	Bmp6	Kcnh8	Kcnh8	Zic1	Slc5a7	Ebf2
+0781__PBG__Mtnr1a__Glut-Chol_1	YaoZ_2023	Mtnr1a	Evx1os	Mtnr1a	Slc5a7
+0782__PAG__Tcf24__Glut_1	YaoZ_2023	Tcf24	Otp	Tcf24
+0783__SCig__Tfap2b__Chrnb3__Glut_1	YaoZ_2023	Tfap2d	Prkcq	Etv1	Tfap2b	Chrnb3	Neurod2	Lef1
+0784__SCop__Pou4f2__Neurod2__Glut_1	YaoZ_2023	Hpse2	Pou4f2	Pou4f2	Neurod2	Ptprk
+0785__SCsg__Pde5a__Glut_1	YaoZ_2023	Irx6	Pde5a	Irx6
+0786__SCsg__Pde5a__Glut_2	YaoZ_2023	Vip	Lef1	Sntb1	Sntb1
+0787__SCsg__Pde5a__Glut_3	YaoZ_2023	Tspan11	Barhl1	Slc24a4	Sox6
+0788__SCop__Sln__Glut_1	YaoZ_2023	Scml2	Lhx9	Hcn1	Sln	Scml2	Hpgd	Npnt
+0789__PAG__Ucn__Glut_1	YaoZ_2023	Ucn	Postn	Ucn
+0790__ND-INC__Foxd2__Glut_1	YaoZ_2023	Foxd2os	Ebf3	Foxd2
+0791__PAG-MRN__Rln3__Gaba_1	YaoZ_2023	Rln3
+0792__PPN-CUN-PCG__Otp__En1__Gaba_1	YaoZ_2023	Pax7	Pappa2	Irx2	Pappa2	Zeb2	Galnt14
+0793__PPN-CUN-PCG__Otp__En1__Gaba_2	YaoZ_2023	Pax7	En1	Bcl11a	Lmo3	Sncg	Spon1	Dscaml1
+0794__PPN-CUN-PCG__Otp__En1__Gaba_3	YaoZ_2023	Pax7	Pax5	Ebf3	Arhgap6	Ebf3	Kctd8	Onecut1
+0795__MRN-PPN-CUN__Pax8__Gaba_1	YaoZ_2023	Pax5	Otp	Bcl11b	Irx3	Slc35f4	Lypd6b	Nox4
+0796__MRN-PPN-CUN__Pax8__Gaba_2	YaoZ_2023	Pax5	Otp	Nfix	En2	Ebf2
+0797__MRN-PPN-CUN__Pax8__Gaba_3	YaoZ_2023	Ptgfr	Pax8	Ptgfr
+0798__MRN-VTN-PPN__Pax5__Cdh23__Gaba_1	YaoZ_2023	Pax5	Cdh23	Sox21	Mn1	Pax2	Sox21	Ltbp1	D030068K23Rik	Pou3f1
+0799__MRN-VTN-PPN__Pax5__Cdh23__Gaba_2	YaoZ_2023	Cdh23	Otx1	Dgkk	Fgf12	St8sia2	Dlk1
+0800__SNr-VTA__Pax5__Npas1__Gaba_1	YaoZ_2023	Gm4675	Hydin	Htr2c	Npas1
+0801__SNr-VTA__Pax5__Npas1__Gaba_2	YaoZ_2023	Padi1	Gad1	2610028E06Rik
+0802__PAG-PPN__Pax5__Sox21__Gaba_1	YaoZ_2023	Aqp6	Sox21	Col23a1	Pax8	Has2os	Cubn	Adamts19
+0803__PAG-PPN__Pax5__Sox21__Gaba_2	YaoZ_2023	Pax5	Sox1	Otx1	Nfix	Prox1
+0804__PAG-PPN__Pax5__Sox21__Gaba_3	YaoZ_2023	Sox21	Pax8	Sema3d	Nfib	Npr3	Npffr2
+0805__PAG-PPN__Pax5__Sox21__Gaba_4	YaoZ_2023	Gm4675	Ptk2b	Cnih3	Ptk2b	Stk32b
+0806__SNr__Six3__Gaba_1	YaoZ_2023	Otx1	Npas1	Six3	Six3	Irx3	Foxp2	Sox2ot
+0807__IC__Six3__En2__Gaba_1	YaoZ_2023	Sox21	Six3	Sox14	Sox14	Galnt14	Sox21	Adarb2
+0808__IC__Six3__En2__Gaba_2	YaoZ_2023	Sox21	Pax8	Six3	Rbms1	Ddo	Cadps2	C1ql1
+0809__IC__Six3__En2__Gaba_3	YaoZ_2023	Gata3	Six3	Ebf1	Nfib	Insyn2a	Ebf3	Nr2f1	Cadps2	Unc5b
+0810__IC__Six3__En2__Gaba_4	YaoZ_2023	Ccdc192	Sox3	Gad1	Ctxn3	Sox21	Gm38505	Cdh20
+0811__IC__Six3__En2__Gaba_5	YaoZ_2023	Emx2	Gm38505	Kcnh8	Kcng1	Gm10421	Itga8	Rprm	Npy
+0812__IC__Six3__En2__Gaba_6	YaoZ_2023	Otx2os1	Bves	Glis3	Six3	Glis3	Fign	Bcl11a
+0813__IC__Six3__En2__Gaba_7	YaoZ_2023	Pdlim3	Six3	Pdlim3
+0814__PAG-MRN-RN__Foxa2__Gaba_1	YaoZ_2023	9030622O22Rik	Neurod6	Gad2	Neurod6	Foxa1	Syndig1l
+0815__PAG-MRN-RN__Foxa2__Gaba_2	YaoZ_2023	9030622O22Rik	Six3	BC039966	Irx2	Slit3	Cbfa2t3
+0816__PAG-MRN-RN__Foxa2__Gaba_3	YaoZ_2023	9030622O22Rik	4933429O19Rik	Ebf3	Kit	Piezo2	Cgnl1
+0817__PAG-MRN-RN__Foxa2__Gaba_4	YaoZ_2023	9030622O22Rik	Tmem114	Adarb2	Calcr	Cobll1	Rftn1	Pou6f2
+0818__PAG-ND-PCG__Onecut1__Gaba_1	YaoZ_2023	Gata2	Onecut1	Six3	Nrxn3	Slc30a3	Six3	Col19a1	Hs3st4	Nxph3
+0819__PAG-ND-PCG__Onecut1__Gaba_2	YaoZ_2023	Otx1	Onecut1	Sp9	Gm38505	Sp9	Zmat4	Otx1
+0820__PAG-ND-PCG__Onecut1__Gaba_3	YaoZ_2023	Sall3	Gata3	Fign	Gm2694	Otx1	Pvalb
+0821__PAG-ND-PCG__Onecut1__Gaba_4	YaoZ_2023	Gsc2	Otx2os1	Tnfrsf11b
+0822__PAG-ND-PCG__Onecut1__Gaba_5	YaoZ_2023	Slc6a5	Gli3	Slc6a5
+0823__PAG-RN__Nkx2-2__Otx1__Gaba_1	YaoZ_2023	Nkx2-2	Sox14	Meis2	Sox14	Stk32a	Grik3	Otx1
+0824__PAG-RN__Nkx2-2__Otx1__Gaba_2	YaoZ_2023	Nkx2-2	Trh	Mme	Npy	Trh	Ankfn1	Gpr101
+0825__PAG-RN__Nkx2-2__Otx1__Gaba_3	YaoZ_2023	Nkx2-2	Tfap2b	En1	Tfap2b	En2	Cabp7	Adamtsl1
+0826__PAG-RN__Nkx2-2__Otx1__Gaba_4	YaoZ_2023	Nkx2-2	Tfap2b	Irx2	Gm29683	Slc6a5
+0827__PAG-RN__Nkx2-2__Otx1__Gaba_5	YaoZ_2023	Skor2	Gata3	B130024G19Rik	Fras1	Skor2
+0828__PAG-RN__Nkx2-2__Otx1__Gaba_6	YaoZ_2023	Nkx2-2	Pax8	Pou6f2	Pou6f2	Bves	Cubn	Agtr1a
+0829__PRT__Tcf7l2__Gaba_1	YaoZ_2023	Gata2	Tcf7l2	Six3os1	Lingo2	Slc30a3	Zfhx4	Chrna4	Six3os1	Ptprz1	Pnoc	Htr1b
+0830__PRT__Tcf7l2__Gaba_2	YaoZ_2023	Pax3	Npffr1	Npffr1	Maf	Sox14	Vwc2l
+0831__PRT__Tcf7l2__Gaba_3	YaoZ_2023	Otx1	Nr4a2	Gad2	Nr4a2	Otx1	Sez6	Ror1
+0832__PRT__Tcf7l2__Gaba_4	YaoZ_2023	Pax3	Nr4a2	Gad2	Pax3	Dscaml1	Npy	Pappa
+0833__PRT__Tcf7l2__Gaba_5	YaoZ_2023	Gata3	Tcf7l2	Lncenc1	Prlr	Col8a1	Cntnap3	Prlr	Col8a1	Ptprk
+0834__LGv-SPFp-SPFm__Nkx2-2__Tcf7l2__Gaba_1	YaoZ_2023	Nkx2-2	Emx2	Scn5a	Tcf7l2	Vipr2	Sntg2	Elfn1	Ankfn1
+0835__LGv-SPFp-SPFm__Nkx2-2__Tcf7l2__Gaba_2	YaoZ_2023	Nkx2-2	Ndnf	Sox14	Bcl11b	Ndnf	Mafb	Igfbpl1	Syndig1
+0836__LGv-SPFp-SPFm__Nkx2-2__Tcf7l2__Gaba_3	YaoZ_2023	Nkx2-2	Drd3	Sox14	Tacr3	Rspo2	Syt17	Slit2
+0837__LGv-SPFp-SPFm__Nkx2-2__Tcf7l2__Gaba_4	YaoZ_2023	Nkx2-2	Trbc2	Sox1ot	Trbc2	Masp1	Tagln2
+0838__LGv-SPFp-SPFm__Nkx2-2__Tcf7l2__Gaba_5	YaoZ_2023	Nkx2-2	Kcng1	Tcf7l2	Slc18a2	Zeb2
+0839__LGv-SPFp-SPFm__Nkx2-2__Tcf7l2__Gaba_6	YaoZ_2023	Nkx2-2	Ror1	St18	Tcf7l2	Nfix	Col8a1	Cdh20
+0840__LGv-SPFp-SPFm__Nkx2-2__Tcf7l2__Gaba_7	YaoZ_2023	Nkx2-2	Apbb1ip	Unc5d	Apbb1ip	Zic1
+0841__SC__Otx2__Gcnt4__Gaba_1	YaoZ_2023	Pax7	Cdh23	Igf1	Stk32b
+0842__SC__Otx2__Gcnt4__Gaba_2	YaoZ_2023	Pax7	Vit	Tafa1	Cdhr1
+0843__SC-PAG__Lef1__Emx2__Gaba_1	YaoZ_2023	Pax7	Nox4	Tfap2b	Gfra1	Nos1	Rai14	Gfra1	Fbn2	Kcnh5
+0844__SC-PAG__Lef1__Emx2__Gaba_2	YaoZ_2023	Pax7	Rxfp2	Bdnf	Cdh18	Sox21	Dkk3	Bdnf	Kcnq5
+0845__SC-PAG__Lef1__Emx2__Gaba_3	YaoZ_2023	Pax7	Tfap2b	Sox5	Lncenc1	Zfp536	Nxph1	Dscaml1	Glra2	Sox5	Nr2f2
+0846__SC-PAG__Lef1__Emx2__Gaba_4	YaoZ_2023	Pax3	Emx2	Kit	Pax3	Cbfa2t3	Cbln4	Hs3st3b1
+0847__SC-PAG__Lef1__Emx2__Gaba_5	YaoZ_2023	Pax7	Tpm2	Foxp2	Tpm2	Klhl14
+0848__SCm-PAG__Cdh23__Gaba_1	YaoZ_2023	Tfap2b	Cdh23	Irx2	Irx2	Npnt	Cacng5
+0849__SCm-PAG__Cdh23__Gaba_2	YaoZ_2023	Tfap2b	Cdh23	Gata3	Epha3	Epha3	Otx2	Slc4a4	Car2
+0850__SCm-PAG__Cdh23__Gaba_3	YaoZ_2023	Tfap2b	Otx2	Zic4	Sox14	Plpp4	Ptprk	Plpp4	En2	Zic5
+0851__SCm-PAG__Cdh23__Gaba_4	YaoZ_2023	Tfap2b	Emx2os	B130024G19Rik	Gpr101	Dscam	Pcdh11x	Rab3b	Nr2f2
+0852__SCs__Dmbx1__Gaba_1	YaoZ_2023	Dmbx1	Cxcl14	Sox2ot	Drd2	Sntg2	Zeb2	Bcl11b
+0853__SCs__Dmbx1__Gaba_2	YaoZ_2023	Dmbx1	Foxp2	Sox2ot	Foxp2	Rorb
+0854__SCs__Dmbx1__Gaba_3	YaoZ_2023	Gabrr2	Dkk2	Fras1	Tmem132c
+0855__SCs__Dmbx1__Gaba_4	YaoZ_2023	Dmbx1	Pax7	Irx1	Sox14	Hs3st4	Pax7	Zic1	Tmie
+0856__SCs__Dmbx1__Gaba_5	YaoZ_2023	Dmbx1	Shox2	Pvalb	Lrrc17
+0857__SC__Lef1__Otx2__Gaba_1	YaoZ_2023	Pax7	Tfap2b	Gbe1	Otx2os1	Tfap2b
+0858__SC__Lef1__Otx2__Gaba_2	YaoZ_2023	Pax7	Chrnb3	Syt4	Chrnb3
+0859__SCs__Pax7__Nfia__Gaba_1	YaoZ_2023	Cubn	Pax7	Prox1	Sox5	Prox1	Crb1
+0860__SCs__Pax7__Nfia__Gaba_2	YaoZ_2023	Pax7	Cubn	Dcn	Fgf10	Sst	Dcn
+0861__SCs__Pax7__Nfia__Gaba_3	YaoZ_2023	Pax7	Ntf3	Sox21	Sox21	Pax7
+0862__SCs__Pax7__Nfia__Gaba_4	YaoZ_2023	Sox21	Tfap2b	Pou3f1	Pde11a
+0863__SCs__Pax7__Nfia__Gaba_5	YaoZ_2023	Tfap2b	Otx2os1	B130024G19Rik	Sox14	Npsr1
+0864__PRT__Mecom__Gaba_1	YaoZ_2023	Mecom	Six3	Ret	Six3	Inhba	Stk32b	Itga6
+0865__PRT__Mecom__Gaba_2	YaoZ_2023	Mecom	Nox4	Nxph1	Zic4	Nwd2
+0866__PRT__Mecom__Gaba_3	YaoZ_2023	Mecom	Pax7	Tfap2a	Pax3
+0867__SC__Tnnt1__Gli3__Gaba_1	YaoZ_2023	Esrrb	Gli3	Foxp2	Penk
+0868__SC__Tnnt1__Gli3__Gaba_2	YaoZ_2023	Tnnt1	Gli3	Ebf1	Ptprt
+0869__SCs__Lef1__Gli3__Gaba_1	YaoZ_2023	Pax7	Gli3	Pou3f1	Kcnh7	Egfem1	Cdh12
+0870__SCs__Lef1__Gli3__Gaba_2	YaoZ_2023	E330013P04Rik	Alkal2	Ptprk
+0871__SCs__Lef1__Gli3__Gaba_3	YaoZ_2023	Igsf5	Gli3	Hcrtr2	Chrna3
+0872__SCsg__Gabrr2__Gaba_1	YaoZ_2023	Gabrr2	B130024G19Rik	B130024G19Rik	Sema5a	Npas3	Scgn
+0873__SCsg__Gabrr2__Gaba_2	YaoZ_2023	Gabrr2	Ccdc141	Frmpd1	Tspan18	Vgll3	Rspo2	Gm30648
+0874__SCsg__Gabrr2__Gaba_3	YaoZ_2023	Chrna6	Tnnt1	Cbln4	Htr1a	Wscd1	Slitrk6	Tmem132d
+0875__SCsg__Gabrr2__Gaba_4	YaoZ_2023	Gabrr2	Cnih3	Car8	Chrnb3	Cpne4	Car8	Nox4	Pla2g5
+0876__SCsg__Gabrr2__Gaba_5	YaoZ_2023	Rd3l	Pla2g5	Necab1	Zfp703
+0877__IPN__Otp__Crisp1__Gaba_1	YaoZ_2023	Chrna2	Map3k19	Ebf2
+0878__IPN__Otp__Crisp1__Gaba_2	YaoZ_2023	Crisp1	Serpina3g	Lancl3
+0879__IPN__Otp__Crisp1__Gaba_3	YaoZ_2023	Pax7	Chrm5	Tcf7l2	Kcnmb2
+0880__SNc-VTA-RAmb__Foxa1__Dopa_1	YaoZ_2023	9030622O22Rik	Slc26a7	Gad2	Crhbp	Dmrta2	9530026P05Rik	Zfp536
+0881__SNc-VTA-RAmb__Foxa1__Dopa_2	YaoZ_2023	Slc6a3	Eya1	Neurod6	Tmem207	Lpl	Plce1
+0882__SNc-VTA-RAmb__Foxa1__Dopa_3	YaoZ_2023	Slc6a3	Aldh1a7	Aldh1a7	Trhr	Anxa1	Cd24a
+0883__SNc-VTA-RAmb__Foxa1__Dopa_4	YaoZ_2023	9030622O22Rik	Cd44	Klhl14	Lepr	Tmem176b	Klhl14	Kctd8	Sorcs3
+0884__SNc-VTA-RAmb__Foxa1__Dopa_5	YaoZ_2023	Slc6a3	Sema5b	Arpp21	Rprm	Tll1	Sntg2	Glra2
+0885__SNc-VTA-RAmb__Foxa1__Dopa_6	YaoZ_2023	Slc6a3	Ctxn3	1110015O18Rik	Gch1	Wnt7a
+0886__SNc-VTA-RAmb__Foxa1__Dopa_7	YaoZ_2023	Slc6a3	Prss23	Frzb	Prss23
+0887__SNc-VTA-RAmb__Foxa1__Dopa_8	YaoZ_2023	9030622O22Rik	Sema3a	Gad2	Ngfr
+0888__MB-MY__Tph2__Glut-Sero_1	YaoZ_2023	Slc6a4	Pax5	Nxph4	Sox1	Pdlim5	Nptx1
+0889__MB-MY__Tph2__Glut-Sero_2	YaoZ_2023	Fev	9530026P05Rik	Mgat4c	Egfem1	Fign	Nptx2	Tacr1	Ccnd1
+0890__MB-MY__Tph2__Glut-Sero_3	YaoZ_2023	Fev	Galr1	Bmp3	L3mbtl4	En1
+0891__MB-MY__Tph2__Glut-Sero_4	YaoZ_2023	Slc6a4	Gabre	Cmbl	Prkcq	Pth2r
+0892__MB-MY__Tph2__Glut-Sero_5	YaoZ_2023	Fev	Hoxb3	Hoxb3	Penk
+0893__MB-MY__Tph2__Glut-Sero_6	YaoZ_2023	Slc6a4	Tecrl	Tecrl
+0894__MB-MY__Tph2__Glut-Sero_7	YaoZ_2023	Slc6a4	Piezo2	Piezo2	Tph1
+0895__PB__Lmx1a__Glut_1	YaoZ_2023	Lmx1a	Irx4	Fign	Irx2	Crispld1	A330102I10Rik	Drd1
+0896__PB__Lmx1a__Glut_2	YaoZ_2023	Calca	Lmx1a	Nr2f2	Qrfpr
+0897__PB__Lmx1a__Glut_3	YaoZ_2023	Lmx1a	Pax5	Tfap2b	Pax5	Sv2c	Dscaml1	En1
+0898__PB__Lmx1a__Glut_4	YaoZ_2023	Lmx1a	Il20ra	Gda	Il20ra	Kcng1	Htr2a	Slc5a7
+0899__PB__Lmx1a__Glut_5	YaoZ_2023	Lmx1a	Slc5a7	Pmfbp1	Ebf2	4930438E09Rik	Pmfbp1	Plekhd1	Lpar1
+0900__PB__Lmx1a__Glut_6	YaoZ_2023	Lmx1a	Satb2	Satb2	Slc10a4	Arhgap6
+0901__PB__Lmx1a__Glut_7	YaoZ_2023	Flt4	Pou4f1	Lmx1a	5033406O09Rik	Zfp536
+0902__PSV__Lmx1a__Trpv6__Glut_1	YaoZ_2023	Ebf2	G630016G05Rik	Ston2	Cbln1	Arpp21	Sema3a	Nnat	Epb41l4a	Meis1	Lmx1a	Trpv6	G630016G05Rik	Ebf2
+0903__PB-SUT__Tlx3__Lhx2__Glut_1	YaoZ_2023	Lmx1b	Lhx2	Irx3	Tlx3	Lhx2	Lmx1b	Irx3
+0904__PB__Pax5__Glut_1	YaoZ_2023	Tfap2b	Pax5	Arhgap36	Arhgap36
+0905__PB__Pax5__Glut_2	YaoZ_2023	Tlx3	Col23a1	Pou4f1
+0906__LDT-PCG__Vsx2__Lhx4__Glut_1	YaoZ_2023	Lhx4	Alkal2	4930438E09Rik	Gm10754	Calb1	Arhgap15	Tacr1
+0907__LDT-PCG__Vsx2__Lhx4__Glut_2	YaoZ_2023	Lhx4	Foxp2	Nr2f2	B130024G19Rik	Lhx1os	Casz1	Il1rapl2
+0908__LDT-PCG__Vsx2__Lhx4__Glut_3	YaoZ_2023	Lhx4	Pde5a	Pde5a	Osbpl3	Gm20754	Sntb1
+0909__LDT-PCG__Vsx2__Lhx4__Glut_4	YaoZ_2023	Vsx2	Hmcn1	Plagl1	Chrna3	Hmcn1	Neurod1	Sox14
+0910__LDT-PCG__Vsx2__Lhx4__Glut_5	YaoZ_2023	Lhx4	Prox1	Megf11	Meis2
+0911__LDT-PCG__Vsx2__Lhx4__Glut_6	YaoZ_2023	Lhx4	Ntn1	Nfib	Prox1	Cpa6	Tent5a
+0912__LDT-PCG__Vsx2__Lhx4__Glut_7	YaoZ_2023	Lhx4	Npr3	Npr3	Tmem132c	Oprk1	Plpp3
+0913__LDT-PCG__Vsx2__Lhx4__Glut_8	YaoZ_2023	Vsx2	Foxp2	Nkx6-1	Zfhx4	Cacng5	Lncenc1
+0914__PB__Evx2__Glut_1	YaoZ_2023	C1ql4	Barhl2	Nr4a2	Cdh18	Barhl2	Irx1	Tmem132d	Otof
+0915__PB__Evx2__Glut_2	YaoZ_2023	Runx1	Pax5	Grid2	Ebf3	Hmcn1	Lbhd2	Pax5	Zbbx
+0916__PB__Evx2__Glut_3	YaoZ_2023	Lhx9	Uncx	Cd24a	Zfp536	Nr4a2	D030068K23Rik	En1	Cd24a	Inhba
+0917__PB__Evx2__Glut_4	YaoZ_2023	Evx1os	Pon2	Trhr	Adarb2	Serpinb1b	Brs3	Syt6	Trhr
+0918__PB__Evx2__Glut_5	YaoZ_2023	Gm3985	Grp	Cdh18	Irx4	Gpr101	Atp8b1	Asb4
+0919__PB__Evx2__Glut_6	YaoZ_2023	Evx1os	Gng8	Pax5	Gng8	Sema3e	Asb4	Evx1os
+0920__PB__Evx2__Glut_7	YaoZ_2023	Nps	Unc5d	Qrfpr	Sst
+0921__PB__Evx2__Glut_8	YaoZ_2023	Pax5	Neurod6	Lhfp	Nrg3	Lhfp	Neurod2	Rassf4	Gpr139
+0922__PB__Evx2__Glut_9	YaoZ_2023	Evx2	Onecut1	B130024G19Rik	Onecut1	Epha8	C1ql4	Ebf3
+0923__B-PB__Nr4a2__Glut_1	YaoZ_2023	C1ql4	Greb1	Sncg	Irx2	Rmst
+0924__B-PB__Nr4a2__Glut_2	YaoZ_2023	Prdm6	C1ql1	Gal
+0925__PCG-PRNr__Vsx2__Nkx6-1__Glut_1	YaoZ_2023	Vsx2	C1ql2	Irx4	Calb1	Irx4
+0926__PCG-PRNr__Vsx2__Nkx6-1__Glut_2	YaoZ_2023	Vsx2	Onecut2	Adarb2	Mab21l1	Nkx6-1	Pitx2	Pgr15l	Npas1	Slc30a3
+0927__PCG-PRNr__Vsx2__Nkx6-1__Glut_3	YaoZ_2023	Vsx2	Rxfp1	Sox2
+0928__PCG-PRNr__Vsx2__Nkx6-1__Glut_4	YaoZ_2023	A330049N07Rik	Shox2	Slc38a11
+0929__PCG-PRNr__Vsx2__Nkx6-1__Glut_5	YaoZ_2023	Vsx2	Hoxb3	B130024G19Rik	Kazald1	Hoxb3
+0930__PCG-PRNr__Vsx2__Nkx6-1__Glut_6	YaoZ_2023	Vsx2	Slc6a5	Cdh23
+0931__PRNc-NI-SG-RPO__Vsx2__Nr4a2__Glut_1	YaoZ_2023	Vsx2	Corin	Meis2	Corin	Tox
+0932__PRNc-NI-SG-RPO__Vsx2__Nr4a2__Glut_2	YaoZ_2023	Vsx2	Cgnl1	Nr4a3	Frem3	Cgnl1	Tspan18
+0933__PRNc-NI-SG-RPO__Vsx2__Nr4a2__Glut_3	YaoZ_2023	Vsx2	Gm32828	Syt2	Nrp1	Nxph4
+0934__PRNc-NI-SG-RPO__Vsx2__Nr4a2__Glut_4	YaoZ_2023	Vsx2	Nr4a2	Slco2a1	Tmem163	Nkx6-1
+0935__PRNc-PARN__Tlx1__Glut_1	YaoZ_2023	Tlx1	Calcr	Plch1	Gabrq
+0936__PRNc-PARN__Tlx1__Glut_2	YaoZ_2023	Gpr50	Phox2b	Prrxl1
+0937__PRNc-PARN__Tlx1__Glut_3	YaoZ_2023	Vip	Pou4f1	Vip
+0938__PB-PSV__Phox2b__Glut_1	YaoZ_2023	Phox2b	Scn7a	Col25a1	Phox2b	Onecut2	Ebf3	Irx5
+0939__PSV__Pvalb__Lhx2__Glut_1	YaoZ_2023	Vmn1r206	Usp43	Vmn1r206
+0940__PSV__Pvalb__Lhx2__Glut_2	YaoZ_2023	Prrxl1	Tgfbr2	Meis2	Gabrg3	Kcnc4	Ebf2
+0941__PSV__Pvalb__Lhx2__Glut_3	YaoZ_2023	Caps2	Slc17a6	L3mbtl4
+0942__PSV__Pvalb__Lhx2__Glut_4	YaoZ_2023	Dytn	Evx1os	Dytn
+0943__PB-NTS__Phox2b__Ebf3__Lmx1b__Glut_1	YaoZ_2023	Phox2b	Eya2	Irx2	Zfhx4	Bcl11a	Zfhx4	Npas1	Pde1a
+0944__PB-NTS__Phox2b__Ebf3__Lmx1b__Glut_2	YaoZ_2023	Six2	Hoxb3	Hoxb3	Sox5
+0945__PRNr__Otp__Nfib__Glut_1	YaoZ_2023	Evx1os	Otp	4930438E09Rik	Otp	Nfib	Bnc2	Npas1
+0946__IPN-LDT__Vsx2__Nkx6-1__Glut_1	YaoZ_2023	Vsx2	D130079A08Rik	Pirt
+0947__IPN-LDT__Vsx2__Nkx6-1__Glut_2	YaoZ_2023	Hepacam2	Sox6	Col25a1
+0948__LDT__Vsx2__Nkx6-1__Nfib__Glut_1	YaoZ_2023	Nkx6-1	Gpc4	Pou6f2	Nfib	Pnoc
+0949__LDT__Vsx2__Nkx6-1__Nfib__Glut_2	YaoZ_2023	Nkx6-1	Otx2os1	Asb4	Otx2os1
+0950__NLL-SOC__Spp1__Glut_1	YaoZ_2023	NA	Gm6213
+0951__NLL-SOC__Spp1__Glut_2	YaoZ_2023	NA	Prdm6
+0952__MEV__Ppp1r1c__Glut_1	YaoZ_2023	Ppp1r1c
+0953__PG-TRN-LRN__Fat2__Glut_1	YaoZ_2023	H2-Ab1	Ldlrap1	Fat2	Fcmr	Zic1
+0954__IRN__Vip__Glut_1	YaoZ_2023	Mecom	Vip	Vip	Mecom
+0955__PRP-NI-PRNc-GRN__Otp__Glut_1	YaoZ_2023	Nr5a2	Pax2	Nr5a2
+0956__PRP-NI-PRNc-GRN__Otp__Glut_2	YaoZ_2023	C1ql4	Pax2	Tcf7l2	Tcf7l2
+0957__PRP-NI-PRNc-GRN__Otp__Glut_3	YaoZ_2023	Evx1os	Lhx1os	C1ql2	Edil3	Kcnmb2	Fras1	C1ql2	Gm20754
+0958__PRP-NI-PRNc-GRN__Otp__Glut_4	YaoZ_2023	Evx1os	Inka2	Sntg2	Npsr1	March1
+0959__NTS__Phox2b__Glut_1	YaoZ_2023	Phox2b	C1ql3	Ebf3	Lypd6b	Onecut2	Dgkk	A330102I10Rik	Stxbp6
+0960__NTS__Phox2b__Glut_2	YaoZ_2023	Phox2b	Cck	Necab1	Vwc2	Tfap2b	Cck	Tmem200a	Galr1
+0961__NTS__Phox2b__Glut_3	YaoZ_2023	Phox2b	Dkk2	Hoxa5	Fibcd1	Sytl5	Irx5
+0962__NTS__Phox2b__Glut_4	YaoZ_2023	Phox2b	Sox6	Sox6	Ramp3	Ntsr1	Dscaml1
+0963__NTS__Phox2b__Glut_5	YaoZ_2023	Phox2b	Tac1	Stk26	Pou3f1	Arhgap36	Hydin	9330158H04Rik	Pou3f1
+0964__NTS__Phox2b__Glut_6	YaoZ_2023	Phox2b	Prok1	Prok1	Npnt	Cartpt	Qrfprl
+0965__NTS__Phox2b__Glut_7	YaoZ_2023	Phox2b	Megf10	Shox2	A2ml1	Megf10	Fign	Dlk1
+0966__NTS__Phox2b__Glut_8	YaoZ_2023	Phox2b	Arhgap15	Zic1	Ebf3	Hoxa5	Arhgap15	Eya2
+0967__NTS__Phox2b__Glut_9	YaoZ_2023	Phox2b	Tfap2b	Nr2f2	Tfap2b	Nr2f2	Adamtsl1	Palld
+0968__NTS__Phox2b__Glut_10	YaoZ_2023	Phox2b	Nr2f2	Tmem132c	Meis2	A330102I10Rik	Mab21l1	Nr2f2	Kazald1	Chrna4	Htr7
+0969__MARN-GRN__Pyy__Glut_1	YaoZ_2023	Pyy
+0970__MDRNv__Lhx4__Qrfprl__Glut_1	YaoZ_2023	Lhx4	Qrfprl	Lhx4	Qrfprl	Dlk1
+0971__NTS__Mbnl3__Glut_1	YaoZ_2023	Gm6213	Hoxb5	Mbnl3	Pou4f1
+0972__PGRNd__Dmbx1__Glut_1	YaoZ_2023	Mecom	Dmbx1	Dmbx1
+0973__PGRN-PARN-MDRN__Hoxb5__Glut_1	YaoZ_2023	Hoxb5	Lhx1os	Slc17a6	Hoxb6	Mab21l2	Lhx1os	Hoxa5	Slc5a7	Plpp4
+0974__PGRN-PARN-MDRN__Hoxb5__Glut_2	YaoZ_2023	Hoxb3	C1ql3	Lhx1os	Sncg	Zfhx4	A330008L17Rik	Dgkg	Mab21l2	C1ql3	Pou6f2	A330008L17Rik	Ret
+0975__PGRN-PARN-MDRN__Hoxb5__Glut_3	YaoZ_2023	Hoxb5	Pou4f1	Adra1a	Mab21l2	Dscaml1	Bcl11b	Samd5	Pou3f3	Pou4f1	Hoxa5	Dscaml1	Itga8
+0976__PGRN-PARN-MDRN__Hoxb5__Glut_4	YaoZ_2023	Evx2	Pax2	Syt10	Pax2	Bcl11b	Evx1os	Frem1
+0977__PGRN-PARN-MDRN__Hoxb5__Glut_5	YaoZ_2023	Abcc9	Pou4f1	Meis2	Lmx1b	Ebf3	Tac1	Reln
+0978__PGRN-PARN-MDRN__Hoxb5__Glut_6	YaoZ_2023	Lmx1b	G630016G05Rik	Onecut2	Ebf3	Kazald1	Mab21l2	Lmx1b	Dlk1	Calb2	Arhgap6
+0979__PGRN-PARN-MDRN__Hoxb5__Glut_7	YaoZ_2023	Hoxb3	Scn4b	Sncg	Slc17a6	Onecut2	Pou3f3	Cabp7	Gng2	Npas1	Scn4b	Kcnab3	Shox2
+0980__MV-SPIV__Slc6a2__Glut_1	YaoZ_2023	Crabp1	Barhl1	Galntl6	Slc6a2	Crabp1	Lhx9	Hoxb3
+0981__SPVI-SPVC__Tlx3__Ebf3__Glut_1	YaoZ_2023	D130009I18Rik	Pdyn	Ebf3	Pou4f1	Hoxb8
+0982__SPVI-SPVC__Tlx3__Ebf3__Glut_2	YaoZ_2023	Bnc2	Hoxc4	Lhx2	Nfib	Lhx2	Nfib
+0983__SPVI-SPVC__Tlx3__Ebf3__Glut_3	YaoZ_2023	Abcc9	Ebf2	Lingo2	Abcc9	Slc35d3	Otof
+0984__SPVI-SPVC__Tlx3__Ebf3__Glut_4	YaoZ_2023	Tlx3	Pamr1	Sema3e	Zfpm2	Ror1	Pamr1	Lncenc1	Rgs12
+0985__SPVI-SPVC__Tlx3__Ebf3__Glut_5	YaoZ_2023	Gm28822	Ebf3	Lbhd2	Tll2	Ecel1
+0986__SPVI-SPVC__Tlx3__Ebf3__Glut_6	YaoZ_2023	Hoxb8	Enpp1	Cacna2d1	Myo5b	Fgf10
+0987__SPVI-SPVC__Tlx3__Ebf3__Glut_7	YaoZ_2023	Gmnc	Ndnf	Sema3e	Ndnf	Ltbp1	Dach1	Serpinb1b
+0988__CU-ECU-SPVI__Foxb1__Glut_1	YaoZ_2023	Evx1os	Hoxb5	Lhx9	Gas7	Fxyd6	Mab21l2	Ctxn2
+0989__CU-ECU-SPVI__Foxb1__Glut_2	YaoZ_2023	Evx1	Hoxb6	Scn4b	Scn4b	Kit
+0990__CU-ECU-SPVI__Foxb1__Glut_3	YaoZ_2023	2610028E06Rik	Hoxb8	Lmx1b
+0991__CU-ECU-SPVI__Foxb1__Glut_4	YaoZ_2023	Hoxb6	BC039966	Slc17a6	Ucma
+0992__MV-SPIV__Phox2b__Ebf3__Lbx1__Glut_1	YaoZ_2023	Phox2b	Neurod2	Ecel1	Sema3e	Rab3b	Gabrb2
+0993__MV-SPIV__Phox2b__Ebf3__Lbx1__Glut_2	YaoZ_2023	Phox2b	Prox1	Chst9
+0994__MV-SPIV__Phox2b__Ebf3__Lbx1__Glut_3	YaoZ_2023	Phox2b	D130009I18Rik	Eya2	D130009I18Rik
+0995__MV-SPIV__Phox2b__Ebf3__Lbx1__Glut_4	YaoZ_2023	Rxfp2	Col27a1	Ppp1r17
+0996__MV-SPIV__Phox2b__Ebf3__Lbx1__Glut_5	YaoZ_2023	Phox2b	Aqp6	4930545L08Rik
+0997__MV-SPIV__Zic4__Neurod2__Glut_1	YaoZ_2023	Hoxa5	Bnc2	Neurod2	Meis2	Hoxb5	Hoxb5	Mkx	Cadps2	Sfrp1
+0998__MV-SPIV__Zic4__Neurod2__Glut_2	YaoZ_2023	Olig3	Pou4f1	Olig3	Fgf10	Foxd3
+0999__MV-SPIV__Zic4__Neurod2__Glut_3	YaoZ_2023	Gpx2	C1ql3	Popdc3	Slc9a3r1	Cdh23
+1000__MV-SPIV__Zic4__Neurod2__Glut_4	YaoZ_2023	D130009I18Rik	Gbx2	Gbx2
+1001__MV-SPIV__Zic4__Neurod2__Glut_5	YaoZ_2023	Slc17a8	Boc	Ebf3	Slc17a8	Ebf2
+1002__NTS__Aldh1a2__Glut_1	YaoZ_2023	Aldh1a2	Hoxb6	Aldh1a2	Fam83b
+1003__CBN__Neurod2__Pvalb__Glut_1	YaoZ_2023	Kcng4	Lhx9	Rasa4	Uncx	Neurod2	Pvalb	Mmp17
+1004__NTS__Dbh__Glut_1	YaoZ_2023	Phox2b	Slc6a2	Hoxa5	Skor1	Gfra1	L3mbtl4	Hoxb6
+1005__NTS__Dbh__Glut_2	YaoZ_2023	Dbh	Syt10	Syt10	Diaph3	Agtr1a	Hoxb3
+1006__NTS__Dbh__Glut_3	YaoZ_2023	Npff	Dnmt3l	Tll1
+1007__NTS__Dbh__Glut_4	YaoZ_2023	Dbh	En1	En1
+1008__NTS__Dbh__Glut_5	YaoZ_2023	Gfral	Hoxa5	Nts	Lrat
+1009__NTS__Dbh__Glut_6	YaoZ_2023	Phox2b	Colq	Zeb2	Rspo2	Hoxa5
+1010__DMX__VII__Tbx20__Chol_1	YaoZ_2023	Tbx20	Grin2b	Hoxd3
+1011__DMX__VII__Tbx20__Chol_2	YaoZ_2023	Tbx20	Gata3	Gata3
+1012__IO__Fgl2__Glut_1	YaoZ_2023	D130009I18Rik	C1ql1	Fgl2
+1013__VCO__Mafa__Meis2__Glut_1	YaoZ_2023	Enpep	Ntrk1	Gm40518
+1014__VCO__Mafa__Meis2__Glut_2	YaoZ_2023	Cox8b	Anxa3	2610307P16Rik
+1015__VCO__Mafa__Meis2__Glut_3	YaoZ_2023	Cox8b	Evx2	Fzd9	Ackr3
+1016__VCO__Mafa__Meis2__Glut_4	YaoZ_2023	NA	Car8
+1017__SPVO__Mafa__Meis2__Glut_1	YaoZ_2023	Fn1	Clec1a	Mafa	Meis2	Fn1
+1018__SPVC__Mafa__Glut_1	YaoZ_2023	Prrxl1	Scara5	Sst
+1019__SPVC__Mafa__Glut_2	YaoZ_2023	Prrxl1	Pla2g5	Mafa	Tafa1
+1020__SPVC__Ccdc172__Glut_1	YaoZ_2023	Ccdc172	Grp	Ccdc172	Hoxb8
+1021__SPVC__Nmu__Glut_1	YaoZ_2023	Nmu	Tac2	4930432L08Rik
+1022__SPVC__Nmu__Glut_2	YaoZ_2023	Hoxb8	Gm29674	Maf
+1023__MDRNd__Bves__Glut_1	YaoZ_2023	Fam129a	Hoxb5	Ebf2	Bves	Prdm8	Dlk1	Ebf2
+1024__MDRNv__Crp__Glut_1	YaoZ_2023	Lhx4	Sp8	Gbx2	Sox14
+1025__HB__Calcb__Chol_1	YaoZ_2023	NA	Dkk2
+1026__HB__Calcb__Chol_2	YaoZ_2023	NA	Dach2
+1027__HB__Calcb__Chol_3	YaoZ_2023	NA	Arhgap9
+1028__HB__Calcb__Chol_4	YaoZ_2023	NA	Shox2
+1029__HB__Calcb__Chol_5	YaoZ_2023	NA	Gm6213
+1030__Pineal__Crx__Glut_1	YaoZ_2023	Pde6g	Crx
+1031__CS-RPO__Meis2__Gaba_1	YaoZ_2023	Otp	G630016G05Rik	Pou6f2	Prlr	Zfhx4	Baiap3	Gad1	Rgma	Tox	Prlr	Wipf3	Lhx1os
+1032__CS-RPO__Meis2__Gaba_2	YaoZ_2023	Otp	Irx2	Bhlhe22	Meis2	Tox	Sstr2	Pcdh18	Kcnj2	Npas1
+1033__CS-RPO__Meis2__Gaba_3	YaoZ_2023	Pax7	Slc17a8	Nfix	Pax7	Nxph4
+1034__CS-RPO__Meis2__Gaba_4	YaoZ_2023	Tgm2	Bhlhe22	Myo16	Ankfn1	Ecel1
+1035__CS-RPO__Meis2__Gaba_5	YaoZ_2023	Cdh23	Otp	Nr4a3	Mab21l2	Dach2
+1036__PRNc__Otp__Gly-Gaba_1	YaoZ_2023	Pax8	Otp	Ebf3	Hoxb3	Lhx1os	Hoxb3	Bcl11b	Bhlhe22	Tmem132c
+1037__PRNc__Otp__Gly-Gaba_2	YaoZ_2023	Slc6a5	Otp	Sytl5	Pde7b	Htr2a	Gpc3	Fbn2	Nxph4
+1038__PRNc__Otp__Gly-Gaba_3	YaoZ_2023	Otp	Slc6a5	Tox3	Lhx1os	D030068K23Rik	Gpc5	Meis2	Tox3	Gm4881	Irx3
+1039__PRNc__Otp__Gly-Gaba_4	YaoZ_2023	Clec10a	En1	Meis2	Nfix	Sema5a
+1040__PRNc__Otp__Gly-Gaba_5	YaoZ_2023	Melk	Sncb	Tmem163	Fgf10
+1041__PB__Sst__Gly-Gaba_1	YaoZ_2023	Skor1	En1	Tacr3	Tfap2b
+1042__PB__Sst__Gly-Gaba_2	YaoZ_2023	Fst	Gm39185	Skor1	Mgl2
+1043__PRNc__Prox1__Brs3__Gly-Gaba_1	YaoZ_2023	Brs3	Hmcn1	Prox1	Brs3
+1044__CS-PRNr-PCG__Tmem163__Otp__Gaba_1	YaoZ_2023	Otp	Irx2	Prdm8	Prlr	Tmem163	C130071C03Rik	Arpp21	Neurod1
+1045__CS-PRNr-PCG__Tmem163__Otp__Gaba_2	YaoZ_2023	Gm4881	Sall3	Onecut3	Onecut3
+1046__CS-PRNr-PCG__Tmem163__Otp__Gaba_3	YaoZ_2023	Pax3	Pou3f1	Pax3
+1047__CS-PRNr-DR__En1__Sox2__Gaba_1	YaoZ_2023	Sox14	Irx3	1110015O18Rik	Zfhx4	Sox2ot	Irx2
+1048__CS-PRNr-DR__En1__Sox2__Gaba_2	YaoZ_2023	Sox14	Ntn1	Slc32a1	Ptprk	Chn2	Sema3e	Calb1	Plpp4
+1049__LDT__Fgf7__Gaba_1	YaoZ_2023	Fgf7	Nr4a2	Fgf7	Ebf3
+1050__LDT-DTN__Gata3__Nfix__Gaba_1	YaoZ_2023	Gm16294	Sox1	Ret	Irx3	S100a10	Htr3a
+1051__LDT-DTN__Gata3__Nfix__Gaba_2	YaoZ_2023	Lrrc38	Jag1	Sp9	Cadps2
+1052__NI-RPO__Gata3__Nr4a2__Gaba_1	YaoZ_2023	Gata2	Nr4a3	Glp1r	Gm29683	B130024G19Rik	Inka2	Glp1r	Abcc12
+1053__NI-RPO__Gata3__Nr4a2__Gaba_2	YaoZ_2023	Nmb	Tal1	Nmb	Tafa4	Nr4a2	Kcnip3
+1054__NI-RPO__Gata3__Nr4a2__Gaba_3	YaoZ_2023	Tnnt1	Plcg2	Scn5a	Otx1	Scn5a
+1055__NI-RPO__Gata3__Nr4a2__Gaba_4	YaoZ_2023	Gata2	Slc17a6	Sox2	Pcp4l1	Pnoc	Mpped2
+1056__LDT-PCG-CS__Gata3__Lhx1__Gaba_1	YaoZ_2023	Tal1	Ebf2	Crhbp	Plpp4	Bcl11b	Qrfprl	Sv2c	Ebf3	Nts
+1057__LDT-PCG-CS__Gata3__Lhx1__Gaba_2	YaoZ_2023	Tnnt1	Crhbp	Gm10754	Frem1	Sulf1	Tnnt1	St8sia2
+1058__LDT-PCG-CS__Gata3__Lhx1__Gaba_3	YaoZ_2023	Gata2	Esrrb	Diaph3	Nek10	Sox14	Kcnk9
+1059__LDT-PCG-CS__Gata3__Lhx1__Gaba_4	YaoZ_2023	Pax5	Sox2	Kif6	Scube2	Pax5
+1060__LDT-PCG-CS__Gata3__Lhx1__Gaba_5	YaoZ_2023	Otx1	Crhbp	Otx2	Prkd1	Arhgap6
+1061__PDTg-PCG__Pax6__Gaba_1	YaoZ_2023	Gm31592	Aqp6	Enox1	C1ql3
+1062__PDTg-PCG__Pax6__Gaba_2	YaoZ_2023	Abcc12	Tnnt1	Fyb2
+1063__PDTg-PCG__Pax6__Gaba_3	YaoZ_2023	Pax6	Tal1	Maf	Bcl11b
+1064__PDTg-PCG__Pax6__Gaba_4	YaoZ_2023	Plcg2	Pax6	Ntn1	Ntn1
+1065__PDTg__Otp__Shroom3__Gaba_1	YaoZ_2023	Otp	Shroom3	Zfp536	Otp	Shroom3
+1066__PDTg__Otp__Olig3__Gaba_1	YaoZ_2023	Olig3	Cyp26b1	Otp	Olig3
+1067__LDT-PCG__St18__Gaba_1	YaoZ_2023	Otp	4930438E09Rik	Adamtsl3	Tmem163	Slc32a1	Ebf2
+1068__LDT-PCG__St18__Gaba_2	YaoZ_2023	Otp	Bves	Pgr15l	Slc32a1	Pgr15l	Lhx1os
+1069__DTN-LDT-IPN__Otp__Pax3__Gaba_1	YaoZ_2023	Pax7	Slc22a3	Cntn4	Gpr83	Ebf2
+1070__DTN-LDT-IPN__Otp__Pax3__Gaba_2	YaoZ_2023	Vmn1r207-ps	Cemip	Drd3	Vip	Tafa2
+1071__DTN-LDT-IPN__Otp__Pax3__Gaba_3	YaoZ_2023	Pax3	Crhbp	Cxcl14	Spon1	Sntg2	Col19a1
+1072__DTN-LDT-IPN__Otp__Pax3__Gaba_4	YaoZ_2023	Vmn1r207-ps	Svep1	Gulp1	Gabrg3
+1073__DTN-LDT-IPN__Otp__Pax3__Gaba_5	YaoZ_2023	Pax3	Nhlh1	Kirrel3	Nhlh1	Th
+1074__NLL__Gata3__Gly-Gaba_1	YaoZ_2023	Gata2	Oprd1	Col15a1	Meis2	Slc35f4	Kcnq4	Heg1
+1075__NLL__Gata3__Gly-Gaba_2	YaoZ_2023	NA	Htr2a
+1076__NLL__Gata3__Gly-Gaba_3	YaoZ_2023	NA	Oprm1	Nefm
+1077__NLL__Gata3__Gly-Gaba_4	YaoZ_2023	NA	Gli3
+1078__PSV__Pax2__Gly-Gaba_1	YaoZ_2023	NA	Zfp385b
+1079__PSV__Pax2__Gly-Gaba_2	YaoZ_2023	NA	Lpar3
+1080__NLL-po__Pax7__Gaba_1	YaoZ_2023	NA	Pax7	Spp1
+1081__POR__Gata3__Gly-Gaba_1	YaoZ_2023	Dkk1	Gata3	Dkk1	Ndnf
+1082__POR__Spp1__Gly-Gaba_1	YaoZ_2023	Cox8b	Slc6a5	Spp1	Cox8b
+1083__PRP__Otp__Gly-Gaba_1	YaoZ_2023	Foxd3	Sp8	En1	En1	Bhlhe22
+1084__PRP__Otp__Gly-Gaba_2	YaoZ_2023	Colq	Crabp1	Foxp2	Sema3d	Crabp1
+1085__PRP__Otp__Gly-Gaba_3	YaoZ_2023	Otp	Hoxd3	Car8	Lemd1	Car8	Pou6f2	Hmx2	Sorcs1
+1086__PRP__Otp__Gly-Gaba_4	YaoZ_2023	Onecut3	Slc6a5	Pax5	Onecut3	Nr2f2	Nxph2
+1087__PRP__Otp__Gly-Gaba_5	YaoZ_2023	Cyp26b1	Tafa4	Dach1	Prox1	Spon1	Hoxc4
+1088__GRN-IRN-MDRNd__Ikzf1__Gly-Gaba_1	YaoZ_2023	Ikzf1	Prrxl1
+1089__MY__Lhx1__Gly-Gaba_1	YaoZ_2023	Slc6a5	Kazald1	Syt6	Lhx1os	G630016G05Rik	Pax2	Myo16	Syt2	Tmem132d	Zfhx4	Adarb2	Tox3	Tmem132d	Cbln4
+1090__MY__Lhx1__Gly-Gaba_2	YaoZ_2023	Slc6a5	Onecut2	Hoxc4	G630016G05Rik	Kazald1	Zmat4	Egfem1	Pax8	Hoxc4	Pax8	Egfem1	Adarb2
+1091__MY__Lhx1__Gly-Gaba_3	YaoZ_2023	Slc6a5	Tspan18	G630016G05Rik	Lhx1os	B130024G19Rik	Bcl11a	Rftn1	Bcl11b	Tspan18	Myh7	D030068K23Rik
+1092__MY__Lhx1__Gly-Gaba_4	YaoZ_2023	Mecom	C1ql2	Gad2	Hoxb5	Mecom	Cntnap3	Pax8
+1093__MY__Lhx1__Gly-Gaba_5	YaoZ_2023	Hoxb5	Tfap2b	Lhx1os	Pou6f2	Hoxb5	Tfap2b	Col25a1	Ptprk
+1094__MY__Lhx1__Gly-Gaba_6	YaoZ_2023	Pax8	Mylk	Pde11a	Skor1	Gpr156	Pde11a
+1095__MY__Lhx1__Gly-Gaba_7	YaoZ_2023	Mecom	Tacr3	Ret	Tacr3	Uncx	Pcsk1	St8sia2
+1096__MY__Lhx1__Gly-Gaba_8	YaoZ_2023	Esrrb	Glipr2	Rab38	Esrrb
+1097__MY__Lhx1__Gly-Gaba_9	YaoZ_2023	Slc6a5	Crhbp	Hoxc4	Hoxb5	Nwd2	Nxph2	Rspo3
+1098__PPY-PGRNl__Vip__Glyc-Gaba_1	YaoZ_2023	Skor2	Vip	Vip	Skor2	Hspb8	Slc5a7
+1099__MV-SPIV-PRP__Dmbx1__Gly-Gaba_1	YaoZ_2023	Dmbx1	Neurod2	Nrxn3	Ebf2	Hoxc4	Fam163a
+1100__MV-SPIV-PRP__Dmbx1__Gly-Gaba_2	YaoZ_2023	Slc6a2	Slc32a1	Pappa
+1101__MV-SPIV-PRP__Dmbx1__Gly-Gaba_3	YaoZ_2023	Nccrp1	Dmbx1	Tmem132c	Lncenc1
+1102__MDRN__Hoxb5__Ebf2__Gly-Gaba_1	YaoZ_2023	Hoxb5	Irx3	Neurod2	Gad2	Hoxb5	Ebf2	Hcrtr1	Prdm8
+1103__MDRNd__Prox1__Pax6__Gly-Gaba_1	YaoZ_2023	Hk2	Slc6a5	Nfix	Prox1	Pax6	Sp8
+1104__MY__Prox1__Lmo7__Gly-Gaba_1	YaoZ_2023	Slc6a5	Cyp26b1	Lhfp	Skor1	Prox1	Lmo7	Cyp26b1	Skor1
+1105__NTS-MDRNd__Prox1__Zic1__Gly-Gaba_1	YaoZ_2023	Arg1	Neurog2	Zic5	Zic5
+1106__NTS-MDRNd__Prox1__Zic1__Gly-Gaba_2	YaoZ_2023	Hoxb6	Col23a1	Ebf3	Pcp4l1
+1107__MV__Nkx6-1__Gly-Gaba_1	YaoZ_2023	Nkx6-1	Crhbp	Gad2	Crhbp
+1108__MV__Nkx6-1__Gly-Gaba_2	YaoZ_2023	Kcng4	Pax8	Cck	Syt2
+1109__PAS-MV__Ebf2__Gly-Gaba_1	YaoZ_2023	Kcng4	Skor1	Hoxd3	Pax2	Kcng4	Syt2	Igf1
+1110__PAS-MV__Ebf2__Gly-Gaba_2	YaoZ_2023	Hoxa5	BC034090	Arhgap15	Nppc	Hoxa5	Adra1a
+1111__PAS-MV__Ebf2__Gly-Gaba_3	YaoZ_2023	Slc6a5	Sall3	Stpg2	Kcnmb2	Npsr1	Sema3d	Stpg2	Bhlhe22
+1112__PAS-MV__Ebf2__Gly-Gaba_4	YaoZ_2023	Sall3	Pdyn	5033406O09Rik	Drd2
+1113__MV__Pax6__Gly-Gaba_1	YaoZ_2023	Slc6a5	Pax6	Neurod2	Cnr1
+1114__MV__Pax6__Gly-Gaba_2	YaoZ_2023	Col24a1	5033406O09Rik	Grin2c	Col24a1
+1115__CBN__Dmbx1__Gaba_1	YaoZ_2023	Dmbx1	Ramp3	Dmbx1	Irx1
+1116__RPA__Pax6__Hoxb5__Gly-Gaba_1	YaoZ_2023	Hoxb5	Tal1	Ebf3	Pax6	Hoxb5	Sox1ot	Slc6a5
+1117__CU-ECU__Pax2__Gly-Gaba_1	YaoZ_2023	NA	Pax2	Egfr
+1118__PRP__Gata3__Slc6a5__Gly-Gaba_1	YaoZ_2023	Slc6a5	Ntf3	Gata3	Slc6a5	Foxp2
+1119__MARN-PPY__Ngfr__Gly-Gaba_1	YaoZ_2023	Ngfr	Gata3
+1120__PARN-MDRNd-NTS__Gbx2__Gly-Gaba_1	YaoZ_2023	Pax8	Gbx2	Tpbg	Lhx1os	Sst	Tpbg	Lypd1	Zeb2	Fgf9
+1121__PARN-MDRNd-NTS__Gbx2__Gly-Gaba_2	YaoZ_2023	Slc6a5	Gbx2	Galr1	Trhr	Nrgn	Pou3f2	Galr1	Cdh20	Trhr
+1122__PARN-MDRNd-NTS__Gbx2__Gly-Gaba_3	YaoZ_2023	Slc6a5	Rprml	Sox5	Sst	Sema3a	Hoxb5	Pgpep1l	Sema3e	Cntn3	Fign
+1123__PARN-MDRNd-NTS__Gbx2__Gly-Gaba_4	YaoZ_2023	Skor2	Pax8	Gpr149	Skor2	Lncenc1	Gpr149	Pcsk5
+1124__PARN-MDRNd-NTS__Gbx2__Gly-Gaba_5	YaoZ_2023	Hoxb8	Lpar1	Cd24a	Npy	Cd24a
+1125__PARN-MDRNd-NTS__Gbx2__Gly-Gaba_6	YaoZ_2023	Slc39a8	Pax2	Slc39a8	Arhgap6	Kit	Drd5
+1126__PARN-MDRNd-NTS__Gbx2__Gly-Gaba_7	YaoZ_2023	Abca4	Rgs5	Foxo1	Tmem215	Cdh12	Arhgap28
+1127__MV__Nr4a2__Gly-Gaba_1	YaoZ_2023	Gna14	Gbx2	Nr4a2	Kcnj5
+1128__MV__Xdh__Gly-Gaba_1	YaoZ_2023	Ptgfr	Gbx2	Xdh
+1129__IRN__Dmbx1__Pax2__Gly-Gaba_1	YaoZ_2023	Dmbx1	Hoxa5	Dmbx1	Pax2	Hoxb5	Hoxc4
+1130__NTS-PARN__Neurod2__Gly-Gaba_1	YaoZ_2023	Zbtb42	Slc5a7	Slc5a7	Fam43a	Zbtb42	Pou6f2
+1131__NTS-PARN__Neurod2__Gly-Gaba_2	YaoZ_2023	Hoxb5	Tfap2b	Mn1	Sgcz	Adamts16	Hoxa5	Klhl1	Plch1
+1132__NTS-PARN__Neurod2__Gly-Gaba_3	YaoZ_2023	Pax8	Neurod6	C130026L21Rik	Bcl11b	Gm20646	Syt10	Neurod6	Samd5	Rasgrp1
+1133__NTS-PARN__Neurod2__Gly-Gaba_4	YaoZ_2023	Hoxb5	Tfap2b	Mn1	B230216N24Rik	Gad2	Ankfn1	G630016G05Rik	Bmp3	Rprm
+1134__NTS-PARN__Neurod2__Gly-Gaba_5	YaoZ_2023	Slc6a5	Ccbe1	Hoxb5	Cpne4	Penk	Sema3e	Abtb2	Gbx2
+1135__NTS-PARN__Neurod2__Gly-Gaba_6	YaoZ_2023	Pax2	Myo1e	Arhgap15	Lhfp	9530026P05Rik	Lhfp	Fras1	Nptx1
+1136__SPVI-SPVC__Sall3__Nfib__Gly-Gaba_1	YaoZ_2023	Hoxb6	Shisa8	Neurod2	Baiap3	Baiap3	Bhlhe22	Sstr1
+1137__SPVI-SPVC__Sall3__Nfib__Gly-Gaba_2	YaoZ_2023	Cdh3	Pvalb	Zeb2	Pvalb	Gulp1	St6galnac5	Sox5
+1138__SPVI-SPVC__Sall3__Lhx1__Gly-Gaba_1	YaoZ_2023	Hoxb8	B130024G19Rik	Rorb	Rorb	Syt9	Hoxb8
+1139__SPVI-SPVC__Sall3__Lhx1__Gly-Gaba_2	YaoZ_2023	Gbx1	Fgf10	9330158H04Rik	Nxph2	Trpc3
+1140__RO-RPA__Pkd2l1__Gaba_1	YaoZ_2023	Pkd2l1	Kcnh7	Pkd2l1
+1141__DCO__Il22__Gly-Gaba_1	YaoZ_2023	Il22	Rftn1	Rftn1	Iltifb
+1142__DCO__Il22__Gly-Gaba_2	YaoZ_2023	Il22	Edaradd	Ppp1r17
+1143__DCO__Il22__Gly-Gaba_3	YaoZ_2023	Fat2	Slc6a5	Cgnl1	Cdh22
+1144__CB__PLI__Gly-Gaba_1	YaoZ_2023	Hmga2	Afap1l2	Afap1l2	Coro6
+1145__CB__PLI__Gly-Gaba_2	YaoZ_2023	Pthlh	Tfap2b	Rspo2	P3h2	Lrrc38
+1146__CB__PLI__Gly-Gaba_3	YaoZ_2023	Pax2	C1ql3	Tfap2b	Gabrb1	Gm20754
+1147__CB__PLI__Gly-Gaba_4	YaoZ_2023	Ly6d	Afap1l2	Ly6d
+1148__CBX__Golgi__Gly-Gaba_1	YaoZ_2023	Zfp385c	Tfap2b
+1149__CBX__MLI__Megf11__Gaba_1	YaoZ_2023	Dnah11	Sla	Gldc	Sdk2	Pax2	Spns2
+1150__CBX__MLI__Megf11__Gaba_2	YaoZ_2023	Gabra6	Pvalb	Gabra6
+1151__CBX__MLI__Cdh22__Gaba_1	YaoZ_2023	Il22	Afap1l2	Ddah2	Cdh22	Adamts15
+1152__CBX__Purkinje__Gaba_1	YaoZ_2023	Pcp2	Stk17b	Plcxd2	Fgf10
+1153__CBX__Purkinje__Gaba_2	YaoZ_2023	NA	Pcdh7	Grin2a	St6gal1
+1154__CB__Granule__Glut_1	YaoZ_2023	Gabra6	Lmx1a	Cntn3
+1155__CB__Granule__Glut_2	YaoZ_2023	Gabra6	Gap43	Rab37	Gap43
+1156__DCO__UBC__Glut_1	YaoZ_2023	Sln	Lmx1a	Sln
+1157__Bergmann__NN_1	YaoZ_2023	Gpr37l1	Ctxn3	Dao	Gdf10
+1158__Astro-CB__NN_1	YaoZ_2023	Dao	Cyp26b1	Emid1	Dao	Dhrs3
+1159__Astro-NT__NN_1	YaoZ_2023	Gfap	Lhfpl3	Gria1	Hopx	C4b	Prelp
+1160__Astro-NT__NN_2	YaoZ_2023	Gja1	A330076C08Rik	Itih3	Gria2	Slco1c1	Gria2	Shisa9
+1161__Astro-TE__NN_1	YaoZ_2023	Myoc	Camk2a	Myoc
+1162__Astro-TE__NN_2	YaoZ_2023	Hepacam	E330013P04Rik	Zfp536	Hopx
+1163__Astro-TE__NN_3	YaoZ_2023	Gja1	Grin2c	Dcc	Slc7a10	Brinp3	Hsd11b1	Grin2c
+1164__Astro-TE__NN_4	YaoZ_2023	Gfap	Thbs4	Gm29683	Gm29683
+1165__Astro-TE__NN_5	YaoZ_2023	Gja1	Thbs4	Kcnk10	Pak1	Sfrp1	Meis2	Retreg1
+1166__Astro-OLF__NN_1	YaoZ_2023	Aqp4	Prss23	Igfbp2	Greb1
+1167__Astro-OLF__NN_2	YaoZ_2023	Gja1	Hs3st3a1	Slco1c1	C4b	Atp13a4
+1168__Astro-OLF__NN_3	YaoZ_2023	Ednrb	Hs3st3a1	C230072F16Rik	Gria2	C230072F16Rik
+1169__Astroependymal__NN_1	YaoZ_2023	Gfap	Cnmd	Id1	Fabp7	Slc7a2
+1170__Astroependymal__NN_2	YaoZ_2023	Wt1	Wif1
+1171__Astroependymal__NN_3	YaoZ_2023	Gfap	Prokr2	Itih3	Calml4
+1172__Tanycyte__NN_1	YaoZ_2023	Cnmd	Lpl	Lpl
+1173__Tanycyte__NN_2	YaoZ_2023	Gpr50	Ccdc170	Nkx2-4	Grid1	Nkx2-4
+1174__Tanycyte__NN_3	YaoZ_2023	Fndc3c1	Ecrg4
+1175__Ependymal__NN_1	YaoZ_2023	Ccdc153	Dnah3	Mtus2
+1176__Ependymal__NN_2	YaoZ_2023	Tmem212	Rarres2	Sulf1	Slc14a1	Hspb6	Kitl
+1177__Hypendymal__NN_1	YaoZ_2023	Sspo	Spag17	Sspo	Spdef
+1178__CHOR__NN_1	YaoZ_2023	2900040C04Rik	Ttr
+1179__OPC__NN_1	YaoZ_2023	Pdgfra	Olig1	Rmi2	Ryr3
+1180__OPC__NN_2	YaoZ_2023	Cenpf	Pdgfra	Cenpa
+1181__COP__NN_1	YaoZ_2023	Gpr17	Bmp4	Bmp4
+1182__NFOL__NN_2	YaoZ_2023	9630013A20Rik	Ptprb	Egflam	Man1a
+1183__MFOL__NN_3	YaoZ_2023	Cldn11	Sec14l5	9630013A20Rik	Cxcl12	2210011C24Rik
+1184__MOL__NN_4	YaoZ_2023	Cldn11	Anln	Efhd1	Spock3
+1185__OEC__NN_1	YaoZ_2023	Apod	Npy	Aqp1	Foxd3
+1186__ABC__NN_1	YaoZ_2023	Thbd	Ccn3	Slc47a1
+1187__VLMC__NN_1	YaoZ_2023	Igf2	Slc13a3	Sdk1
+1188__VLMC__NN_2	YaoZ_2023	Apod	Slc6a13	Col15a1	Srpx2	Igf2
+1189__VLMC__NN_3	YaoZ_2023	Alpl	Moxd1	Alpl
+1190__VLMC__NN_4	YaoZ_2023	Apod	Tfap2b	Il33	Angptl1
+1191__Peri__NN_1	YaoZ_2023	Vtn	Abcc9	Kcnj8
+1192__SMC__NN_1	YaoZ_2023	Acta2	Myh11	Acta2
+1193__Endo__NN_1	YaoZ_2023	Ly6c1
+1194__Microglia__NN_1	YaoZ_2023	C1qa	Tmem119	C1qa	Plxdc2
+1195__BAM__NN_1	YaoZ_2023	Mrc1	Maf	Pf4
+1196__Monocytes__NN_1	YaoZ_2023	Il1b	S100a9	Hp
+1197__DC__NN_1	YaoZ_2023	Cd74	Lyz2	H2-Aa	Cd74
+1198__B__cells__NN_1	YaoZ_2023	Cd74	Igkc	Igkc
+1199__ILC__NN_2	YaoZ_2023	Il1rl1	Gata3	Il1rl1
+1200__NK__cells__NN_3	YaoZ_2023	Ccl5	Fcer1g	Fcer1g
+1201__T__cells__NN_4	YaoZ_2023	Itk	Cd3d	Cd3d

@@ -1,0 +1,338 @@
+CLA-EPd-CTX__Car3__Glut	YaoZ_2023	Car3	Slc17a7
+IT__EP-CLA__Glut	YaoZ_2023	Npsr1	Satb2	Plekha2
+L5/6__IT__TPE-ENT__Glut	YaoZ_2023	Susd5	Slc17a7	Mas1
+L6__IT__CTX__Glut	YaoZ_2023	Herc6	Slc17a7	Blnk	Sulf1	Gucy1a1	Pde7b
+L5__IT__CTX__Glut	YaoZ_2023	Trbc2	Slc17a7	Prrg1	Arhgap25
+L4/5__IT__CTX__Glut	YaoZ_2023	Col26a1	Satb2	Herc6	Rorb
+L2/3__IT__CTX__Glut	YaoZ_2023	Stard8	Slc17a7	Ccbe1	Otof
+L2/3__IT__ENT__Glut	YaoZ_2023	Cd44	Slc17a7	Cemip
+L2/3__IT__PIR-ENTl__Glut	YaoZ_2023	Igfn1	Cntnap5a	Dach1	Bcl11a
+IT__AON-TT-DP__Glut	YaoZ_2023	Abi3bp	C1ql3	Prss23
+L2__IT__ENT-po__Glut	YaoZ_2023	Lef1	Itpka
+MEA__Slc17a7__Glut	YaoZ_2023	Zic5	Slc17a7	Crym
+COAp__Grxcr2__Glut	YaoZ_2023	Trh	Slc17a7
+LA-BLA-BMA-PA__Glut	YaoZ_2023	Calb2	Ccn3	C1ql3	Man1a
+ENTmv-PA-COAp__Glut	YaoZ_2023	Abca8a	Sv2b	Dcn
+CA1-ProS__Glut	YaoZ_2023	Fibcd1	Spink8
+CA3__Glut	YaoZ_2023	Tspan18	Slc17a7	Hes1
+L2__IT__PPP-APr__Glut	YaoZ_2023	Ctxn3	Satb2	Tll1
+L2/3__IT__PPP__Glut	YaoZ_2023	Cdc14a	Satb2	Meis2
+L2/3__IT__RSP__Glut	YaoZ_2023	Cxcl14	Satb2	Grik3	Brinp3
+L4__RSP-ACA__Glut	YaoZ_2023	Il22	Cbln1
+L5__ET__CTX__Glut	YaoZ_2023	Lratd2	Slc17a7	Fezf2
+SUB-ProS__Glut	YaoZ_2023	Rab38	Pou3f1	Hcn1
+L5__PPP__Glut	YaoZ_2023	Lipm
+CA2-FC-IG__Glut	YaoZ_2023	Map3k15	Slc17a7
+NLOT__Rho__Glut	YaoZ_2023	Sim1	Slc17a7
+L6b__EPd__Glut	YaoZ_2023	Calca	Satb2
+L6b/CT__ENT__Glut	YaoZ_2023	Cplx3	Nxph3	Npr3
+L6b__CTX__Glut	YaoZ_2023	Clic5	Cplx3
+L6__CT__CTX__Glut	YaoZ_2023	Syt6	Tbr1	Rprm
+CT__SUB__Glut	YaoZ_2023	Sntb1	Prss35	Ankrd33b
+L5__NP__CTX__Glut	YaoZ_2023	Nxph1	Fezf2	Satb2
+NP__SUB__Glut	YaoZ_2023	Crybg1	Nxph3
+NP__PPP__Glut	YaoZ_2023	Aox3	Rxfp1
+OB__Eomes__Ms4a15__Glut	YaoZ_2023	Eomes	Cck
+HPF__CR__Glut	YaoZ_2023	Trp73	Ndnf
+DG__Glut	YaoZ_2023	Prox1	Itpka	C1ql3
+DG-PIR__Ex__IMN	YaoZ_2023	Mex3a	Neurod1
+OB__Meis2__Thsd7b__Gaba	YaoZ_2023	Gm5087	Foxp2	Gabra3
+OB__Trdn__Gaba	YaoZ_2023	Ctxn3	Ndnf
+OB-in__Frmd7__Gaba	YaoZ_2023	Vipr2	Frmd7	Tenm4
+OB-out__Frmd7__Gaba	YaoZ_2023	Apold1	Kcnmb2
+OB-mi__Frmd7__Gaba	YaoZ_2023	Frmd7	Vip	Tcap
+OB__Dopa-Gaba	YaoZ_2023	Lpar1	Lgr5	Zeb2
+OB-STR-CTX__Inh__IMN	YaoZ_2023	2610307P16Rik	Dlx1	Zeb2
+Vip__Gaba	YaoZ_2023	Grpr	Vip
+Sncg__Gaba	YaoZ_2023	Egln3	Dlx1as	Galnt18
+RHP-COA__Ndnf__Gaba	YaoZ_2023	Ndnf	Htr3a	Gad2	Ntng1
+Lamp5__Gaba	YaoZ_2023	Cplx3	Ndnf
+Lamp5__Lhx6__Gaba	YaoZ_2023	Mctp2	Lhx6	Cryab
+Pvalb__chandelier__Gaba	YaoZ_2023	Pvalb	Vipr2
+Pvalb__Gaba	YaoZ_2023	Rbp4	Lhx6	Zfp804b
+Sst__Gaba	YaoZ_2023	Rbp4	Lhx6	Reln
+STR__Prox1__Lhx6__Gaba	YaoZ_2023	Gna14	Lhx6
+STR__Lhx8__Gaba	YaoZ_2023	Lhx8	St18
+Sst__Chodl__Gaba	YaoZ_2023	Lhx6	Hhip
+NDB-SI-MA-STRv__Lhx8__Gaba	YaoZ_2023	Gbx1	Lhx6	Sox6
+PAL-STR__Gaba-Chol	YaoZ_2023	Chat	Lhx8
+GPe-SI__Sox6__Cyp26b1__Gaba	YaoZ_2023	Lcp1	Sox6
+OT__D3__Folh1__Gaba	YaoZ_2023	Drd3	Prok2
+STR__D1__Gaba	YaoZ_2023	Prkch	Slc32a1	Drd1
+STR__D2__Gaba	YaoZ_2023	Adora2a	Phactr1	Pcp4l1
+STR__D1__Sema5a__Gaba	YaoZ_2023	Rbp1	Gpr88	Alk
+STR-PAL__Chst9__Gaba	YaoZ_2023	Chst9	Six3	Meis2
+IA__Mgp__Gaba	YaoZ_2023	Col23a1	Sp9	Adarb2	Foxg1	Nxph1
+NDB-SI-ant__Prdm12__Gaba	YaoZ_2023	Prdm12	Foxp2	Meis2	Pcp4l1
+LSX__Sall3__Pax6__Gaba	YaoZ_2023	Prdm12	Eya4	Gria1
+LSX__Otx2__Gaba	YaoZ_2023	Otx2os1	Ptk2b	Slc32a1
+LSX__Nkx2-1__Gaba	YaoZ_2023	C130074G19Rik	Lbhd2	Slc32a1	Tox
+LSX__Prdm12__Slit2__Gaba	YaoZ_2023	Prdm12	Hs3st2	Shisa9	Runx1t1
+LSX__Prdm12__Zeb2__Gaba	YaoZ_2023	Ano1	Myo5b	Zeb2	Slc18a2
+LSX__Sall3__Lmo1__Gaba	YaoZ_2023	Col6a3	Trpc4	Ptprm
+MEA-BST__Sox6__Gaba	YaoZ_2023	B130024G19Rik	Sox6	Slc32a1	Cxcl14
+MEA-BST__Lhx6__Sp9__Gaba	YaoZ_2023	Nxph2	Scn5a	Sox2ot	Fign
+MEA-BST__Lhx6__Nr2e1__Gaba	YaoZ_2023	Nr2e1	Lhx6	Satb1
+MEA-BST__Lhx6__Nfib__Gaba	YaoZ_2023	Greb1	Lhx6	Nfib
+CEA-BST__Gal__Avp__Gaba	YaoZ_2023	Avp	Meis2
+SI-MA-ACB__Ebf1__Bnc2__Gaba	YaoZ_2023	Bnc2	Gad1	Meis2
+CEA-BST__Six3__Cyp26b1__Gaba	YaoZ_2023	Cyp26b1	Six3
+CEA-AAA-BST__Six3__Sp9__Gaba	YaoZ_2023	Six3	Egr3	Nr2f2	Gpr88	Tshz1	Spock1
+ACB-BST-FS__D1__Gaba	YaoZ_2023	Zfp503	Sox1ot	Rprml	Wls	Elavl4
+CEA-BST__Ebf1__Pdyn__Gaba	YaoZ_2023	Ebf1	Dlx6	6430628N08Rik	Fgf14
+CEA-BST__Rai14__Pdyn__Crh__Gaba	YaoZ_2023	Rai14	Tac2	Gda
+BST-SI-AAA__Six3__Slc22a3__Gaba	YaoZ_2023	Slc22a3	Six3	Dach2
+SI-MPO-LPO__Lhx8__Gaba	YaoZ_2023	Gbx2	Lhx6	Foxp2
+MPO-ADP__Lhx8__Gaba	YaoZ_2023	Lhx8	Islr2	Pde11a
+MPN-MPO-LPO__Lhx6__Zfhx3__Gaba	YaoZ_2023	Gm29683	Lhx6	Pde11a
+BST__Tac2__Gaba	YaoZ_2023	Satb2	Slc32a1	Lamp5
+PVR__Six3__Sox3__Gaba	YaoZ_2023	Rorb	Six3	Ano1	Zic1
+BST-MPN__Six3__Nrgn__Gaba	YaoZ_2023	Rspo1	Six3	B130024G19Rik	Slc32a1
+ARH-PVi__Six6__Dopa-Gaba	YaoZ_2023	Slc6a3	Coch
+TMv-PMv__Tbx3__Hist-Gaba	YaoZ_2023	Hdc	Gap43
+RT-ZI__Gnb3__Gaba	YaoZ_2023	Cplx3	Six3
+SCH__Six6__Cdc14a__Gaba	YaoZ_2023	Six6	Cdc14a
+DMH__Prdm13__Gaba	YaoZ_2023	Prdm13	Gad1	Zfhx4
+PVHd__Gsc__Gaba	YaoZ_2023	Gsc	Gad1
+PVHd-SBPV__Six3__Prox1__Gaba	YaoZ_2023	Arx	Prox1	Isl1	Sox2ot
+AHN-SBPV-PVHd__Pdrm12__Gaba	YaoZ_2023	Prdm12	Lrfn5	Nr2f2	Dlx1
+SBPV-PVa__Six6__Satb2__Gaba	YaoZ_2023	Six6	Satb2	Gria3	Grid2
+AHN__Onecut3__Gaba	YaoZ_2023	Onecut3	Slc32a1	Gda
+ZI__Pax6__Gaba	YaoZ_2023	Pax6	Isl1	Lingo2	Nr2f2
+DMH-LHA__Gsx1__Gaba	YaoZ_2023	Gsx1	Cntnap5a	Prox1
+PVHd-DMH__Lhx6__Gaba	YaoZ_2023	Lhx6	Glra1	Sp9
+TU-ARH__Otp__Six6__Gaba	YaoZ_2023	Six6	Otp
+TMd-DMH__Foxd2__Gaba	YaoZ_2023	Sox14	Dlx1
+PVpo-VMPO-MPN__Hmx2__Gaba	YaoZ_2023	Hmx2	Slc32a1	Foxg1	Gal
+DMH__Hmx2__Gaba	YaoZ_2023	Lef1	Dlx1	Dlk1	Gal
+ARH-PVp__Tbx3__Gaba	YaoZ_2023	Tbx3	Usp29	Slc32a1	Dlk1
+LGv-ZI__Otx2__Gaba	YaoZ_2023	Otx2	Sp9	Lrrtm4	Rmst
+BST-po__Iigp1__Glut	YaoZ_2023	Cpa6	Gm31938
+TRS-BAC__Sln__Glut	YaoZ_2023	Adgrd1	Sln
+GPi__Tbr1__Cngb3__Gaba-Glut	YaoZ_2023	Cngb3	Grm5
+MEA-COA-BMA__Ccdc42__Glut	YaoZ_2023	Kcnh3	Scn5a	Adcyap1	Csmd3	Trhr	B130024G19Rik
+COAa-PAA-MEA__Barhl2__Glut	YaoZ_2023	Kcnh3	Nxph4	Lhx9	Fam155a
+MS-SF__Bsx__Glut	YaoZ_2023	Bmp7	Isl1
+AVPV-MEPO-SFO__Tbr1__Glut	YaoZ_2023	Gng8	Gad2	Tbr1
+LHA__Barhl2__Glut	YaoZ_2023	Samd3	AW551984	Lingo2	Meis2	Prlr
+ADP-MPO__Trp73__Glut	YaoZ_2023	Trp73	Nrsn2
+SI-MA-LPO-LHA__Skor1__Glut	YaoZ_2023	Il31ra	Dmrta2	Galntl6
+MEA__Otp__Foxp2__Glut	YaoZ_2023	Megf10	Slc17a6	Stc1
+MEA-BST__Otp__Zic2__Glut	YaoZ_2023	Otp	Zic4	Cxcl14
+LHA-MEA__Otp__Glut	YaoZ_2023	Otp	Lhx2	Nrgn
+DMH__Nkx2-4__Glut	YaoZ_2023	Tafa4	Asb4
+MPN-MPO-PVpo__Hmx2__Glut	YaoZ_2023	Foxg1	Sfta3-ps	Slc17a6
+DMH__Hmx2__Glut	YaoZ_2023	Hmx2	Lef1	Slc17a6
+ARH-PVp__Tbx3__Glut	YaoZ_2023	Tbx3	Slc17a6	Bsx
+DMH-LHA__Vgll2__Glut	YaoZ_2023	Vgll2
+VMH__Fezf1__Glut	YaoZ_2023	Fezf1	Sfta3-ps	Htr7
+VMH__Nr5a1__Glut	YaoZ_2023	Nr5a1	Lingo2
+LHA__Pmch__Glut	YaoZ_2023	Parpbp	Pmch
+LHA-AHN-PVH__Otp__Trh__Glut	YaoZ_2023	Sim2	Sgcz
+AHN-RCH-LHA__Otp__Fezf1__Glut	YaoZ_2023	Otp	Fezf1	Ebf1
+PVH-SO-PVa__Otp__Glut	YaoZ_2023	Otp	Pdyn	Tns1	Cadps2	Unc5d
+PH-ant-LHA__Otp__Bsx__Glut	YaoZ_2023	Otp	Bsx	Slc17a6
+STN-PSTN__Pitx2__Glut	YaoZ_2023	Cdh23	Lmx1a
+PMv-TMv__Pitx2__Glut	YaoZ_2023	Irx3	Lmx1a	Gabrg3	C1ql3
+PH-an__Pitx2__Glut	YaoZ_2023	Pax7	Slc17a6
+PH__Pitx2__Glut	YaoZ_2023	Irx3	Lmx1a	Dmrta2	Grid2	Lncenc1
+PH-LHA__Foxb1__Glut	YaoZ_2023	Foxb1	Pitx2	Frmpd4
+PMd-LHA__Foxb1__Glut	YaoZ_2023	Foxb1	Emx2
+PH-SUM__Foxa1__Glut	YaoZ_2023	Lmx1a	Zeb2	Gap43
+HY__Gnrh1__Glut	YaoZ_2023	Gnrh1
+MM-ant__Foxb1__Glut	YaoZ_2023	Tacstd2	Foxb1	Gpc6
+MM__Foxb1__Glut	YaoZ_2023	Sall3	Foxb1
+MH__Tac2__Glut	YaoZ_2023	Ano1	Gng8
+LH__Pou4f1__Sox1__Glut	YaoZ_2023	Sox1ot	Pou4f1
+AD__Serpinb7__Glut	YaoZ_2023	C1ql2	Zic1
+AV__Col27a1__Glut	YaoZ_2023	Npsr1	Trpm6
+PVT-PT__Ntrk1__Glut	YaoZ_2023	Bcl11b	Gbx2	Zic5
+CM-IAD-CL-PCN__Sema5b__Glut	YaoZ_2023	Sema5b	Gbx2	Edaradd
+TH__Prkcd__Grin2c__Glut	YaoZ_2023	Slc9a3r1	Shox2	Unc13c
+RE-Xi__Nox4__Glut	YaoZ_2023	Nox4	Shox2	Rgs16
+MG-POL-SGN__Nts__Glut	YaoZ_2023	Otof	Gbx2	Lhfp
+PF__Fzd5__Glut	YaoZ_2023	Ctxn3	Fzd5
+PRC-PAG__Pax6__Glut	YaoZ_2023	Pax6	Slc17a6	Barhl2
+MB-ant-ve__Dmrta2__Glut	YaoZ_2023	Emx2	Dmrta2	Glra1	Cdh18
+RN__Spp1__Glut	YaoZ_2023	Spp1	Ttc6
+MRN-PAG__Nkx6-1__Glut	YaoZ_2023	Pitx2	Slc30a3
+IF-RL-CLI-PAG__Foxa1__Glut	YaoZ_2023	Dmrta2	Ebf3	Prkg1	Nfib
+PAG-SC__Neurod2__Meis2__Glut	YaoZ_2023	Otx2os1	Shox2	Barhl1
+PAG__Pou4f3__Glut	YaoZ_2023	Pou4f3	Sgcz	Ebf2
+CUN__Evx2__Lhx2__Glut	YaoZ_2023	Otx2	Lhx9	Evx2	Tenm2
+APN__C1ql2__Glut	YaoZ_2023	Esrrb	Tfap2d	C1ql2
+APN__C1ql4__Glut	YaoZ_2023	Ctxn3	C1ql4
+PAG-MRN__Pou3f1__Glut	YaoZ_2023	C1ql4	Shox2	Calb1
+MRN__Pou3f1__C1ql4__Glut	YaoZ_2023	C1ql4	Shox2	Cacng3
+PRC-PAG__Tcf7l2__Irx2__Glut	YaoZ_2023	Zic4	Tfap2d	Lingo2	Irx2	Syt17	Galnt18
+SPA-SPFm-SPFp-POL-PIL-PoT__Sp9__Glut	YaoZ_2023	Sp9	Slc17a6	Klhl1	Tcf7l2	Dlgap2
+PAG-SC__Pou4f1__Zic1__Glut	YaoZ_2023	Barhl1	Lhx9	Zic1	Tcf7l2	Zfhx4
+PAG-MRN__Tfap2b__Glut	YaoZ_2023	Tfap2b	Bnc2	Shox2	Cck
+PAG__Pou4f1__Bnc2__Glut	YaoZ_2023	Bnc2	Shox2	4930438E09Rik	Sorcs3
+PAG__Pou4f1__Ebf2__Glut	YaoZ_2023	Barhl1	Ebf2	D130079A08Rik	Kit	Lrrtm4
+PAG__Pou4f2__Glut	YaoZ_2023	Sox6	Shox2	BC039966	Tenm2	Barhl1	Npsr1	Pou4f2
+PAG__Pou4f2__Mesi2__Glut	YaoZ_2023	Gli3	Shox2	Npas1	Ntng2	Pou4f1
+SC__Bnc2__Glut	YaoZ_2023	Sox6	Shox2	Csgalnact1	Bnc2
+SCig__Foxb1__Glut	YaoZ_2023	Foxb1	Tfap2b	Sox6
+SCig-an-PPT__Foxb1__Glut	YaoZ_2023	Foxb1	B130024G19Rik
+SCig__Foxb1__Otx2__Glut	YaoZ_2023	Foxb1	Nfix
+SCdg-PAG__Tfap2b__Glut	YaoZ_2023	Tfap2b	Bnc2	D130079A08Rik
+SCiw__Pitx2__Glut	YaoZ_2023	Pitx2	Bnc2
+IC__Tfap2d__Maf__Glut	YaoZ_2023	Tfap2d	En1	Irx2	Zfhx4
+CUN-PPN__Evx2__Meis2__Glut	YaoZ_2023	Evx2	C1ql4	Slc5a7
+PBG__Mtnr1a__Glut-Chol	YaoZ_2023	Mtnr1a	Evx1os
+PAG__Tcf24__Glut	YaoZ_2023	Tcf24
+SCig__Tfap2b__Chrnb3__Glut	YaoZ_2023	Etv1	Tfap2b	Prkcq
+SCop__Pou4f2__Neurod2__Glut	YaoZ_2023	Hpse2	Pou4f2
+SCsg__Pde5a__Glut	YaoZ_2023	Robo3	Shox2	Lef1
+SCop__Sln__Glut	YaoZ_2023	Scml2	Npnt
+PAG__Ucn__Glut	YaoZ_2023	Ucn
+ND-INC__Foxd2__Glut	YaoZ_2023	Foxd2os	Slc17a6
+PAG-MRN__Rln3__Gaba	YaoZ_2023	Rln3
+PPN-CUN-PCG__Otp__En1__Gaba	YaoZ_2023	Pax7	En1
+MRN-PPN-CUN__Pax8__Gaba	YaoZ_2023	Pax5	Otp	Pax8	En2
+MRN-VTN-PPN__Pax5__Cdh23__Gaba	YaoZ_2023	Cdh23	Pax5	Gad2
+SNr-VTA__Pax5__Npas1__Gaba	YaoZ_2023	Gm4675	Gabra1	Npas1
+PAG-PPN__Pax5__Sox21__Gaba	YaoZ_2023	Sox21	Pax5	Col23a1
+SNr__Six3__Gaba	YaoZ_2023	Six3os1	Irx3
+IC__Six3__En2__Gaba	YaoZ_2023	Six3os1	Gata3	Car8	Kcnmb2	Lingo2	Zfp804b
+PAG-MRN-RN__Foxa2__Gaba	YaoZ_2023	9030622O22Rik	Gad1
+PAG-ND-PCG__Onecut1__Gaba	YaoZ_2023	Onecut1	Gata3	Lingo2
+PAG-RN__Nkx2-2__Otx1__Gaba	YaoZ_2023	Nkx2-2	Slc32a1	Tfap2b
+PRT__Tcf7l2__Gaba	YaoZ_2023	Tcf7l2	Gata3	Slc30a3	Syt6
+LGv-SPFp-SPFm__Nkx2-2__Tcf7l2__Gaba	YaoZ_2023	Tcf7l2	Gata3	Nkx2-2
+SC__Otx2__Gcnt4__Gaba	YaoZ_2023	Gcnt4	Pax7	Syt4
+SC-PAG__Lef1__Emx2__Gaba	YaoZ_2023	Lef1	Pax7	Ptprk	Pdzrn4
+SCm-PAG__Cdh23__Gaba	YaoZ_2023	Lef1	Gata3	Cdh23	Lingo2
+SCs__Dmbx1__Gaba	YaoZ_2023	Fibcd1	Dmbx1	Gabrg3
+SC__Lef1__Otx2__Gaba	YaoZ_2023	Lef1	Pax7	Tmem132d	Otx2os1
+SCs__Pax7__Nfia__Gaba	YaoZ_2023	Shox2	Pax7	Nfib
+PRT__Mecom__Gaba	YaoZ_2023	Mecom	Gad1
+SC__Tnnt1__Gli3__Gaba	YaoZ_2023	Gli3	Gata3	Ebf3
+SCs__Lef1__Gli3__Gaba	YaoZ_2023	Gli3	Pax7
+SCsg__Gabrr2__Gaba	YaoZ_2023	Cplx3	Otx2os1	Grm5
+IPN__Otp__Crisp1__Gaba	YaoZ_2023	Cnksr3	Slc32a1
+SNc-VTA-RAmb__Foxa1__Dopa	YaoZ_2023	Slc6a3	Ntn1
+MB-MY__Tph2__Glut-Sero	YaoZ_2023	Gata3	Lmx1b
+PB__Lmx1a__Glut	YaoZ_2023	Lmx1a	Tfap2b
+PSV__Lmx1a__Trpv6__Glut	YaoZ_2023	Sema3a	Ebf2	Tspan18	Meis2	Ankfn1	Dach2
+PB-SUT__Tlx3__Lhx2__Glut	YaoZ_2023	Bmp6	Lmx1b	Lhx2
+PB__Pax5__Glut	YaoZ_2023	Prkcq	Tfap2b	Arhgap36
+LDT-PCG__Vsx2__Lhx4__Glut	YaoZ_2023	Sox1ot	Lhx4
+PB__Evx2__Glut	YaoZ_2023	Rprml	Lhx9	Meis1	Cbln1	Gabrq	Nr2f1
+B-PB__Nr4a2__Glut	YaoZ_2023	D930028M14Rik	Evx2	Grid2
+PCG-PRNr__Vsx2__Nkx6-1__Glut	YaoZ_2023	Vsx2	Lhx5	Zfhx4	Nr2f1	Tmem163
+PRNc-NI-SG-RPO__Vsx2__Nr4a2__Glut	YaoZ_2023	Vsx2	Calb1
+PRNc-PARN__Tlx1__Glut	YaoZ_2023	Lmx1b	Meis2	Pou6f2	Dlk1
+PB-PSV__Phox2b__Glut	YaoZ_2023	Phox2b	Ptger3	Slc17a6
+PSV__Pvalb__Lhx2__Glut	YaoZ_2023	Tgfbr2	Prrxl1	Pcdh7
+PB-NTS__Phox2b__Ebf3__Lmx1b__Glut	YaoZ_2023	Phox2b	Slc24a4
+PRNr__Otp__Nfib__Glut	YaoZ_2023	Otp	Evx1os	Ebf2
+IPN-LDT__Vsx2__Nkx6-1__Glut	YaoZ_2023	Pax8	Adcyap1
+LDT__Vsx2__Nkx6-1__Nfib__Glut	YaoZ_2023	Pax8	Slc17a6	Nfib
+NLL-SOC__Spp1__Glut	YaoZ_2023	6430553K19Rik	Spp1
+MEV__Ppp1r1c__Glut	YaoZ_2023	Ppp1r1c
+PG-TRN-LRN__Fat2__Glut	YaoZ_2023	H2-Ab1	Kcnd2
+IRN__Vip__Glut	YaoZ_2023	Vip	Slc17a6
+PRP-NI-PRNc-GRN__Otp__Glut	YaoZ_2023	Otp	Evx2	Zfhx4
+NTS__Phox2b__Glut	YaoZ_2023	Phox2b	Hoxc4	Nrgn
+MARN-GRN__Pyy__Glut	YaoZ_2023	Pyy
+MDRNv__Lhx4__Qrfprl__Glut	YaoZ_2023	Gbx2	Calcr
+NTS__Mbnl3__Glut	YaoZ_2023	Gm6213	Hoxb5
+PGRNd__Dmbx1__Glut	YaoZ_2023	Dmbx1	Mecom
+PGRN-PARN-MDRN__Hoxb5__Glut	YaoZ_2023	Hoxc4	Slc17a6	Sncg	Zim1	Lamp5	Dpyd	Trhde
+MV-SPIV__Slc6a2__Glut	YaoZ_2023	Crabp1	Lhx9	Lingo2
+SPVI-SPVC__Tlx3__Ebf3__Glut	YaoZ_2023	Hoxb6	Ebf2	Tac1	Dab1
+CU-ECU-SPVI__Foxb1__Glut	YaoZ_2023	Hoxb6	Slc17a6	Lhx9
+MV-SPIV__Phox2b__Ebf3__Lbx1__Glut	YaoZ_2023	Phox2b	Neurod2
+MV-SPIV__Zic4__Neurod2__Glut	YaoZ_2023	Zic4	Hoxb3	Myo5b	Cntnap2
+NTS__Aldh1a2__Glut	YaoZ_2023	Aldh1a2	Hoxb6
+CBN__Neurod2__Pvalb__Glut	YaoZ_2023	Kcng4	C1ql3	Neurod2	Rasa4
+NTS__Dbh__Glut	YaoZ_2023	Dbh	Lingo2
+DMX__VII__Tbx20__Chol	YaoZ_2023	Tbx20
+IO__Fgl2__Glut	YaoZ_2023	Htr5b	Crh
+VCO__Mafa__Meis2__Glut	YaoZ_2023	Mafa	Slc17a7	Bmpr1b	Rasef
+SPVO__Mafa__Meis2__Glut	YaoZ_2023	Mafa	Meis2	Fn1
+SPVC__Mafa__Glut	YaoZ_2023	Mafa	Vmn1r206	Slc30a3
+SPVC__Ccdc172__Glut	YaoZ_2023	Ccdc172	Prrxl1
+SPVC__Nmu__Glut	YaoZ_2023	Nmu
+MDRNd__Bves__Glut	YaoZ_2023	Fam129a	Hoxb5	Ebf3
+MDRNv__Crp__Glut	YaoZ_2023	Sp8	Slc17a6
+HB__Calcb__Chol	YaoZ_2023	Calcb
+Pineal__Crx__Glut	YaoZ_2023	Crx
+CS-RPO__Meis2__Gaba	YaoZ_2023	Otp	G630016G05Rik	Bhlhe22	Calb2	Crnde
+PRNc__Otp__Gly-Gaba	YaoZ_2023	Otp	Slc6a5	Lhx1os
+PB__Sst__Gly-Gaba	YaoZ_2023	Col23a1	Pax2	Sst
+PRNc__Prox1__Brs3__Gly-Gaba	YaoZ_2023	Brs3	Hmcn1
+CS-PRNr-PCG__Tmem163__Otp__Gaba	YaoZ_2023	Otp	Irx2	Onecut2	Nr2f1
+CS-PRNr-DR__En1__Sox2__Gaba	YaoZ_2023	Sox1ot	En1	Sox14	Gad1
+LDT__Fgf7__Gaba	YaoZ_2023	Fgf7	Grm5
+LDT-DTN__Gata3__Nfix__Gaba	YaoZ_2023	Sp9	Gata3	9530026P05Rik	Tenm2
+NI-RPO__Gata3__Nr4a2__Gaba	YaoZ_2023	Slc17a8	Slc32a1	Vwa5b1	Meis2
+LDT-PCG-CS__Gata3__Lhx1__Gaba	YaoZ_2023	Gm38505	Ebf3	Lhx1os	Gad1	Sox1ot
+PDTg-PCG__Pax6__Gaba	YaoZ_2023	Pax6	Tal1	B130024G19Rik
+PDTg__Otp__Shroom3__Gaba	YaoZ_2023	Rxfp1	Otp
+PDTg__Otp__Olig3__Gaba	YaoZ_2023	Olig3
+LDT-PCG__St18__Gaba	YaoZ_2023	Otp	St18	Tmem163	Ebf1
+DTN-LDT-IPN__Otp__Pax3__Gaba	YaoZ_2023	Vmn1r207-ps	Pax7
+NLL__Gata3__Gly-Gaba	YaoZ_2023	Gata2	Oprd1	Kcnh8
+PSV__Pax2__Gly-Gaba	YaoZ_2023	Pax2	St3gal1	Pcdh20	Acan
+NLL-po__Pax7__Gaba	YaoZ_2023	Pax7	Spp1
+POR__Gata3__Gly-Gaba	YaoZ_2023	Dkk1
+POR__Spp1__Gly-Gaba	YaoZ_2023	Cox8b	Slc6a5
+PRP__Otp__Gly-Gaba	YaoZ_2023	Otp	Hoxd3	Mab21l2
+GRN-IRN-MDRNd__Ikzf1__Gly-Gaba	YaoZ_2023	Ikzf1	Slc6a5
+MY__Lhx1__Gly-Gaba	YaoZ_2023	Hoxb3	Slc6a5	Lhx1	Sv2b	G630016G05Rik	Arpp21
+PPY-PGRNl__Vip__Glyc-Gaba	YaoZ_2023	Vip	Tfap2b
+MV-SPIV-PRP__Dmbx1__Gly-Gaba	YaoZ_2023	Dmbx1	Ebf3	Slc6a5
+MDRN__Hoxb5__Ebf2__Gly-Gaba	YaoZ_2023	Hoxb6	Irx3	Pax2
+MDRNd__Prox1__Pax6__Gly-Gaba	YaoZ_2023	Sp8	Slc6a5
+MY__Prox1__Lmo7__Gly-Gaba	YaoZ_2023	Cyp26b1	Skor1	Gad2	Thrsp
+NTS-MDRNd__Prox1__Zic1__Gly-Gaba	YaoZ_2023	Zic5	Hoxa5	Gpr101
+MV__Nkx6-1__Gly-Gaba	YaoZ_2023	Serpina9	Pvalb	Slc32a1
+PAS-MV__Ebf2__Gly-Gaba	YaoZ_2023	Ebf2	Slc6a5	Zic1	Bhlhe22	Sema3a
+MV__Pax6__Gly-Gaba	YaoZ_2023	Pax6	Slc6a5	Neurod2
+CBN__Dmbx1__Gaba	YaoZ_2023	Ramp3	Dmbx1
+RPA__Pax6__Hoxb5__Gly-Gaba	YaoZ_2023	Dlk1	Slc6a5	Sox1ot
+CU-ECU__Pax2__Gly-Gaba	YaoZ_2023	Pax2	Egfr
+PRP__Gata3__Slc6a5__Gly-Gaba	YaoZ_2023	Ntf3	Slc6a5
+MARN-PPY__Ngfr__Gly-Gaba	YaoZ_2023	Ngfr	Slc6a5
+PARN-MDRNd-NTS__Gbx2__Gly-Gaba	YaoZ_2023	Gbx2	Pax2	Zic4	Arhgap6	Adra1a
+MV__Nr4a2__Gly-Gaba	YaoZ_2023	Slc18a2	Gbx2
+MV__Xdh__Gly-Gaba	YaoZ_2023	Xdh	Slc6a5
+IRN__Dmbx1__Pax2__Gly-Gaba	YaoZ_2023	Gbx1	Dmbx1	Hoxb5
+NTS-PARN__Neurod2__Gly-Gaba	YaoZ_2023	Arhgap15	Slc6a5	Bcl11a	Slc4a4
+SPVI-SPVC__Sall3__Nfib__Gly-Gaba	YaoZ_2023	Hoxb8	Pax2	Sall3	Nfib
+SPVI-SPVC__Sall3__Lhx1__Gly-Gaba	YaoZ_2023	Kank1	Hoxa5	Ryr2
+RO-RPA__Pkd2l1__Gaba	YaoZ_2023	Pkd2l1
+DCO__Il22__Gly-Gaba	YaoZ_2023	Tmem204	Slc6a5
+CB__PLI__Gly-Gaba	YaoZ_2023	Bmp6	Slc6a5	Zic1	Shisa9	Rgs6
+CBX__Golgi__Gly-Gaba	YaoZ_2023	Zfp385c	Slc6a5
+CBX__MLI__Megf11__Gaba	YaoZ_2023	Homer3	Tfap2b	Sorcs3	Cacna1e
+CBX__MLI__Cdh22__Gaba	YaoZ_2023	4930523C07Rik	Cacng2	Shisa8
+CBX__Purkinje__Gaba	YaoZ_2023	Pcp2
+CB__Granule__Glut	YaoZ_2023	Gabra6	Ror1
+DCO__UBC__Glut	YaoZ_2023	Sln	Lmx1a
+Bergmann__NN	YaoZ_2023	Dao	Gdf10
+Astro-CB__NN	YaoZ_2023	Dao	Cyp26b1
+Astro-NT__NN	YaoZ_2023	Aqp4	Cd38	Agt	Itih3
+Astro-TE__NN	YaoZ_2023	Gja1	Lhx2	Gpc5	Nr2f1
+Astro-OLF__NN	YaoZ_2023	Gja1	Hs3st3a1
+Astroependymal__NN	YaoZ_2023	Gfap	Slit2	Slc7a11	Zic4
+Tanycyte__NN	YaoZ_2023	Gpr50	Apoe
+Ependymal__NN	YaoZ_2023	Tmem212	Rarres2
+Hypendymal__NN	YaoZ_2023	Sspo	Spag17
+CHOR__NN	YaoZ_2023	Ttr	Kl
+OPC__NN	YaoZ_2023	Pdgfra
+Oligo__NN	YaoZ_2023	Cldn11	Gjc3
+OEC__NN	YaoZ_2023	Aqp1	Foxd3
+ABC__NN	YaoZ_2023	Slc47a1
+VLMC__NN	YaoZ_2023	Apod	Slc6a13
+Peri__NN	YaoZ_2023	Kcnj8
+SMC__NN	YaoZ_2023	Acta2
+Endo__NN	YaoZ_2023	Ly6c1
+Microglia__NN	YaoZ_2023	C1qa	Tmem119
+BAM__NN	YaoZ_2023	Mrc1	Maf
+Monocytes__NN	YaoZ_2023	S100a9
+DC__NN	YaoZ_2023	Cd74
+Lymphoid__NN	YaoZ_2023	Cd52	Gimap3

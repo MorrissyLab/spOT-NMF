@@ -488,7 +488,27 @@ def plot_network_graph(graph: Union[nx.Graph, nx.DiGraph], pos: dict, sample: st
 
 
 def plot_network_analysis(results_dir: str, sample_name: str, usage_threshold: Union[float, int], n_bins: int, edge_threshold: float, annot_file: Union[str, None]):
-# Load the relevant files
+    """
+    Perform network analysis and visualization for a given sample.
+    Loads usage data, computes pairwise statistics, builds a network graph, detects communities, and plots the results.
+
+    Parameters
+    ----------
+    results_dir : str
+        Directory to load and save results.
+    sample_name : str
+        Name of the sample to analyze.
+    usage_threshold : float or int
+        Threshold for usage counts to consider a program present in a sample.
+    n_bins : int
+        Minimum number of bins (samples) for an edge to be included in the network.
+    edge_threshold : float
+        Threshold for edge weights to filter the network.
+    annot_file : str or None
+        Path to an annotation file containing program annotations. If None, no annotations are applied.
+    """
+    
+    # Load the relevant files
     results_path = os.path.join(results_dir, sample_name)
     rf_usages = pd.read_csv(os.path.join(results_path, f"topics_per_spot_{sample_name}.csv"), index_col=0)
 

@@ -312,7 +312,7 @@ def base_plot(graph: Union[nx.Graph, nx.DiGraph], pos: dict, title: Union[str, N
     # Check if the graph is empty
     if graph.number_of_nodes() == 0 or graph.number_of_edges() == 0:
         print("Empty graph: no nodes to plot.")
-        return fig
+        return fig, ax
 
     # Edge attributes
     edge_weights = [graph[u][v].get('weight') for u, v in graph.edges()]

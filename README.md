@@ -38,7 +38,7 @@ conda create -n spotnmf python=3.12.3
 conda activate spotnmf
 
 # Install major dependencies
-conda install -c conda-forge scanpy python-igraph leidenalg scikit-learn statsmodels pandas pygam scipy=1.12
+conda install -c conda-forge scanpy python-igraph leidenalg scikit-learn statsmodels pandas pygam scipy=1.12 adjusttext
 pip install rbo distinctipy gprofiler-official==1.0.0 fastcluster==1.2.6
 
 # Install PyTorch (adjust CUDA version as needed)
@@ -75,18 +75,25 @@ python cli.py plot --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --resu
 python cli.py annotate --sample_name SAMPLE1 --results_dir ./results --genome GRCh38
 ```
 
+**Plot niche network plots:**
+
+```bash
+python cli.py network --sample_name SAMPLE1 --results_dir ./results --usage_threshold 0 --n_bins 1000 --edge_threshold 0.199
+```
+
 ---
 
 ## Command-Line Interface (CLI)
 
 The main CLI (`cli.py`) supports the following commands:
 
-| Command    | Description                                                    |
-| ---------- | -------------------------------------------------------------- |
-| spotnmf    | Full pipeline: deconvolution, annotation, and spatial plotting |
-| deconvolve | Only run OT-NMF and save results                               |
-| plot       | Visualize spatial topic/program usage                          |
-| annotate   | Annotate gene programs with pathway and gene set enrichment    |
+| Command      | Description                                                    |
+| ------------ | -------------------------------------------------------------- |
+| spotnmf      | Full pipeline: deconvolution, annotation, and spatial plotting |
+| deconvolve   | Only run OT-NMF and save results                               |
+| plot         | Visualize spatial topic/program usage                          |
+| annotate     | Annotate gene programs with pathway and gene set enrichment    |
+| network      | Visualize niche networks                                       |
 
 ### Key Arguments
 
@@ -99,6 +106,10 @@ The main CLI (`cli.py`) supports the following commands:
 * `--is_xeno`: Flag for xenograft data
 * `--is_aggr`: Flag for aggregated libraries
 * `--hvg_file`: Precomputed highly variable genes (optional)
+* `--usage_threshold`: Usage threshold
+* `--n_bins`: Number of bins
+* `--edge_threshold`: Edge threshold
+* `--annot_file`: Annotation file
 
 **Model parameters** (customizable):
 
@@ -127,6 +138,7 @@ The main CLI (`cli.py`) supports the following commands:
 
   * Spatial maps of topics/programs (per sample)
   * QC and statistics for HVG selection
+  * Niche network plots showing interactions between topics
 
 ---
 

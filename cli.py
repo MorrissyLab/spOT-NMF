@@ -7,21 +7,26 @@ gene set enrichment, and annotation.
 
 Functionality:
     - run_experiment: Main function for processing spatial data and saving outputs.
-    - plot_programs: Visualize inferred topics on spatial tissue maps.
+    - plot: Visualize inferred topics on spatial tissue maps.
+    - network: Plot networks of gene programs.
     - annotate_programs: Perform enrichment and annotation of gene programs.
     - main: Command-line interface to execute various modes (deconvolution, plotting, annotation).
 """
 
+
 import argparse
 import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import time
 from datetime import datetime
 import pandas as pd
 pd.options.display.float_format = '{:f}'.format
+import numpy as np
+from typing import Union
 
 from spotnmf import run_spotnmf
 from spotnmf.gscore import calculate_marker_genes_topics_df
-from spotnmf import io, pl, annotate, enrichment, hvg
+from spotnmf import io, pl, annotate, enrichment, hvg, niche_networks
 
 
 def plot_programs(results_dir, sample_name, adata_spatial, is_visium=True, genome=None, is_xenograft=False, is_aggr = True):
@@ -104,6 +109,22 @@ def annotate_programs(results_dir, sample_name, genome):
         )
 
 
+def plot_networks(results_dir: str, sample_name: str, usage_threshold: Union[float, int], n_bins: int, edge_threshold: float, annot_file: Union[str, None]):
+    """
+    Plot niche networks for a given sample.
+    """
+    print("Plotting niche networks.")
+
+    niche_networks.plot_network_analysis(
+        results_dir=results_dir,
+        sample_name=sample_name,
+        usage_threshold=usage_threshold,
+        n_bins=n_bins,
+        edge_threshold=edge_threshold,
+        annot_file=annot_file
+    )
+
+
 def run_experiment(
     adata_spatial,
     k: int,
@@ -114,9 +135,14 @@ def run_experiment(
     hvg_file=None,
     annotate=False,
     plot=False,
+    network=False,
     is_visium=True,
     is_aggr = True,
     is_xenograft=False,
+    usage_threshold: Union[float, int] = 0,
+    n_bins: int = 1000,
+    edge_threshold: float = 0.199,
+    annot_file: Union[str, None] = None,
     model_params={},
     **kwargs,
 ):
@@ -185,10 +211,14 @@ def run_experiment(
             genome = adata_spatial.uns.params["genome"]
         annotate_programs(results_dir, sample_name, genome)
 
-            # Plot spatial maps
+    # Plot spatial maps
     if plot:
         plot_programs(results_dir, sample_name, adata_spatial, is_visium=is_visium, genome=genome, is_xenograft=is_xenograft, is_aggr = is_aggr)
-        
+
+    # Plot networks
+    if network:
+        plot_networks(results_dir, sample_name, usage_threshold=usage_threshold, n_bins=n_bins, edge_threshold=edge_threshold, annot_file=annot_file)
+
     # Save timing
     duration = time.time() - start_time
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Completed in {duration:.2f} seconds.")
@@ -201,7 +231,7 @@ def main():
     Command-line interface for running spotnmf experiments.
     """
     parser = argparse.ArgumentParser(description="Run spatial transcriptomics experiments with spotnmf.")
-    parser.add_argument("run_type", choices=["spotnmf", "deconvolve", "plot", "annotate"], help="Type of operation to perform.")
+    parser.add_argument("run_type", choices=["spotnmf", "deconvolve", "plot", "annotate", "network"], help="Type of operation to perform.")
     parser.add_argument("--sample_name", required=True, help="Sample identifier.")
     parser.add_argument("--results_dir", required=True, help="Directory for saving results.")
 
@@ -214,6 +244,10 @@ def main():
     parser.add_argument("--is_aggr", action="store_true", help="Whether data is aggregated across libraries.")
     parser.add_argument("--select_sample", default=None, help="Subset a specific sample.")
     parser.add_argument("--hvg_file", default=None, help="Precomputed highly variable genes file.")
+    parser.add_argument("--usage_threshold", type=float, default=0, help="Usage threshold.")
+    parser.add_argument("--n_bins", type=int, default=1000, help="Number of bins.")
+    parser.add_argument("--edge_threshold", type=float, default=0.199, help="Edge threshold.")
+    parser.add_argument("--annot_file", default=None, help="Annotation file.")
 
     parser.add_argument("--lr", type=float, default=0.001, help="Learning rate.")
     parser.add_argument("--h", type=float, default=0.05, help="Height parameter.")
@@ -230,7 +264,9 @@ def main():
         parser.error("--genome is required for 'annotate'.")
     if args.run_type == "plot" and not args.adata_path:
         parser.error("--adata_path is required for 'plot'.")
-    
+    if args.run_type == "network" and (args.usage_threshold is None or args.n_bins is None or args.edge_threshold is None):
+        parser.error("--usage_threshold, --n_bins, and --edge_threshold are required for 'network'.")
+
     is_visium = args.data_mode in {"visium", "visium_hd"}
 
     adata_spatial = None
@@ -265,7 +301,7 @@ def main():
         run_experiment(
             adata_spatial, args.k, args.sample_name, args.results_dir,
             genome=args.genome, hvg_file=args.hvg_file,
-            annotate=True, plot=True,
+            annotate=True, plot=True, network=True,
             is_visium=is_visium, is_xenograft=args.is_xeno, is_aggr=args.is_aggr,
             model_params=model_params
         )
@@ -273,7 +309,7 @@ def main():
         run_experiment(
             adata_spatial, args.k, args.sample_name, args.results_dir,
             genome=args.genome, hvg_file=args.hvg_file,
-            annotate=False, plot=False,
+            annotate=False, plot=False, network=False,
             is_visium=is_visium, is_xenograft=args.is_xeno, is_aggr=args.is_aggr,
             model_params=model_params
         )
@@ -281,6 +317,8 @@ def main():
         plot_programs(args.results_dir, args.sample_name, adata_spatial, is_visium=is_visium, genome=args.genome, is_xenograft=args.is_xeno, is_aggr=args.is_aggr)
     elif args.run_type == "annotate":
         annotate_programs(args.results_dir, args.sample_name, genome=args.genome)
+    elif args.run_type == "network":
+        plot_networks(args.results_dir, args.sample_name, args.usage_threshold, args.n_bins, args.edge_threshold, annot_file=args.annot_file)
 
 
 if __name__ == "__main__":

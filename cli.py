@@ -330,7 +330,7 @@ def main():
         parser.error("--genome is required for 'annotate'.")
     if args.run_type == "plot" and not args.adata_path:
         parser.error("--adata_path is required for 'plot'.")
-    if args.run_type == "network" and (args.usage_threshold is None and args.n_bins is None and args.edge_threshold is None):
+    if args.run_type == "network" and (args.usage_threshold is None or args.n_bins is None or args.edge_threshold is None):
         parser.error("--usage_threshold, --n_bins, and --edge_threshold are required for 'network'.")
 
     is_visium = args.data_mode in {"visium", "visium_hd"}

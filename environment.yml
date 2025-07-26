@@ -37,6 +37,7 @@ dependencies:
   - packaging=24.2
   - pyparsing=3.2.1
   - six=1.17.0
+  - typing
   - typing_extensions=4.12.2
   - cached-property=1.5.2
   - cached_property=1.5.2
@@ -52,6 +53,8 @@ dependencies:
   - kiwisolver=1.4.8
   - markupsafe=2.1.5
   - jinja2=3.1.4
+  - os
+  - adjust_text
   # CUDA/torch dependencies typically installed via pip (see below)
   - pip
   - pip:

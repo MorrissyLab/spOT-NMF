@@ -198,7 +198,7 @@ def run_experiment(
     usage_threshold: Union[float, int] = 0,
     n_bins: int = 1000,
     edge_threshold: float = 0.199,
-    annot_file: str = None,
+    annot_file: Union[str, None] = None,
     model_params={},
     **kwargs,
 ):

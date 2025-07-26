@@ -181,3 +181,6 @@ data/topics_per_spot_P5_CRC_GRCh38_50_24um.csv
 data/topics_per_spot_pdx_merge_all_mm10_90.csv
 data/programs_annotations.csv
 .vscode/settings.json
+data/CRC_connections.png
+data/CRC_network.png
+data/GBMXeno_network.png

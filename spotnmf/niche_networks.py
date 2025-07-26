@@ -563,7 +563,7 @@ def plot_connection_heatmap(group_connections, rowannot: Union[pd.DataFrame, Non
                             custom_colors=None, figsize=(14, 10), cmap="coolwarm",
                             cluster_rows: bool = True, cluster_cols: bool = True,
                             suptitle: str = "In-group and Out-group Connection Heatmap", legend_title: str = "n.edges",
-                            save: bool = False, save_path: Union[str, None]  = None, prefix: Union[str, None] = None) -> Tuple[plt.Figure, plt.Axes]:
+                            save: bool = False, save_path: Union[str, None] = None, prefix: Union[str, None] = None) -> Tuple[plt.Figure, plt.Axes]:
     """
     Plot a clustered heatmap of group connections with optional row and column cluster annotations and legends.
 

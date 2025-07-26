@@ -478,7 +478,7 @@ def plot_network_analysis(graph: Union[nx.Graph, nx.DiGraph], pos: dict, sample:
 
         # Create PDF file
         pdf_filename = os.path.join(samples_split_dir, 
-                                f"usagethresh{usage_threshold}_{prefix}nbins{n_bins}_{sample}_Program_Program_Interaction_Network_Edge_Cutoff.pdf")
+                                f"usagethresh{usage_threshold}_{prefix}_nbins{n_bins}_{sample}_Program_Program_Interaction_Network_Edge_Cutoff.pdf")
         with PdfPages(pdf_filename) as pdf:
             pdf.savefig(fig1, bbox_inches='tight')
             if fig2 is not None:

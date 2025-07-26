@@ -7,14 +7,16 @@ gene set enrichment, and annotation.
 
 Functionality:
     - run_experiment: Main function for processing spatial data and saving outputs.
-    - plot_programs: Visualize inferred topics on spatial tissue maps.
-    - plot_networks: Plot networks of gene programs.
+    - plot: Visualize inferred topics on spatial tissue maps.
+    - network: Plot networks of gene programs.
     - annotate_programs: Perform enrichment and annotation of gene programs.
     - main: Command-line interface to execute various modes (deconvolution, plotting, annotation).
 """
 
+
 import argparse
 import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import time
 from datetime import datetime
 import pandas as pd
@@ -122,6 +124,9 @@ def plot_networks(results_dir: str, sample_name: str, usage_threshold: Union[flo
         # Load and clean annotation
         annot = pd.read_csv(annot_file)
 
+        if "Annotation" not in annot.columns or "Program" not in annot.columns:
+            raise ValueError("Annotation file must contain 'Program' and 'Annotation' columns, in that order.")
+
         # Rename columns based on annotations
         annot_dict = dict(zip(annot["Program"], annot["Annotation"]))
 
@@ -137,6 +142,8 @@ def plot_networks(results_dir: str, sample_name: str, usage_threshold: Union[flo
     # Compute pairwise statistics
     stats_df = niche_networks.compute_pairwise_stats(usage=rf_usages, usage_threshold=usage_threshold, sample=sample_name,
                                                      save_path=results_path)
+    print("Stats DataFrame created and saved.")
+
     stats_df[f"{sample_name}_val"] = (stats_df[f"{sample_name}_P2pos"] + 1) / (stats_df[f"{sample_name}_P2pos"] + stats_df[f"{sample_name}_P2neg"] + 2)
 
     # Generate binary column for the edge threshold
@@ -150,6 +157,7 @@ def plot_networks(results_dir: str, sample_name: str, usage_threshold: Union[flo
 
     # Build the network graph
     graph, graph_filtered = niche_networks.build_network_graph(stats_df, node_attrs, sample_name, n_bins)
+    print("Network graph built.")
 
     # Cluster the graph using Infomap and save the results
     graph = niche_networks.detect_communities_infomap(graph)
@@ -167,7 +175,8 @@ def plot_networks(results_dir: str, sample_name: str, usage_threshold: Union[flo
     niche_networks.plot_network_analysis(graph=graph_filtered, pos=pos_filtered, sample=sample_name,
                                          n_bins=n_bins, edge_threshold=edge_threshold, 
                                          usage_threshold=usage_threshold,
-                                         save=True, save_path=results_path, prefix=sample_name)
+                                         save=True, save_path=results_path, prefix=str(sample_name + "_filtered"))
+    print("Network analysis plots saved.")
     
     # Plot the inside-outside connections heatmap
     group_connections, columnannot, rowannot = niche_networks.calculate_outgoing_and_incoming_connections(graph)
@@ -179,6 +188,7 @@ def plot_networks(results_dir: str, sample_name: str, usage_threshold: Union[flo
                                            cluster_rows=True, cluster_cols=True,
                                            suptitle="In-group and Out-group Connections Heatmap", legend_title="Log2(n.edges + 1)",
                                            save=True, save_path=results_path, prefix=sample_name)
+    print("Network connections heatmap saved.")
 
 
 def run_experiment(
@@ -191,7 +201,7 @@ def run_experiment(
     hvg_file=None,
     annotate=False,
     plot_program=False,
-    plot_network=False,
+    network=False,
     is_visium=True,
     is_aggr = True,
     is_xenograft=False,
@@ -272,7 +282,7 @@ def run_experiment(
         plot_programs(results_dir, sample_name, adata_spatial, is_visium=is_visium, genome=genome, is_xenograft=is_xenograft, is_aggr = is_aggr)
 
     # Plot networks
-    if plot_network:
+    if network:
         plot_networks(results_dir, sample_name, usage_threshold=usage_threshold, n_bins=n_bins, edge_threshold=edge_threshold, annot_file=annot_file)
 
     # Save timing
@@ -287,7 +297,7 @@ def main():
     Command-line interface for running spotnmf experiments.
     """
     parser = argparse.ArgumentParser(description="Run spatial transcriptomics experiments with spotnmf.")
-    parser.add_argument("run_type", choices=["spotnmf", "deconvolve", "plot_programs", "annotate", "plot_networks"], help="Type of operation to perform.")
+    parser.add_argument("run_type", choices=["spotnmf", "deconvolve", "plot", "annotate", "network"], help="Type of operation to perform.")
     parser.add_argument("--sample_name", required=True, help="Sample identifier.")
     parser.add_argument("--results_dir", required=True, help="Directory for saving results.")
 
@@ -300,9 +310,9 @@ def main():
     parser.add_argument("--is_aggr", action="store_true", help="Whether data is aggregated across libraries.")
     parser.add_argument("--select_sample", default=None, help="Subset a specific sample.")
     parser.add_argument("--hvg_file", default=None, help="Precomputed highly variable genes file.")
-    parser.add_argument("--usage_threshold", help="Usage threshold.")
-    parser.add_argument("--n_bins", help="Number of bins.")
-    parser.add_argument("--edge_threshold", help="Edge threshold.")
+    parser.add_argument("--usage_threshold", type=float, default=None, help="Usage threshold.")
+    parser.add_argument("--n_bins", type=int, default=None, help="Number of bins.")
+    parser.add_argument("--edge_threshold", type=float, default=None, help="Edge threshold.")
     parser.add_argument("--annot_file", default=None, help="Annotation file.")
 
     parser.add_argument("--lr", type=float, default=0.001, help="Learning rate.")
@@ -318,10 +328,10 @@ def main():
         parser.error("--adata_path and --k are required for 'spotnmf' or 'deconvolve'.")
     if args.run_type == "annotate" and not args.genome:
         parser.error("--genome is required for 'annotate'.")
-    if args.run_type == "plot_programs" and not args.adata_path:
-        parser.error("--adata_path is required for 'plot_programs'.")
-    if args.run_type == "plot_networks" and not (args.usage_threshold and args.n_bins and args.edge_threshold):
-        parser.error("--usage_threshold, --n_bins, and --edge_threshold are required for 'plot_networks'.")
+    if args.run_type == "plot" and not args.adata_path:
+        parser.error("--adata_path is required for 'plot'.")
+    if args.run_type == "network" and (args.usage_threshold is None and args.n_bins is None and args.edge_threshold is None):
+        parser.error("--usage_threshold, --n_bins, and --edge_threshold are required for 'network'.")
 
     is_visium = args.data_mode in {"visium", "visium_hd"}
 
@@ -357,7 +367,7 @@ def main():
         run_experiment(
             adata_spatial, args.k, args.sample_name, args.results_dir,
             genome=args.genome, hvg_file=args.hvg_file,
-            annotate=True, plot_program=True, plot_network=True,
+            annotate=True, plot_program=True, network=True,
             is_visium=is_visium, is_xenograft=args.is_xeno, is_aggr=args.is_aggr,
             model_params=model_params
         )
@@ -365,15 +375,15 @@ def main():
         run_experiment(
             adata_spatial, args.k, args.sample_name, args.results_dir,
             genome=args.genome, hvg_file=args.hvg_file,
-            annotate=False, plot_program=False, plot_network=False,
+            annotate=False, plot_program=False, network=False,
             is_visium=is_visium, is_xenograft=args.is_xeno, is_aggr=args.is_aggr,
             model_params=model_params
         )
-    elif args.run_type == "plot_programs":
+    elif args.run_type == "plot":
         plot_programs(args.results_dir, args.sample_name, adata_spatial, is_visium=is_visium, genome=args.genome, is_xenograft=args.is_xeno, is_aggr=args.is_aggr)
     elif args.run_type == "annotate":
         annotate_programs(args.results_dir, args.sample_name, genome=args.genome)
-    elif args.run_type == "plot_networks":
+    elif args.run_type == "network":
         plot_networks(args.results_dir, args.sample_name, args.usage_threshold, args.n_bins, args.edge_threshold, annot_file=args.annot_file)
 
 

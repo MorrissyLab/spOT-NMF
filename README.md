@@ -66,7 +66,7 @@ python cli.py deconvolve --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad 
 **Plot spatial topic usage:**
 
 ```bash
-python cli.py plot_program --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --results_dir ./results
+python cli.py plot --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --results_dir ./results
 ```
 
 **Annotate gene programs (enrichment and gene set overlap):**
@@ -78,7 +78,7 @@ python cli.py annotate --sample_name SAMPLE1 --results_dir ./results --genome GR
 **Plot niche network plots:**
 
 ```bash
-python cli.py plot_network --sample_name SAMPLE1 --results_dir ./results --usage_threshold 0 --n_bins 1000 --edge_threshold 0.199
+python cli.py network --sample_name SAMPLE1 --results_dir ./results --usage_threshold 0 --n_bins 1000 --edge_threshold 0.199
 ```
 
 ---
@@ -91,9 +91,9 @@ The main CLI (`cli.py`) supports the following commands:
 | ------------ | -------------------------------------------------------------- |
 | spotnmf      | Full pipeline: deconvolution, annotation, and spatial plotting |
 | deconvolve   | Only run OT-NMF and save results                               |
-| plot_program | Visualize spatial topic/program usage                          |
+| plot         | Visualize spatial topic/program usage                          |
 | annotate     | Annotate gene programs with pathway and gene set enrichment    |
-| plot_network | Visualize niche networks                                       |
+| network      | Visualize niche networks                                       |
 
 ### Key Arguments
 

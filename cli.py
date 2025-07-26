@@ -109,86 +109,20 @@ def annotate_programs(results_dir, sample_name, genome):
         )
 
 
-def plot_networks(results_dir: str, sample_name: str, usage_threshold: Union[float, int] = 0, n_bins: int = 1000, edge_threshold: float = 0.199, annot_file: Union[str, None] = None):
+def plot_networks(results_dir: str, sample_name: str, usage_threshold: Union[float, int], n_bins: int, edge_threshold: float, annot_file: Union[str, None]):
     """
     Plot niche networks for a given sample.
     """
     print("Plotting niche networks.")
-    
-    # Load the relevant files
-    results_path = os.path.join(results_dir, sample_name)
-    rf_usages = pd.read_csv(os.path.join(results_path, f"topics_per_spot_{sample_name}.csv"), index_col=0)
 
-    # Load the annotation file if it exists
-    if annot_file is not None:
-        # Load and clean annotation
-        annot = pd.read_csv(annot_file)
-
-        if "Annotation" not in annot.columns or "Program" not in annot.columns:
-            raise ValueError("Annotation file must contain 'Program' and 'Annotation' columns, in that order.")
-
-        # Rename columns based on annotations
-        annot_dict = dict(zip(annot["Program"], annot["Annotation"]))
-
-        rf_usages.columns = [col.replace("ot_", "ot") + f"_{annot_dict[col]}" 
-                            if col in annot_dict else col.replace("ot_", "ot")
-                            for col in rf_usages.columns]
-
-    # Filter usages based on the usage threshold
-    for col in rf_usages.columns:
-        thresh = rf_usages[col].quantile(0.90)
-        rf_usages.loc[rf_usages[col] < thresh, col] = 0
-
-    # Compute pairwise statistics
-    stats_df = niche_networks.compute_pairwise_stats(usage=rf_usages, usage_threshold=usage_threshold, sample=sample_name,
-                                                     save_path=results_path)
-    print("Stats DataFrame created and saved.")
-
-    stats_df[f"{sample_name}_val"] = (stats_df[f"{sample_name}_P2pos"] + 1) / (stats_df[f"{sample_name}_P2pos"] + stats_df[f"{sample_name}_P2neg"] + 2)
-
-    # Generate binary column for the edge threshold
-    stats_df[f"gt{edge_threshold}"] = (stats_df[f"{sample_name}_val"].abs() > edge_threshold)
-
-    # Subset the stats_df for the specified edge threshold
-    stats_df = stats_df[stats_df[f"gt{edge_threshold}"] == 1]
-
-    # Generate node attributes
-    node_attrs = niche_networks.generate_node_attributes(rf_usages, usage_threshold, sample_name)
-
-    # Build the network graph
-    graph, graph_filtered = niche_networks.build_network_graph(stats_df, node_attrs, sample_name, n_bins)
-    print("Network graph built.")
-
-    # Cluster the graph using Infomap and save the results
-    graph = niche_networks.detect_communities_infomap(graph)
-    pos = niche_networks.get_node_positions(graph, layout_algorithm='graphopt')
-
-    niche_networks.plot_network_analysis(graph=graph, pos=pos, sample=sample_name, 
-                                         n_bins=n_bins, edge_threshold=edge_threshold, 
-                                         usage_threshold=usage_threshold,
-                                         save=True, save_path=results_path, prefix=sample_name)
-
-    # Cluster the filtered graph (no nodes lacking any edges) using Infomap and save the results
-    graph_filtered = niche_networks.detect_communities_infomap(graph_filtered)
-    pos_filtered = niche_networks.get_node_positions(graph_filtered, layout_algorithm='graphopt')
-
-    niche_networks.plot_network_analysis(graph=graph_filtered, pos=pos_filtered, sample=sample_name,
-                                         n_bins=n_bins, edge_threshold=edge_threshold, 
-                                         usage_threshold=usage_threshold,
-                                         save=True, save_path=results_path, prefix=str(sample_name + "_filtered"))
-    print("Network analysis plots saved.")
-    
-    # Plot the inside-outside connections heatmap
-    group_connections, columnannot, rowannot = niche_networks.calculate_outgoing_and_incoming_connections(graph)
-    group_connections = np.log2(group_connections + 1)
-
-    niche_networks.plot_connection_heatmap(group_connections,
-                                           rowannot=rowannot, columnannot=columnannot, 
-                                           figsize=(12, 10), cmap="RdBu_r",
-                                           cluster_rows=True, cluster_cols=True,
-                                           suptitle="In-group and Out-group Connections Heatmap", legend_title="Log2(n.edges + 1)",
-                                           save=True, save_path=results_path, prefix=sample_name)
-    print("Network connections heatmap saved.")
+    niche_networks.plot_network_analysis(
+        results_dir=results_dir,
+        sample_name=sample_name,
+        usage_threshold=usage_threshold,
+        n_bins=n_bins,
+        edge_threshold=edge_threshold,
+        annot_file=annot_file
+    )
 
 
 def run_experiment(
@@ -200,7 +134,7 @@ def run_experiment(
     filter_genes=True,
     hvg_file=None,
     annotate=False,
-    plot_program=False,
+    plot=False,
     network=False,
     is_visium=True,
     is_aggr = True,
@@ -278,7 +212,7 @@ def run_experiment(
         annotate_programs(results_dir, sample_name, genome)
 
     # Plot spatial maps
-    if plot_program:
+    if plot:
         plot_programs(results_dir, sample_name, adata_spatial, is_visium=is_visium, genome=genome, is_xenograft=is_xenograft, is_aggr = is_aggr)
 
     # Plot networks
@@ -310,9 +244,9 @@ def main():
     parser.add_argument("--is_aggr", action="store_true", help="Whether data is aggregated across libraries.")
     parser.add_argument("--select_sample", default=None, help="Subset a specific sample.")
     parser.add_argument("--hvg_file", default=None, help="Precomputed highly variable genes file.")
-    parser.add_argument("--usage_threshold", type=float, default=None, help="Usage threshold.")
-    parser.add_argument("--n_bins", type=int, default=None, help="Number of bins.")
-    parser.add_argument("--edge_threshold", type=float, default=None, help="Edge threshold.")
+    parser.add_argument("--usage_threshold", type=float, default=0, help="Usage threshold.")
+    parser.add_argument("--n_bins", type=int, default=1000, help="Number of bins.")
+    parser.add_argument("--edge_threshold", type=float, default=0.199, help="Edge threshold.")
     parser.add_argument("--annot_file", default=None, help="Annotation file.")
 
     parser.add_argument("--lr", type=float, default=0.001, help="Learning rate.")

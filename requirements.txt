@@ -78,3 +78,5 @@ umap-learn
 unicodedata2
 urllib3==2.3.0
 wheel==0.45.1
+os
+adjusttext

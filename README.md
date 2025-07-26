@@ -38,7 +38,7 @@ conda create -n spotnmf python=3.12.3
 conda activate spotnmf
 
 # Install major dependencies
-conda install -c conda-forge scanpy python-igraph leidenalg scikit-learn statsmodels pandas pygam scipy=1.12 adjustText
+conda install -c conda-forge scanpy python-igraph leidenalg scikit-learn statsmodels pandas pygam scipy=1.12 adjusttext
 pip install rbo distinctipy gprofiler-official==1.0.0 fastcluster==1.2.6
 
 # Install PyTorch (adjust CUDA version as needed)

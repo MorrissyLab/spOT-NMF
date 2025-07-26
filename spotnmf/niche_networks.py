@@ -391,7 +391,7 @@ def base_plot(graph: Union[nx.Graph, nx.DiGraph], pos: dict, title: Union[str, N
     return fig, ax
 
 
-def plot_network_analysis(graph: Union[nx.Graph, nx.DiGraph], pos: dict, sample: str, 
+def plot_network_graph(graph: Union[nx.Graph, nx.DiGraph], pos: dict, sample: str, 
                           n_bins: int, edge_threshold: float, usage_threshold: Union[int, float],
                           save: bool = False, save_path: Union[str, None] = None, prefix: Union[str, None] = None):
     """
@@ -485,6 +485,82 @@ def plot_network_analysis(graph: Union[nx.Graph, nx.DiGraph], pos: dict, sample:
                 pdf.savefig(fig2, bbox_inches='tight')
     else:
         return fig1, ax1, fig2, ax2
+
+
+def plot_network_analysis(results_dir: str, sample_name: str, usage_threshold: Union[float, int], n_bins: int, edge_threshold: float, annot_file: Union[str, None]):
+# Load the relevant files
+    results_path = os.path.join(results_dir, sample_name)
+    rf_usages = pd.read_csv(os.path.join(results_path, f"topics_per_spot_{sample_name}.csv"), index_col=0)
+
+    # Load the annotation file if it exists
+    if annot_file is not None:
+        # Load and clean annotation
+        annot = pd.read_csv(annot_file)
+
+        if "Annotation" not in annot.columns or "Program" not in annot.columns:
+            raise ValueError("Annotation file must contain 'Program' and 'Annotation' columns, in that order.")
+
+        # Rename columns based on annotations
+        annot_dict = dict(zip(annot["Program"], annot["Annotation"]))
+
+        rf_usages.columns = [col.replace("ot_", "ot") + f"_{annot_dict[col]}" 
+                            if col in annot_dict else col.replace("ot_", "ot")
+                            for col in rf_usages.columns]
+
+    # Filter usages based on the usage threshold
+    for col in rf_usages.columns:
+        thresh = rf_usages[col].quantile(0.90)
+        rf_usages.loc[rf_usages[col] < thresh, col] = 0
+
+    # Compute pairwise statistics
+    stats_df = compute_pairwise_stats(usage=rf_usages, usage_threshold=usage_threshold, sample=sample_name, save_path=results_path)
+    print("Stats DataFrame created and saved.")
+
+    stats_df[f"{sample_name}_val"] = (stats_df[f"{sample_name}_P2pos"] + 1) / (stats_df[f"{sample_name}_P2pos"] + stats_df[f"{sample_name}_P2neg"] + 2)
+
+    # Generate binary column for the edge threshold
+    stats_df[f"gt{edge_threshold}"] = (stats_df[f"{sample_name}_val"].abs() > edge_threshold)
+
+    # Subset the stats_df for the specified edge threshold
+    stats_df = stats_df[stats_df[f"gt{edge_threshold}"] == 1]
+
+    # Generate node attributes
+    node_attrs = generate_node_attributes(rf_usages, usage_threshold, sample_name)
+
+    # Build the network graph
+    graph, graph_filtered = build_network_graph(stats_df, node_attrs, sample_name, n_bins)
+    print("Network graph built.")
+
+    # Cluster the graph using Infomap and save the results
+    graph = detect_communities_infomap(graph)
+    pos = get_node_positions(graph, layout_algorithm='graphopt')
+
+    plot_network_graph(graph=graph, pos=pos, sample=sample_name, 
+                       n_bins=n_bins, edge_threshold=edge_threshold, 
+                       usage_threshold=usage_threshold,
+                       save=True, save_path=results_path, prefix=sample_name)
+
+    # Cluster the filtered graph (no nodes lacking any edges) using Infomap and save the results
+    graph_filtered = detect_communities_infomap(graph_filtered)
+    pos_filtered = get_node_positions(graph_filtered, layout_algorithm='graphopt')
+
+    plot_network_graph(graph=graph_filtered, pos=pos_filtered, sample=sample_name,
+                       n_bins=n_bins, edge_threshold=edge_threshold, 
+                       usage_threshold=usage_threshold,
+                       save=True, save_path=results_path, prefix=str(sample_name + "_filtered"))
+    print("Network analysis plots saved.")
+    
+    # Plot the inside-outside connections heatmap
+    group_connections, columnannot, rowannot = calculate_outgoing_and_incoming_connections(graph)
+    group_connections = np.log2(group_connections + 1)
+
+    plot_connection_heatmap(group_connections,
+                            rowannot=rowannot, columnannot=columnannot, 
+                            figsize=(12, 10), cmap="RdBu_r",
+                            cluster_rows=True, cluster_cols=True,
+                            suptitle="In-group and Out-group Connections Heatmap", legend_title="Log2(n.edges + 1)",
+                            save=True, save_path=results_path, prefix=sample_name)
+    print("Network connections heatmap saved.")
 
 
 def calculate_outgoing_and_incoming_connections(graphobj):

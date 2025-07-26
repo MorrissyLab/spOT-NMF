@@ -301,7 +301,7 @@ def main():
         run_experiment(
             adata_spatial, args.k, args.sample_name, args.results_dir,
             genome=args.genome, hvg_file=args.hvg_file,
-            annotate=True, plot_program=True, network=True,
+            annotate=True, plot=True, network=True,
             is_visium=is_visium, is_xenograft=args.is_xeno, is_aggr=args.is_aggr,
             model_params=model_params
         )

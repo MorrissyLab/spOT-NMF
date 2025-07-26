@@ -16,7 +16,7 @@ from adjustText import adjust_text
 import igraph as ig
 import seaborn as sns
 
-def compute_pairwise_stats(usage: pd.DataFrame, usage_threshold: Union[int, float], sample: str, save_path = None, file_prefix = None) -> pd.DataFrame:
+def compute_pairwise_stats(usage: pd.DataFrame, usage_threshold: Union[int, float], sample: str, save_path=None, file_prefix=None) -> pd.DataFrame:
     """
     Computes pairwise statistics for program interactions based on usage counts.
 

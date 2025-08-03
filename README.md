@@ -155,7 +155,3 @@ GPL-3.0 License. See [LICENSE](./LICENSE) for details.
 
 For questions or help, open a [GitHub issue](https://github.com/MorrissyLab/spOT-NMF/issues).
 
----
-
-Let me know if you'd like to localize the citation to APA/MLA/Chicago format as well, or auto-generate the README from metadata in `setup.py` or `pyproject.toml`.
-```

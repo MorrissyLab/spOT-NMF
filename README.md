@@ -139,6 +139,25 @@ If you use **spOT-NMF** in your work, please cite:
 }
 ```
 
+
+## 📂 Manuscript Notebooks for Figure Reproduction
+
+The main branch of **spOT-NMF** focuses on the reusable software package.  
+If you are looking for the original Jupyter notebooks used to reproduce the figures in the manuscript, they are now maintained separately in the **`manuscript`** branch.
+
+You can switch to it as follows:
+
+```bash
+git fetch origin
+git checkout manuscript
+```
+The notebooks can be found under:
+```bash
+scripts/manuscript_notebooks/
+```
+👉 Use this branch if you need to regenerate the analyses and figures reported in the paper.
+👉 Stay on the main branch for running the software package on your own data.
+
 ---
 
 ## 🤝 Contributing

@@ -1,0 +1,11 @@
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - spotnmf
+  - sphinx < 7
+  - sphinx-book-theme
+  - sphinx-copybutton
+  - nbsphinx
+  - myst-parser
+  - pandoc

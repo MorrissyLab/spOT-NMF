@@ -1,11 +1,11 @@
 import os
 import pandas as pd
 from .io import load_experiment_result, check_dir, get_ground_truth, save_ranked_genes, read_gmt_file
+from .pl import plot_df_heatmap
 from sklearn.metrics.pairwise import cosine_similarity
 import seaborn as sns
 import numpy as np
 import rbo
-from .pl import plot_df_heatmap
 import matplotlib as mpl
 mpl.rcParams['pdf.fonttype'] = 42
 mpl.rcParams['ps.fonttype'] = 42

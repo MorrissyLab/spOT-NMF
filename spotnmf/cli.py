@@ -24,9 +24,9 @@ pd.options.display.float_format = '{:f}'.format
 import numpy as np
 from typing import Union
 
-from spotnmf import run_spotnmf
-from spotnmf.gscore import calculate_marker_genes_topics_df
-from spotnmf import io, pl, annotate, enrichment, hvg, niche_networks
+from .models import run_spotnmf
+from .gscore import calculate_marker_genes_topics_df
+from . import io, pl, annotate, enrichment, hvg, niche_networks
 
 
 def plot_programs(results_dir, sample_name, adata_spatial, is_visium=True, genome=None, is_xenograft=False, is_aggr = True):

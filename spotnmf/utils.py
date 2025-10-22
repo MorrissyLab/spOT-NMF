@@ -122,7 +122,7 @@ def normalize_tensor(X: torch.Tensor) -> torch.Tensor:
 def entropy(
     X: torch.Tensor, min_one: bool = False, rescale: bool = False
 ) -> torch.Tensor:
-    """
+    r"""
     Computes the entropy of a tensor, defined as :math:`E(X) = \langle X, \log X - 1 \rangle`.
 
     Args:

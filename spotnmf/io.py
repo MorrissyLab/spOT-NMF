@@ -26,6 +26,56 @@ def check_dir(dir_path):
     os.makedirs(dir_path, exist_ok=True)
     return dir_path
 
+def read_adata(
+    data_path,
+    data_mode,
+    genome = "mm10",
+    is_aggr=False,
+    is_xenograft=False,
+    select_sample=None,
+    bin_size=None
+):
+    """
+    Reads AnnData object based on data mode and parameters.
+
+    Args:
+        data_path (str): Path to the AnnData or spatial data.
+        data_mode (str): Mode of the data, e.g., 'visium_hd', 'visium', 'csv', or 'h5ad'.
+        genome (str): Genome reference name (default: mm10 genome).
+        is_aggr (bool, optional): Whether data is aggregated. Defaults to False.
+        is_xenograft (bool, optional): Whether data is from a xenograft model. Defaults to False.
+        select_sample (str, optional): Specific sample name to select. Defaults to None.
+        bin_size (int, optional): Bin size for spatial data. Defaults to None.
+
+    Returns:
+        AnnData: Loaded AnnData object.
+    """
+    if data_mode == "visium_hd":
+        adata_spatial = read_visium_hd(
+            adata_path=data_path,
+            bin_size=bin_size,
+            genome=genome,
+            is_aggr=is_aggr,
+            is_xenograft=is_xenograft
+        )
+        return adata_spatial
+
+    elif data_mode == "visium":
+        adata_spatial = read_spatial_data(
+            adata_path=data_path,
+            genome=genome,
+            is_xenograft=is_xenograft,
+            is_aggr=is_aggr,
+            select_sample=select_sample
+        )
+        return adata_spatial
+    elif data_mode == "csv":
+        
+    else:
+        adata = sc.read_h5ad(data_path)
+        return adata
+    
+
 def load_spatial_image(image_path, mode='original'):
     """
     Load a spatial image and return it in the desired color mode.

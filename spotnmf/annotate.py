@@ -1,11 +1,11 @@
 import os
 import pandas as pd
 from .io import load_experiment_result, check_dir, get_ground_truth, save_ranked_genes, read_gmt_file
+from .pl import plot_df_heatmap
 from sklearn.metrics.pairwise import cosine_similarity
 import seaborn as sns
 import numpy as np
 import rbo
-from .pl import plot_df_heatmap
 import matplotlib as mpl
 mpl.rcParams['pdf.fonttype'] = 42
 mpl.rcParams['ps.fonttype'] = 42
@@ -85,7 +85,7 @@ def compute_genesets_annotation(rf_usages, gene_set, results_dir_path, max_top_g
 
 
     df_gene_scores.to_csv(os.path.join(output_path, f"genesets_scores_{experiment_title}.csv"))
-    save_ranked_genes(df_gene_scores, results_file = os.path.join(output_path, f"ranked_genesets_{experiment_title}.csv"), n_top_genes=5)
+    save_ranked_genes(df_gene_scores, results_file = os.path.join(output_path, f"ranked_genesets_{experiment_title}.csv"), top_genes=5)
     plot_df_heatmap(df_gene_scores,title_name =experiment_title, x_name = "Topic", y_name = "Geneset", results_dir_path= output_path,is_cluster=True)   
 
 

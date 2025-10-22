@@ -81,14 +81,50 @@ spotnmf network    --sample_name SAMPLE1 --results_dir ./results --usage_thresho
 ### Python / Notebooks
 
 ```python
-import spotnmf
-from spotnmf.io import read_adata
-from spotnmf.models import run_spotnmf
-from spotnmf.pl import plot_usage
+import spotnmf as spot
 
-adata = read_adata("./data/sample1.h5ad")
-res = run_spotnmf(adata, k=5, sample_name="SAMPLE1", results_dir="./results")
-plot_usage(adata=res["adata"], results_dir="./results", sample_name="SAMPLE1")
+# === Configuration === #
+DATA_PATH = Path("data/test_data/dataset10_adata_spatial.h5ad")
+RESULTS_DIR = Path(r"/data/test_results/")
+SAMPLE_NAME = "TestSample"
+GENOME = "mm10"
+
+# === Read Data === #
+adata = spot.io.read_adata(
+    data_path=DATA_PATH,
+    data_mode="h5ad"
+)
+
+# === Model Parameters === #
+model_params = {
+    "lr": 0.001,         # Learning rate
+    "h": 0.01,           # H regularization
+    "w": 0.01,           # W regularization
+    "eps": 0.05,         # Epsilon
+    "normalize_rows": True,
+}
+
+# === Run Factorization === #
+results = spot.cli.run_experiment(
+    adata_spatial=adata,
+    k=5,                        # Number of ranks
+    sample_name=SAMPLE_NAME,
+    results_dir=str(RESULTS_DIR),
+    genome=GENOME,
+    annotate=False,
+    plot=False,
+    network=False,
+    is_visium=True,
+    model_params=model_params,
+)
+
+# === Annotate Programs === #
+spot.cli.annotate_programs(
+    results_dir=str(RESULTS_DIR),
+    sample_name=SAMPLE_NAME,
+    genome=GENOME,
+)
+
 ```
 
 ---

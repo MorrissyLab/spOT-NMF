@@ -21,12 +21,11 @@ import time
 from datetime import datetime
 import pandas as pd
 pd.options.display.float_format = '{:f}'.format
-import numpy as np
 from typing import Union
 
-from .models import run_spotnmf
-from .gscore import calculate_marker_genes_topics_df
-from . import io, pl, annotate, enrichment, hvg, niche_networks
+from spotnmf.models import run_spotnmf
+from spotnmf.gscore import calculate_marker_genes_topics_df
+from spotnmf import io, pl, annotate, enrichment, hvg, niche_networks
 
 
 def plot_programs(results_dir, sample_name, adata_spatial, is_visium=True, genome=None, is_xenograft=False, is_aggr = True):
@@ -137,7 +136,7 @@ def run_experiment(
     plot=False,
     network=False,
     is_visium=True,
-    is_aggr = True,
+    is_aggr = False,
     is_xenograft=False,
     usage_threshold: Union[float, int] = 0,
     n_bins: int = 1000,
@@ -225,6 +224,8 @@ def run_experiment(
     with open(os.path.join(results_path, f"time_{sample_name}.txt"), "w") as f:
         f.write(f"{duration}\t{losses[-1]}\t")
 
+    return results
+
 
 def main():
     """
@@ -269,25 +270,15 @@ def main():
 
     is_visium = args.data_mode in {"visium", "visium_hd"}
 
-    adata_spatial = None
-        
-    if args.adata_path:
-        if args.data_mode == "visium_hd":
-            adata_spatial = io.read_visium_hd(
-                adata_path=args.adata_path,
-                bin_size=args.bin_size,
-                genome=args.genome,
-                is_aggr=args.is_aggr,
-                is_xenograft=args.is_xeno
-            )
-        else:
-            adata_spatial = io.read_spatial_data(
-                adata_path=args.adata_path,
-                genome=args.genome,
-                is_xenograft=args.is_xeno,
-                is_aggr=args.is_aggr,
-                select_sample=args.select_sample
-            )
+    adata_spatial = io.read_adata(
+        data_path=args.adata_path,
+        data_mode=args.data_mode,
+        genome=args.genome,
+        is_aggr=args.is_aggr,
+        is_xenograft=args.is_xeno,
+        select_sample=args.select_sample,
+        bin_size=args.bin_size
+    )
 
     model_params = {
         "lr": args.lr,

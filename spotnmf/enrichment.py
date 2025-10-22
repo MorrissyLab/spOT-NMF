@@ -12,8 +12,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import traceback
 
-from .io import check_dir
-from .utils import clean_mixed_gene_names
+from spotnmf.io import check_dir
+from spotnmf.utils import clean_mixed_gene_names
 
 def run_topics_pathway_enrichment(rf_usages, gene_set, results_dir_path, top_n_features=1000, genome='mm10', experiment_title="experiment"):
     """

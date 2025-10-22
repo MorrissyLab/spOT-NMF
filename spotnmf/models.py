@@ -13,7 +13,7 @@ import torch.nn.functional as F
 from torch import optim
 from tqdm import tqdm
 import pandas as pd 
-from . import utils
+from spotnmf import utils
 
 def seed_all(seed):
     np.random.seed(seed)  # Seed numpy (covers scipy)

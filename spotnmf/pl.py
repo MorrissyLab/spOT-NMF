@@ -16,7 +16,7 @@ from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.backends.backend_pdf import PdfPages
 from tqdm import tqdm
 
-from .io import check_dir, load_experiment_result
+from spotnmf.io import check_dir, load_experiment_result
 
 # --------- Helper variables and sample orders ---------
 printable_rotate_dict = {

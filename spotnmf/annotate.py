@@ -85,7 +85,7 @@ def compute_genesets_annotation(rf_usages, gene_set, results_dir_path, max_top_g
 
 
     df_gene_scores.to_csv(os.path.join(output_path, f"genesets_scores_{experiment_title}.csv"))
-    save_ranked_genes(df_gene_scores, results_file = os.path.join(output_path, f"ranked_genesets_{experiment_title}.csv"), n_top_genes=5)
+    save_ranked_genes(df_gene_scores, results_file = os.path.join(output_path, f"ranked_genesets_{experiment_title}.csv"), top_genes=5)
     plot_df_heatmap(df_gene_scores,title_name =experiment_title, x_name = "Topic", y_name = "Geneset", results_dir_path= output_path,is_cluster=True)   
 
 

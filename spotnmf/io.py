@@ -40,7 +40,11 @@ def read_adata(
 
     Args:
         data_path (str): Path to the AnnData or spatial data.
+<<<<<<< HEAD
+        data_mode (str): Mode of the data, e.g., 'visium_hd', 'visium', or 'h5ad'.
+=======
         data_mode (str): Mode of the data, e.g., 'visium_hd', 'visium', 'csv', or 'h5ad'.
+>>>>>>> origin
         genome (str): Genome reference name (default: mm10 genome).
         is_aggr (bool, optional): Whether data is aggregated. Defaults to False.
         is_xenograft (bool, optional): Whether data is from a xenograft model. Defaults to False.
@@ -68,9 +72,8 @@ def read_adata(
             is_aggr=is_aggr,
             select_sample=select_sample
         )
-        return adata_spatial
-    elif data_mode == "csv":
-        
+        return adata_spatial 
+       
     else:
         adata = sc.read_h5ad(data_path)
         return adata

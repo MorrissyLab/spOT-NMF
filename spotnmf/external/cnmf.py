@@ -1125,6 +1125,35 @@ class cNMF():
 import os
 import tempfile
 import traceback
+def load_results(sample_name, temp_dir, k, density_threshold=0.10, method_type="nmf"):
+
+    cnmf_obj = cNMF(
+        output_dir=os.path.join(temp_dir, sample_name, f'c{method_type}_results'),
+        name=f"{method_type}_{sample_name}"
+    )
+
+    usage, spectra_scores, spectra_tpm, top_genes = cnmf_obj.load_results(
+        K=k, density_threshold=density_threshold
+    )
+
+    # Ensure string indices
+    usage.index = usage.index.astype(str)
+    spectra_scores.index = spectra_scores.index.astype(str)
+
+    # Prepare results dictionary
+    results = {
+        "topics_per_spot": usage,
+        "genes_per_topic": spectra_scores,
+        f"spectra_tpm_c{method_type}": spectra_tpm,
+        f"top_genes_c{method_type}": top_genes
+    }
+
+    # Prefix column names
+    for key_matrix in results:
+        results[key_matrix].columns = [f"c{method_type}_{x}" for x in results[key_matrix].columns]
+
+    return results
+            
 
 def run_cnmf(
     adata_spatial,
@@ -1134,7 +1163,8 @@ def run_cnmf(
     temp_dir: str = None,
     method_type: str = "nmf",
     n_iter: int = 200,
-    sample_name: str = None
+    sample_name: str = None,
+    is_factorized: bool = False,
 ):
     """
     Run cNMF (consensus NMF) on a transcriptomics AnnData object.
@@ -1182,7 +1212,6 @@ def run_cnmf(
             output_dir=os.path.join(temp_dir, sample_name, f'c{method_type}_results'),
             name=f"{method_type}_{sample_name}"
         )
-
         # Prepare data and NMF parameters
         cnmf_obj.prepare(
             input_counts=adata_spatial,
@@ -1191,9 +1220,9 @@ def run_cnmf(
             num_highvar_genes=n_genes,
             seed=14
         )
-
-        # Factorize
-        cnmf_obj.factorize(worker_i=0, total_workers=nprocess, method_type=method_type)
+        if(not is_factorized):
+            # Factorize
+            cnmf_obj.factorize(worker_i=0, total_workers=nprocess, method_type=method_type)
 
         # Combine results and generate plots
         cnmf_obj.combine(components=components, skip_missing_files=True)
@@ -1210,34 +1239,16 @@ def run_cnmf(
                 # continue instead of break to try other components
                 continue
 
-        # Load results (from first component as reference)
-        usage, spectra_scores, spectra_tpm, top_genes = cnmf_obj.load_results(
-            K=components[0], density_threshold=0.10
-        )
+        results = load_results(sample_name, temp_dir, components[0], density_threshold=0.10, method_type="nmf")
 
-        # Ensure string indices
-        usage.index = usage.index.astype(str)
-        spectra_scores.index = spectra_scores.index.astype(str)
-
-        # Prepare results dictionary
-        results = {
-            "topics_per_spot": usage,
-            "genes_per_topic": spectra_scores,
-            f"spectra_tpm_c{method_type}": spectra_tpm,
-            f"top_genes_c{method_type}": top_genes
-        }
-
-        # Prefix column names
-        for key_matrix in results:
-            results[key_matrix].columns = [f"c{method_type}_{x}" for x in results[key_matrix].columns]
-
-        return results
 
     finally:
         # Cleanup temporary directory if it was created
         if temp_dir_obj is not None:
             temp_dir_obj.cleanup()
 
+
+    return results
 
 def main():
     """

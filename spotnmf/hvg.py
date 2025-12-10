@@ -10,6 +10,7 @@ from pygam import s, LinearGAM
 from scipy.stats import chi2, f
 from statsmodels.formula.api import ols
 from statsmodels.sandbox.stats.multicomp import multipletests
+from scipy.sparse import issparse
 
 # Patch for pygam compatibility with scipy sparse matrices
 def to_array(self):
@@ -137,6 +138,9 @@ def compute_overdispersed_genes(
 
     else:
         mat = adata_spatial.X
+        if issparse(mat):
+            mat = mat.toarray()  # convert to dense
+
         filtered_genes = adata_spatial.var.index.values
         n_spots = len(adata_spatial)
         n_genes = len(filtered_genes)

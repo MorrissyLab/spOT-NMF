@@ -15,7 +15,7 @@ if os.path.exists("README.md"):
 
 setup(
     name="spotnmf",
-    version="0.1.0",
+    version="0.1.1",
     description="Optimal Transport-based Matrix Factorization for spatial transcriptomics deconvolution.",
     long_description=long_description,
     long_description_content_type="text/markdown",

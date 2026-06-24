@@ -1,3 +1,2 @@
 recursive-include spotnmf *.txt *.tsv *.csv *.gmt *.json
-recursive-include data *.txt *.tsv *.csv *.gmt *.json
 global-exclude *.py[cod] __pycache__ *.so

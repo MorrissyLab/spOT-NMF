@@ -79,7 +79,7 @@ def run_topics_pathway_enrichment(rf_usages, gene_set, results_dir_path, top_n_f
         fig.savefig(os.path.join(output_path, f"heatmap_detailed_{file_base}.pdf"))
         fig_cluster.savefig(os.path.join(output_path, f"clustermap_{file_base}.pdf"))
         plt.close(fig)
-        plt.close(fig_cluster)
+        plt.close(fig_cluster.figure)  # sns.clustermap returns a ClusterGrid, not a Figure
         plt.close(figlegend)
         plt.close("all")
 

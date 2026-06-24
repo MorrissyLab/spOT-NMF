@@ -18,10 +18,11 @@ from spotnmf import utils
 def seed_all(seed):
     np.random.seed(seed)  # Seed numpy (covers scipy)
     torch.manual_seed(seed)  # Seed pytorch (CPU)
-    torch.cuda.manual_seed(seed)  # Seed pytorch (GPU)
-    torch.cuda.manual_seed_all(seed)  # Seed all GPUs
-    torch.backends.cudnn.deterministic = True  # Ensure deterministic behavior
-    torch.backends.cudnn.benchmark = False
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)  # Seed pytorch (GPU)
+        torch.cuda.manual_seed_all(seed)  # Seed all GPUs
+        torch.backends.cudnn.deterministic = True  # Ensure deterministic behavior
+        torch.backends.cudnn.benchmark = False
 
 class spotnmf:
     """The spotnmf model, which performs OT-NMF.
@@ -390,7 +391,7 @@ class spotnmf:
 
                 # Add a value to the loss history.
                 history.append(loss_fn().cpu().detach())
-                gpu_mem_alloc = torch.cuda.memory_allocated(device=device)
+                gpu_mem_alloc = torch.cuda.memory_allocated(device=device) if torch.cuda.is_available() else 0
 
                 # Populate the progress bar.
                 pbar.set_postfix(
@@ -543,7 +544,9 @@ def run_spotnmf(adata_spatial, components, seed=42, **kwargs):
         "tol_inner": 1e-12,
         "tol_outer": 0.00001,
         "max_iter": 100,
-        "max_iter_inner": 1000
+        "max_iter_inner": 1000,
+        # Use the GPU when available, otherwise fall back to CPU.
+        "device": "cuda" if torch.cuda.is_available() else "cpu",
     }
     defaults.update(kwargs)
     print("Model Params:", defaults)
@@ -569,7 +572,7 @@ def run_spotnmf(adata_spatial, components, seed=42, **kwargs):
         max_iter=defaults["max_iter"],
         max_iter_inner=defaults["max_iter_inner"],
         impute=False,
-        device='cuda',
+        device=defaults["device"],
     )
 
     # Extract results

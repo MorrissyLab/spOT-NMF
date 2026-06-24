@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spot-nmf"
-version = "0.1.1"
+dynamic = ["version"]
 description = "Optimal Transport-based Matrix Factorization for spatial transcriptomics deconvolution."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -42,6 +42,7 @@ dependencies = [
   "statsmodels>=0.14",
   "pygam>=0.9",
   "natsort>=8.4",
+  "pyyaml>=6.0",                       # used by external cNMF module
   "tqdm>=4.65",
   "progressbar2>=4.4",
   "session-info>=1.0",
@@ -83,6 +84,14 @@ spotnmf = "spotnmf.cli:main"
 
 # Packaging config (flat layout)
 [tool.setuptools]
-packages = ["spotnmf"]
+packages = ["spotnmf", "spotnmf.external"]
 include-package-data = true
 zip-safe = false
+
+# Single source of truth for the version: spotnmf/_version.py
+[tool.setuptools.dynamic]
+version = { attr = "spotnmf._version.__version__" }
+
+# Ship bundled gene sets as package data so annotation works after install
+[tool.setuptools.package-data]
+spotnmf = ["data/genesets/*.gmt"]

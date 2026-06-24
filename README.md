@@ -23,35 +23,53 @@ This package supports the analyses in:
 
 ## 📦 Installation
 
-1. **Install PyTorch** (CPU or CUDA) for your platform (see [pytorch.org](https://pytorch.org)). Examples:
+`spOT-NMF` requires **Python ≥ 3.12**. We recommend [**uv**](https://docs.astral.sh/uv/) for a fast,
+reproducible setup. PyTorch is installed separately so you can pick the build (CPU or CUDA) for your platform.
+
+### Recommended: uv
 
 ```bash
-# CPU-only
-pip install torch --index-url https://download.pytorch.org/whl/cpu
-# CUDA 11.8 (Linux/Windows with NVIDIA GPUs)
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# 1. Create and activate an isolated environment (uv fetches Python 3.12 if needed)
+uv venv --python 3.12
+# Linux/macOS:  source .venv/bin/activate
+# Windows:      .venv\Scripts\activate
+
+# 2. Install PyTorch for your platform (see pytorch.org)
+#    CPU-only:
+uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+#    CUDA 12.x (Linux/Windows with NVIDIA GPUs):
+#    uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+# 3. Install spOT-NMF
+uv pip install spot-nmf
 ```
 
-2. **Install spOT-NMF**:
+### Alternative: pip
 
 ```bash
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install spot-nmf
 ```
 
-3. **Verify the CLI**:
+### From source (development)
+
+```bash
+git clone https://github.com/MorrissyLab/spOT-NMF.git
+cd spOT-NMF
+uv venv --python 3.12
+uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+uv pip install -e ".[dev]"     # editable install with test dependencies
+uv run pytest -q               # run the test suite
+```
+
+### Verify the install
 
 ```bash
 spotnmf --help
 ```
 
-> **Conda users:**
->
-> ```bash
-> conda create -n spotnmf python=3.12
-> conda activate spotnmf
-> # install torch as above, then:
-> pip install spot-nmf
-> ```
+> If no GPU is available, spOT-NMF automatically runs on CPU.
 
 ---
 
@@ -59,28 +77,40 @@ spotnmf --help
 
 ### Command Line
 
-Full pipeline (deconvolution → annotation → spatial plots):
+Full pipeline (deconvolution → annotation → spatial plots → networks):
 
 ```bash
 spotnmf spotnmf \
   --sample_name SAMPLE1 \
   --adata_path ./data/sample1.h5ad \
+  --data_mode h5ad \
   --results_dir ./results \
-  --k 5
+  --k 5 \
+  --genome GRCh38
 ```
+
+> **`--data_mode`** selects how the input is read: `h5ad` for a single AnnData
+> `.h5ad` file, `visium` (the default) for a Space Ranger output directory, or
+> `visium_hd` for Visium HD. Pass `--data_mode h5ad` whenever `--adata_path`
+> points to a `.h5ad` file.
 
 Other commands:
 
 ```bash
-spotnmf deconvolve --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --results_dir ./results --k 5
-spotnmf plot       --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --results_dir ./results
+spotnmf deconvolve --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --data_mode h5ad --results_dir ./results --k 5
+spotnmf plot       --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --data_mode h5ad --results_dir ./results
 spotnmf annotate   --sample_name SAMPLE1 --results_dir ./results --genome GRCh38
 spotnmf network    --sample_name SAMPLE1 --results_dir ./results --usage_threshold 0 --n_bins 1000 --edge_threshold 0.199
 ```
 
+> The `network` command reuses the per-spot usages written by `deconvolve`. On
+> small datasets no topic pairs may pass `--n_bins` / `--edge_threshold`; in that
+> case it prints a notice and skips plotting — lower the thresholds to force a graph.
+
 ### Python / Notebooks
 
 ```python
+from pathlib import Path
 import spotnmf as spot
 
 # === Configuration === #

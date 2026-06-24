@@ -15,9 +15,17 @@ import random
 from tqdm import tqdm
 from matplotlib.patches import Patch
 
+def _genesets_dir():
+    """Return the directory holding the bundled .gmt gene sets.
+
+    The gene sets ship as package data (``spotnmf/data/genesets``), so they
+    resolve correctly for both editable and installed (wheel) deployments.
+    """
+    return os.path.join(os.path.dirname(__file__), 'data', 'genesets')
+
+
 def list_genesets(genome = None):
-    parent_directory = os.path.dirname(os.path.dirname(__file__))
-    geneset_dir = os.path.join(parent_directory, 'data', 'genesets')
+    geneset_dir = _genesets_dir()
     available_genesets =  [f.replace(".gmt", "") for f in os.listdir(geneset_dir) if f.endswith(".gmt")]
 
     if(genome == "mm10"):
@@ -55,8 +63,7 @@ def compute_genesets_annotation(rf_usages, gene_set, results_dir_path, max_top_g
 
     # Define paths and directories
 
-    parent_directory = os.path.dirname(os.path.dirname(__file__))
-    geneset_dir = os.path.join(parent_directory, 'data', 'genesets')
+    geneset_dir = _genesets_dir()
     geneset_file = os.path.join(geneset_dir, gene_set + ".gmt")
 
     # Check if geneset file exists, return available gene sets if not found

@@ -2,17 +2,17 @@
 from __future__ import annotations
 
 from pathlib import Path
-import numpy as np
 
-def test_spotnmf_pipeline():
+def test_spotnmf_pipeline(tmp_path):
     import spotnmf as spot  # noqa: F401
 
     # Paths
     root = Path(__file__).resolve().parents[1]
     data_file = root / "data" / "test_data" / "dataset10_adata_spatial.h5ad"
     sample_name = "SAMPLE1_k5"
-    results_dir = root / "data" / "test_results" / sample_name
-    results_dir.mkdir(parents=True, exist_ok=True)
+    results_dir = tmp_path
+    # run_experiment writes its outputs under <results_dir>/<sample_name>.
+    results_path = results_dir / sample_name
 
     # Load
     assert data_file.exists(), f"Missing test data at: {data_file}"
@@ -48,11 +48,26 @@ def test_spotnmf_pipeline():
     )
 
     # Basic checks
-    assert isinstance(res, dict) and "adata" in res, "run_spotnmf should return dict with 'adata'."
+    assert isinstance(res, dict), "run_experiment should return a dict."
+    for key in ("topics_per_spot", "genes_per_topic", "adata"):
+        assert key in res, f"run_experiment result missing '{key}'."
+
     out_adata = res["adata"]
+    topics = res["topics_per_spot"]
 
-    # Plot usage
-    spot.pl.plot_usage(adata=out_adata, results_dir=str(results_dir), sample_name="SAMPLE1")
+    # Usage matrix: one row per spot, one column per topic (k=5).
+    assert topics.shape == (out_adata.n_obs, 5), f"Unexpected usage shape: {topics.shape}"
 
-    # Ensure something was written
-    assert any(results_dir.iterdir()), f"No files written under {results_dir}"
+    # Deconvolution outputs should be written to disk.
+    assert (results_path / f"topics_per_spot_{sample_name}.csv").exists()
+    assert (results_path / f"genescores_per_topic_{sample_name}.csv").exists()
+
+    # Spatial plotting should produce a figure without error.
+    spot.pl.plot_spatial_all_topics(
+        out_adata,
+        rf_usages=topics,
+        results_dir_path=str(results_path),
+        title_name=sample_name,
+        is_show=False,
+    )
+    assert (results_path / f"topics_plot_{sample_name}.pdf").exists()

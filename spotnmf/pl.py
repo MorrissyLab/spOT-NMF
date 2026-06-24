@@ -1,6 +1,7 @@
 import os
 import gc
 import math
+import sys
 
 import numpy as np
 import pandas as pd
@@ -88,31 +89,46 @@ def plot_df_heatmap(df, title_name, x_name, y_name, results_dir_path, cmap = "Bl
     Plot a DataFrame as a heatmap or clustered heatmap and save as PDF.
     """
     fig_size = [10 + df.shape[1]/4, 10 + df.shape[0]/6]
-    if(is_cluster):
-        fig_cluster = sns.clustermap(df.astype(float).fillna(0), cmap=cmap, col_cluster=True, row_cluster=True, figsize=fig_size, xticklabels=True, yticklabels=True)
-        fig_cluster.ax_heatmap.set_title(title_name)
-        fig_cluster.ax_heatmap.set_xlabel(x_name)
-        fig_cluster.ax_heatmap.set_ylabel(y_name)
-        fig_cluster.ax_heatmap.tick_params(axis='y', labelrotation=0, labelright=True, labelleft=False)
-        fig_cluster.ax_heatmap.tick_params(axis='x', labelrotation=90)
-        for _, spine in fig_cluster.ax_heatmap.spines.items():
-            spine.set_visible(True)
-            spine.set_color('#aaaaaa')
-        fig_cluster.cax.set_visible(False)
-        fig_cluster.savefig(os.path.join(results_dir_path, f"clustermap_{title_name}.pdf") )
-    else:
-        fig, ax_plot = plt.subplots(figsize=fig_size, layout="constrained")
-        sns.heatmap(df.astype(float), cmap=cmap, ax=ax_plot, xticklabels=True, yticklabels=True)
-        ax_plot.set_title(title_name)
-        ax_plot.set_xlabel(x_name)
-        ax_plot.set_ylabel(y_name)
-        ax_plot.tick_params(axis='y', labelrotation=0, labelright=True, labelleft=False)
-        ax_plot.tick_params(axis='x', labelrotation=90)
-        for _, spine in ax_plot.spines.items():
-            spine.set_visible(True)
-            spine.set_color('#aaaaaa')
+    if is_cluster:
+        try:
+            # scipy's dendrogram recurses ~once per row, which overflows Python's
+            # default recursion limit on tall matrices. Raise it for this call
+            # (capped to avoid a native stack overflow).
+            needed = 10 * df.shape[0] + 1000
+            if sys.getrecursionlimit() < needed:
+                sys.setrecursionlimit(min(needed, 50000))
 
-        fig.savefig(os.path.join(results_dir_path, f"heatmap_{title_name}.pdf") )
+            fig_cluster = sns.clustermap(df.astype(float).fillna(0), cmap=cmap, col_cluster=True, row_cluster=True, figsize=fig_size, xticklabels=True, yticklabels=True)
+            fig_cluster.ax_heatmap.set_title(title_name)
+            fig_cluster.ax_heatmap.set_xlabel(x_name)
+            fig_cluster.ax_heatmap.set_ylabel(y_name)
+            fig_cluster.ax_heatmap.tick_params(axis='y', labelrotation=0, labelright=True, labelleft=False)
+            fig_cluster.ax_heatmap.tick_params(axis='x', labelrotation=90)
+            for _, spine in fig_cluster.ax_heatmap.spines.items():
+                spine.set_visible(True)
+                spine.set_color('#aaaaaa')
+            fig_cluster.cax.set_visible(False)
+            fig_cluster.savefig(os.path.join(results_dir_path, f"clustermap_{title_name}.pdf"))
+            plt.close(fig_cluster.figure)
+            return
+        except (RecursionError, MemoryError):
+            # Clustering blew up (too many rows); fall back to a plain heatmap.
+            print(f"Clustering too large for '{title_name}'; saving an unclustered heatmap instead.")
+            plt.close("all")
+
+    fig, ax_plot = plt.subplots(figsize=fig_size, layout="constrained")
+    sns.heatmap(df.astype(float).fillna(0), cmap=cmap, ax=ax_plot, xticklabels=True, yticklabels=True)
+    ax_plot.set_title(title_name)
+    ax_plot.set_xlabel(x_name)
+    ax_plot.set_ylabel(y_name)
+    ax_plot.tick_params(axis='y', labelrotation=0, labelright=True, labelleft=False)
+    ax_plot.tick_params(axis='x', labelrotation=90)
+    for _, spine in ax_plot.spines.items():
+        spine.set_visible(True)
+        spine.set_color('#aaaaaa')
+
+    fig.savefig(os.path.join(results_dir_path, f"heatmap_{title_name}.pdf"))
+    plt.close(fig)
     
 
 def plot_spatial_topic(adata_spatial, topic, axe, use_scanpy=False):

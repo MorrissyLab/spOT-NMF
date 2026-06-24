@@ -217,6 +217,12 @@ def detect_communities_infomap(graph: nx.DiGraph) -> nx.DiGraph:
     """
     # Convert NetworkX graph to DataFrame and extract weighted edge tuples
     edges_from_nx = nx.to_pandas_edgelist(graph)
+    required_cols = {'source', 'target', 'weight', 'weight_col'}
+    if edges_from_nx.empty or not required_cols.issubset(edges_from_nx.columns):
+        # No weighted edges to cluster on; mark every node as unassigned (-1).
+        for node in graph.nodes:
+            graph.nodes[node]["cluster"] = -1
+        return graph
     edge_tuples = list(edges_from_nx[['source', 'target', 'weight', 'weight_col']].itertuples(index=False, name=None))
 
     # Create igraph graph with node names as vertex IDs
@@ -550,6 +556,15 @@ def plot_network_analysis(results_dir: str, sample_name: str, usage_threshold: U
     # Build the network graph
     graph, graph_filtered = build_network_graph(stats_df, node_attrs, sample_name, n_bins)
     print("Network graph built.")
+
+    # No edges survive the thresholds (common for small datasets) — nothing to plot.
+    if graph.number_of_edges() == 0:
+        print(
+            f"No edges meet the thresholds (n_bins={n_bins}, edge_threshold={edge_threshold}) "
+            f"for sample '{sample_name}'; skipping network plots. "
+            f"Lower --n_bins / --edge_threshold or use a larger dataset."
+        )
+        return
 
     # Cluster the graph using Infomap and save the results
     graph = detect_communities_infomap(graph)

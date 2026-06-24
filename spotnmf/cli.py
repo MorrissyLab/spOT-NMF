@@ -188,6 +188,15 @@ def run_experiment(
 
         adata_spatial.var['highly_variable'] = adata_spatial.var.index.isin(overdispersed_genes)
 
+        n_hvg = int(adata_spatial.var['highly_variable'].sum())
+        if n_hvg < int(k):
+            raise ValueError(
+                f"Only {n_hvg} highly variable gene(s) were selected, which is fewer than "
+                f"k={k} requested factors. The factorization needs more genes than factors. "
+                f"Relax the gene-selection thresholds (e.g. increase 'alpha'), provide an "
+                f"--hvg_file, or use a dataset with more expression variability."
+            )
+
     # Run topic model
     results, losses = run_spotnmf(adata_spatial, components=k, **model_params)
 
@@ -224,7 +233,9 @@ def run_experiment(
     with open(os.path.join(results_path, f"time_{sample_name}.txt"), "w") as f:
         f.write(f"{duration}\t{losses[-1]}\t")
 
-    return results
+    # Return the factorization matrices alongside the mutated AnnData, which now
+    # holds the learned usages/spectra (obsm["W_OT"], uns["H_OT"]) for plotting.
+    return {**results, "adata": adata_spatial}
 
 
 def main():
@@ -270,15 +281,19 @@ def main():
 
     is_visium = args.data_mode in {"visium", "visium_hd"}
 
-    adata_spatial = io.read_adata(
-        data_path=args.adata_path,
-        data_mode=args.data_mode,
-        genome=args.genome,
-        is_aggr=args.is_aggr,
-        is_xenograft=args.is_xeno,
-        select_sample=args.select_sample,
-        bin_size=args.bin_size
-    )
+    # Only commands that operate on the data need to load it; 'annotate' and
+    # 'network' work purely from previously-saved result files.
+    adata_spatial = None
+    if args.run_type in {"spotnmf", "deconvolve", "plot"}:
+        adata_spatial = io.read_adata(
+            data_path=args.adata_path,
+            data_mode=args.data_mode,
+            genome=args.genome,
+            is_aggr=args.is_aggr,
+            is_xenograft=args.is_xeno,
+            select_sample=args.select_sample,
+            bin_size=args.bin_size
+        )
 
     model_params = {
         "lr": args.lr,

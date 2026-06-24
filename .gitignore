@@ -171,3 +171,4 @@ cython_debug/
 .pypirc
 *.ipynb_checkpoints
 data/test_results/
+docs/source/tutorials/results/

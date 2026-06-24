@@ -165,6 +165,20 @@ spot.cli.annotate_programs(
 
 ---
 
+## 📓 Tutorials
+
+A fully worked, **well-commented notebook** runs the entire pipeline end-to-end on the
+small example dataset that ships with the repo (CPU-only, ~1 minute) — loading data,
+selecting HVGs, running the OT-NMF deconvolution, mapping programs spatially, extracting
+marker genes, and validating the recovered programs against ground-truth cell types. All
+figures are pre-rendered in the notebook.
+
+* **[Full pipeline tutorial →](docs/source/tutorials/full_pipeline.ipynb)** (`docs/source/tutorials/full_pipeline.ipynb`)
+
+> GitHub renders the notebook (with figures) directly in the browser — just click the link.
+
+---
+
 ## ⚙️ CLI Overview
 
 | Command      | Description                                                  |

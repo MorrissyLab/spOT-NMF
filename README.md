@@ -5,6 +5,9 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Publish to PyPI](https://github.com/MorrissyLab/spOT-NMF/actions/workflows/publish.yml/badge.svg)](https://github.com/MorrissyLab/spOT-NMF/actions/workflows/publish.yml)
 [![bioRxiv](https://img.shields.io/badge/bioRxiv-10.1101%2F2025.08.02.668292-red.svg)](https://doi.org/10.1101/2025.08.02.668292)
+[![Documentation Status](https://readthedocs.org/projects/spot-nmf/badge/?version=latest)](https://spot-nmf.readthedocs.io/en/latest/)
+
+📖 **Documentation:** <https://spot-nmf.readthedocs.io>
 
 **Optimal Transport-Based Matrix Factorization for Accurate Deconvolution of Spatial Transcriptomics**
 *Abdelkareem, A.O. et al.(2025)*

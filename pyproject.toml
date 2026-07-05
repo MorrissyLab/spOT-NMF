@@ -64,9 +64,12 @@ dev = [
   "pytest>=7.4",
 ]
 docs = [
-  "mkdocs>=1.5",
-  "mkdocs-material>=9.5",
-  "mkdocstrings[python]>=0.24",
+  "sphinx>=7,<8",
+  "sphinx-book-theme>=1.1",
+  "sphinx-copybutton>=0.5",
+  "myst-parser>=2.0",
+  "nbsphinx>=0.9",
+  "ipykernel>=6.29",
 ]
 # Users who want PyTorch can choose their own build (CPU/CUDA).
 torch = [

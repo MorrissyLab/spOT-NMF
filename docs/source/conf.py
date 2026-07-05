@@ -13,7 +13,8 @@
 import os
 import sys
 from importlib import metadata
-sys.path.insert(0, os.path.abspath('../../spotnmf'))
+# Repo root on the path so ``import spotnmf`` works even without an install.
+sys.path.insert(0, os.path.abspath('../..'))
 
 
 # -- Project information -----------------------------------------------------
@@ -22,8 +23,12 @@ project = 'spOT-NMF'
 copyright = '2025, Aly O. Abdlkareem'
 author = 'Aly O. Abdlkareem'
 
-# The full version, including alpha/beta/rc tags
-release = metadata.version("spotnmf")
+# The full version, including alpha/beta/rc tags.
+# The distribution is named "spot-nmf"; fall back gracefully if not installed.
+try:
+    release = metadata.version("spot-nmf")
+except metadata.PackageNotFoundError:
+    from spotnmf import __version__ as release
 
 
 # -- General configuration ---------------------------------------------------
@@ -35,6 +40,7 @@ extensions = [
     'myst_parser',
     "nbsphinx",
     "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
     "sphinx.ext.coverage",
@@ -54,6 +60,10 @@ exclude_patterns = []
 # nbsphinx
 
 nbsphinx_execute = 'never'
+
+# autodoc: mock heavy / platform-specific imports so the API can be documented
+# without installing them on the build server (torch is installed per-platform).
+autodoc_mock_imports = ["torch", "torchvision", "torchaudio"]
 
 # intersphinx
 
@@ -87,7 +97,8 @@ html_theme_options = dict(
     repository_url="https://github.com/MorrissyLab/spOT-NMF",
     repository_branch="main",
 )
-html_logo = "_static/img/logo_only.svg"
+# Add a logo at docs/source/_static/img/logo_only.svg and uncomment to enable:
+# html_logo = "_static/img/logo_only.svg"
 issues_github_path = "MorrissyLab/spOT-NMF"
 html_show_sphinx = False
 

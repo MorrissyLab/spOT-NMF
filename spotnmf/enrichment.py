@@ -16,16 +16,24 @@ from spotnmf.io import check_dir
 from spotnmf.utils import clean_mixed_gene_names
 
 def run_topics_pathway_enrichment(rf_usages, gene_set, results_dir_path, top_n_features=1000, genome='mm10', experiment_title="experiment"):
-    """
-    Run pathway enrichment analysis for topics in `rf_usages` dataframe.
-    
-    Parameters:
-    - rf_usages (pd.DataFrame): Dataframe with topics as columns and genes as rows.
-    - gene_set (str): Name of the gene set to use for enrichment analysis.
-    - results_dir_path (str): Directory path to save results.
-    - top_n_features (int): Number of top features to consider for enrichment.
-    - genome (str): Genome type, either 'mm10' or 'GRCh38'.
-    - experiment_title (str): Title for the experiment, used in output file naming.
+    """Run pathway enrichment analysis for the topics in ``rf_usages``.
+
+    Queries g:Profiler for each topic's top genes, saves enrichment results and
+    a readable annotation summary as CSVs, and writes heatmap and clustermap
+    plots of the -log10(p-value) scores to ``results_dir_path``.
+
+    Args:
+        rf_usages (pandas.DataFrame): Usage matrix with topics as columns and
+            genes as rows.
+        gene_set (str): Name of the gene set source to use for enrichment
+            analysis.
+        results_dir_path (str): Directory path in which to save results.
+        top_n_features (int): Number of top-scoring genes per topic to consider
+            for enrichment. Defaults to 1000.
+        genome (str): Genome identifier; ``'GRCh38'`` maps to human, any other
+            value (e.g. ``'mm10'``) maps to mouse. Defaults to ``'mm10'``.
+        experiment_title (str): Title for the experiment, used in output file
+            naming. Defaults to ``"experiment"``.
     """
     gene_set_safe = gene_set.replace(":", "_")
     rf_usages.index = clean_mixed_gene_names(rf_usages.index, genome)
@@ -99,6 +107,38 @@ def program_gprofiler(program_df: pd.DataFrame,
                       batch_size: int = 20,
                       show_progress_bar: bool = True
                       ) -> SimpleNamespace:
+    """Run g:Profiler functional enrichment on the top genes of each program.
+
+    For every program (column) in ``program_df``, the top ``n_hsg`` genes by
+    score are queried against g:Profiler in batches. Results are combined into a
+    single output table and a pivoted summary of enrichment statistics, filtered
+    by term size.
+
+    Args:
+        program_df (pandas.DataFrame): Program matrix with genes as rows and
+            programs as columns. Column names may be single- or multi-level.
+        species (Literal["hsapiens", "mmusculus"]): g:Profiler organism to query.
+        n_hsg (int): Number of top-scoring genes per program to query. Defaults
+            to 1000.
+        gene_sets (Collection[str]): Enrichment data sources to query. Defaults
+            to an empty list.
+        no_iea (bool): Whether to exclude electronically inferred annotations.
+            Recorded on the result namespace. Defaults to False.
+        min_termsize (int): Minimum term size to retain in the summary. Defaults
+            to 10.
+        max_termsize (int): Maximum term size to retain in the summary. Defaults
+            to 2000.
+        batch_size (int): Number of programs to include per g:Profiler query.
+            Defaults to 20.
+        show_progress_bar (bool): Whether to display a progress bar while
+            querying. Defaults to True.
+
+    Returns:
+        types.SimpleNamespace: Namespace with the query inputs (``background``,
+        ``query``, ``gene_sets``, ``no_iea``), the concatenated
+        ``gprofiler_output`` DataFrame (including a ``-log10pval`` column), and a
+        pivoted ``summary`` DataFrame of enrichment statistics per program.
+    """
     from gprofiler import GProfiler
     result = SimpleNamespace()
     result.background = program_df.dropna(how="all").index.to_list()  # all genes in program_df
@@ -156,10 +196,18 @@ def program_gprofiler(program_df: pd.DataFrame,
     return result
 
 def order_genesets(df: pd.DataFrame):
-    """Order genesets by the column with highest significance, followed by the max significance value.
+    """Order gene sets by their most significant column and value.
 
-    :param df: A geneset × program/sample matrix with -log10(pvals) as values.
-    :type df: pd.DataFrame
+    Assigns each gene set to the column in which it is most significant, then
+    orders gene sets within each column by descending maximum value.
+
+    Args:
+        df (pandas.DataFrame): A gene set x program/sample matrix with
+            -log10(p-value) values.
+
+    Returns:
+        pandas.DataFrame: The input matrix with rows reordered. Returned
+        unchanged if it has no rows.
     """
     # sort gene sets by highest column and then highest value of that column
     if df.shape[0] > 0:
@@ -182,7 +230,32 @@ def plot_geneset_pval_heatmap(df: pd.DataFrame,
                               vmax: float = 10.,
                               plot_title: str = "heatmap",
                               show_geneset_names: bool = False) -> Optional[Figure]:
+    """Plot a heatmap of gene set -log10(p-value) scores.
 
+    Draws a heatmap of ``df`` with a separate colorbar. When ``ax`` and
+    ``axlegend`` are not supplied, new figures are created for the heatmap and
+    the legend and returned.
+
+    Args:
+        df (pandas.DataFrame): Gene set x program matrix of -log10(p-value)
+            values.
+        ax (Optional[matplotlib.axes.Axes]): Axes on which to draw the heatmap.
+            If None, a new figure and axes are created. Defaults to None.
+        axlegend (Optional[matplotlib.axes.Axes]): Axes on which to draw the
+            colorbar. If None, a new legend figure and axes are created.
+            Defaults to None.
+        cmap (str): Matplotlib colormap name. Defaults to ``"Blues"``.
+        vmin (float): Minimum value of the color scale. Defaults to 0.0.
+        vmax (float): Maximum value of the color scale. Defaults to 10.0.
+        plot_title (str): Title for the heatmap. Defaults to ``"heatmap"``.
+        show_geneset_names (bool): Whether to show gene set names as y-axis
+            labels and adjust the figure size accordingly. Defaults to False.
+
+    Returns:
+        tuple[matplotlib.figure.Figure, matplotlib.figure.Figure]: The heatmap
+        figure and the legend figure, returned only when both ``ax`` and
+        ``axlegend`` are None; otherwise nothing is returned.
+    """
     if ax is None:
 
         if show_geneset_names:
@@ -229,7 +302,32 @@ def plot_geneset_pval_clustermap(df: pd.DataFrame,
                             is_cluster: bool = True,
                             vmin: float = 0.,
                             vmax: float = 10.) -> Optional[Figure]:
-    """Plot heatmap for gene set p-values."""
+    """Plot a heatmap and optional clustermap of gene set -log10(p-value) scores.
+
+    Draws a heatmap of ``df`` with pathway labels (``source-name``) and, when
+    ``is_cluster`` is True, an additional column-clustered clustermap.
+
+    Args:
+        df (pandas.DataFrame): Gene set x program matrix of -log10(p-value)
+            values, indexed by pathway metadata including ``source`` and
+            ``name``.
+        ax (Optional[matplotlib.axes.Axes]): Axes on which to draw the heatmap.
+            If None, a new figure and axes are created. Defaults to None.
+        axlegend (Optional[matplotlib.axes.Axes]): Axes on which to draw the
+            colorbar. If None, a new legend figure and axes are created.
+            Defaults to None.
+        cmap (str): Matplotlib colormap name. Defaults to ``"Blues"``.
+        plot_title (str): Title for the plots. Defaults to ``"heatmap"``.
+        is_cluster (bool): Whether to also produce a column-clustered
+            clustermap. Defaults to True.
+        vmin (float): Minimum value of the color scale. Defaults to 0.0.
+        vmax (float): Maximum value of the color scale. Defaults to 10.0.
+
+    Returns:
+        tuple: The heatmap figure, the clustermap (a seaborn ``ClusterGrid``, or
+        None when ``is_cluster`` is False), and the legend figure. The tuple is
+        returned only when both ``ax`` and ``axlegend`` are None.
+    """
     df_reset = df.reset_index()
     pathways_list = df_reset["source"] + "-" + df_reset["name"]
     figsize = [10 + df.shape[1]/4, 10 + df.shape[0]/4]

@@ -29,8 +29,26 @@ from spotnmf import io, pl, annotate, enrichment, hvg, niche_networks
 
 
 def plot_programs(results_dir, sample_name, adata_spatial, is_visium=True, genome=None, is_xenograft=False, is_aggr = True):
-    """
-    Plot topic usages spatially for a given sample.
+    """Plot topic usages spatially for a given sample.
+
+    Reads the saved ``topics_per_spot_{sample_name}.csv`` usages and dispatches to
+    the appropriate plotting routine depending on the data type. For xenograft
+    Visium data, usages are scaled by the per-spot admixture ratio for the selected
+    genome before plotting.
+
+    Args:
+        results_dir (str): Root directory containing the sample's result files.
+        sample_name (str): Sample identifier; used to locate inputs and title plots.
+        adata_spatial (anndata.AnnData): AnnData object with spatial coordinates and,
+            for xenografts, an "admix" column in ``obs``.
+        is_visium (bool): If True, use the Visium aggregate plotting paths; otherwise
+            use the generic spatial-topics plot. Defaults to True.
+        genome (str): Reference genome used to select the admixture ratio for
+            xenograft scaling (e.g. "GRCh38", "mm10"). Defaults to None.
+        is_xenograft (bool): If True, scale usages by the admixture ratio.
+            Defaults to False.
+        is_aggr (bool): If True, use the aggregate multi-sample plot; otherwise use
+            the manuscript-style per-sample plot. Defaults to True.
     """
     print("Plotting spatial topics")
     results_path = os.path.join(results_dir, sample_name)
@@ -78,8 +96,19 @@ def plot_programs(results_dir, sample_name, adata_spatial, is_visium=True, genom
 
 
 def annotate_programs(results_dir, sample_name, genome):
-    """
-    Run gene set enrichment and annotate topics for a given sample.
+    """Run gene set enrichment and annotate topics for a given sample.
+
+    Loads the saved ``genescores_per_topic_{sample_name}.csv`` gene scores, runs
+    pathway enrichment for a set of standard gene sets (GO:CC, GO:BP, KEGG, REAC),
+    and computes gene-set annotations for each geneset available for the genome.
+
+    Args:
+        results_dir (str): Root directory containing the sample's result files and
+            where enrichment/annotation outputs are written.
+        sample_name (str): Sample identifier; used to locate inputs and title
+            outputs.
+        genome (str): Reference genome (e.g. "GRCh38", "mm10") used for enrichment
+            and to select available gene sets.
     """
     print("Annotating programs with pathway enrichment")
     results_path = os.path.join(results_dir, sample_name)
@@ -109,8 +138,20 @@ def annotate_programs(results_dir, sample_name, genome):
 
 
 def plot_networks(results_dir: str, sample_name: str, usage_threshold: Union[float, int], n_bins: int, edge_threshold: float, annot_file: Union[str, None]):
-    """
-    Plot niche networks for a given sample.
+    """Plot niche networks for a given sample.
+
+    Thin wrapper around ``niche_networks.plot_network_analysis`` that builds and
+    plots co-occurrence/niche networks from the sample's saved results.
+
+    Args:
+        results_dir (str): Root directory containing the sample's result files.
+        sample_name (str): Sample identifier.
+        usage_threshold (float | int): Minimum topic usage for a spot to count
+            toward the network.
+        n_bins (int): Number of spatial bins used when building the network.
+        edge_threshold (float): Minimum edge weight to retain in the network.
+        annot_file (str | None): Optional path to an annotation file mapping topics
+            to labels; None to skip annotation.
     """
     print("Plotting niche networks.")
 
@@ -145,8 +186,58 @@ def run_experiment(
     model_params={},
     **kwargs,
 ):
-    """
-    Run a complete spotnmf experiment including model training, gene ranking, plotting, and annotation.
+    """Run a complete spotnmf experiment: gene selection, model training, gene ranking, and optional plotting/annotation/networks.
+
+    Optionally selects highly variable (overdispersed) genes, fits the spotnmf topic
+    model, saves the factorization matrices and per-topic gene scores, and then
+    optionally annotates topics, plots spatial maps, and plots niche networks. Also
+    writes a timing/loss record.
+
+    Args:
+        adata_spatial (anndata.AnnData): AnnData object with the spatial expression
+            data to factorize.
+        k (int): Number of topics/components to learn.
+        sample_name (str): Sample identifier; used for the output directory and file
+            names.
+        results_dir (str): Root directory under which the sample's results are saved.
+        genome (str): Reference genome (e.g. "GRCh38", "mm10"); if None and needed
+            for annotation, it is read from ``adata_spatial.uns``. Defaults to None.
+        filter_genes (bool): If True, perform overdispersed-gene selection before
+            fitting. Defaults to True.
+        hvg_file (str): Optional path to a precomputed highly variable gene list; if
+            given, gene selection is loaded rather than computed. Defaults to None.
+        annotate (bool): If True, run enrichment/annotation after fitting. Defaults
+            to False.
+        plot (bool): If True, plot spatial topic maps after fitting. Defaults to
+            False.
+        network (bool): If True, plot niche networks after fitting. Defaults to
+            False.
+        is_visium (bool): Whether the data is Visium; passed through to plotting.
+            Defaults to True.
+        is_aggr (bool): Whether the data is aggregated across libraries; controls
+            batch-mode gene selection and aggregate plotting. Defaults to False.
+        is_xenograft (bool): Whether the dataset is a xenograft model; passed through
+            to plotting. Defaults to False.
+        usage_threshold (float | int): Minimum topic usage used for network plotting.
+            Defaults to 0.
+        n_bins (int): Number of spatial bins used for network plotting. Defaults to
+            1000.
+        edge_threshold (float): Minimum edge weight for network plotting. Defaults to
+            0.199.
+        annot_file (str | None): Optional annotation file for network plotting.
+            Defaults to None.
+        model_params (dict): Extra keyword arguments forwarded to ``run_spotnmf``.
+            Defaults to an empty dict.
+        **kwargs: Additional keyword arguments forwarded to the gene-selection
+            routines.
+
+    Returns:
+        dict: The factorization results (e.g. "topics_per_spot", "genes_per_topic")
+        plus an "adata" entry holding the mutated ``adata_spatial`` with learned
+        usages/spectra for plotting.
+
+    Raises:
+        ValueError: If fewer highly variable genes are selected than ``k``.
     """
     start_time = time.time()
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -239,9 +330,7 @@ def run_experiment(
 
 
 def main():
-    """
-    Command-line interface for running spotnmf experiments.
-    """
+    """Command-line entry point for running spotnmf experiments (spotnmf, deconvolve, plot, annotate, network)."""
     parser = argparse.ArgumentParser(description="Run spatial transcriptomics experiments with spotnmf.")
     parser.add_argument("run_type", choices=["spotnmf", "deconvolve", "plot", "annotate", "network"], help="Type of operation to perform.")
     parser.add_argument("--sample_name", required=True, help="Sample identifier.")

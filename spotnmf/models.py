@@ -16,6 +16,15 @@ import pandas as pd
 from spotnmf import utils
 
 def seed_all(seed):
+    """Seed all relevant random number generators for reproducibility.
+
+    Seeds NumPy (which also covers SciPy) and PyTorch on both CPU and,
+    when available, GPU. On GPU, cuDNN is also configured for deterministic
+    behavior.
+
+    Args:
+        seed (int): The random seed to apply across NumPy and PyTorch.
+    """
     np.random.seed(seed)  # Seed numpy (covers scipy)
     torch.manual_seed(seed)  # Seed pytorch (CPU)
     if torch.cuda.is_available():
@@ -101,17 +110,24 @@ class spotnmf:
         normalize_rows: bool = False,
         impute: bool = False,
     ) -> None:
-        """Initialize parameters based on input data.
+        """Initialize the model parameters based on the input data.
+
+        Builds the reference dataset ``A`` and ground cost ``K`` from the
+        spatial data, then initializes the spectra ``H``, the usage ``W``,
+        and the dual variable ``G``.
 
         Args:
-            adata_spatial:
-                The input adata_spatial object.
-            dtype (torch.dtype):
-                The dtype to work with.
-            device (torch.device):
-                The device to work on.
-            force_recompute (bool, optional):
-                Whether to recompute the ground cost. Defaults to False.
+            adata_spatial (anndata.AnnData): The input spatial AnnData object.
+            dtype (torch.dtype): The dtype to work with.
+            device (torch.device): The device to work on.
+            force_recompute (bool, optional): Whether to recompute the ground
+                cost even if a cached cost is available. Defaults to False.
+            normalize_rows (bool, optional): Whether to normalize the rows of
+                the reference dataset before column normalization.
+                Defaults to False.
+            impute (bool, optional): Whether to impute the data using FastICA
+                (with ``factors`` components) before building the reference
+                dataset. Defaults to False.
         """
 
         # Set some attributes.
@@ -197,33 +213,41 @@ class spotnmf:
         impute: bool = False,
         batch_size = 512,
     ) -> None:
-        """Train the spotnmf model on an input adata object.
+        """Train the spotnmf model on an input AnnData object.
+
+        Initializes the parameters, then alternately optimizes the usage
+        ``W`` and the spectra ``H`` until convergence or ``max_iter`` is
+        reached. On completion, the learned ``H`` is stored in
+        ``adata_spatial.uns["H_OT"]`` and ``W`` in
+        ``adata_spatial.obsm["W_OT"]``.
 
         Args:
-            adata_spatial :
-                The input adata object.
-            max_iter_inner (int, optional):
-                How many iterations for the inner optimization loop
-                (optimizing H, or W). Defaults to 1_000.
-            max_iter (int, optional):
-                How many interations for the outer optimization loop (how
-                many successive optimizations of H and W). Defaults to 100.
-            device (torch.device, optional):
-                The device to work on. Defaults to 'cpu'.
-            dtype (torch.dtype, optional):
-                The dtype to work with. Defaults to torch.double.
-            lr (float, optional):
-                The learning rate for the optimizer. The default is set
-                for LBFGS and should be changed otherwise. Defaults to 1.
-            optim_name (str, optional):
-                The optimizer to use (`lbfgs`, `sgd` or `adam`). LBFGS
-                is advised, but requires more memory. Defaults to "lbfgs".
-            tol_inner (float, optional):
-                The tolerance for the inner iterations before early stopping.
-                Defaults to 1e-12.
-            tol_outer (float, optional):
-                The tolerance for the outer iterations before early stopping.
-                Defaults to 1e-4.
+            adata_spatial (anndata.AnnData): The input spatial AnnData object.
+            max_iter_inner (int, optional): The maximum number of iterations
+                for the inner optimization loop (optimizing H or W).
+                Defaults to 1000.
+            max_iter (int, optional): The maximum number of iterations for the
+                outer optimization loop (successive optimizations of H and W).
+                Defaults to 50.
+            device (torch.device, optional): The device to work on.
+                Defaults to "cpu".
+            dtype (torch.dtype, optional): The dtype to work with.
+                Defaults to torch.double.
+            lr (float, optional): The learning rate for the optimizer. The
+                default is tuned for LBFGS and should be changed for other
+                optimizers. Defaults to 1.
+            optim_name (str, optional): The optimizer to use (``"lbfgs"``,
+                ``"sgd"`` or ``"adam"``). LBFGS is advised, but requires more
+                memory. Defaults to "lbfgs".
+            tol_inner (float, optional): The tolerance for the inner iterations
+                before early stopping. Defaults to 1e-12.
+            tol_outer (float, optional): The tolerance for the outer iterations
+                before early stopping. Defaults to 1e-4.
+            normalize_rows (bool, optional): Whether to normalize the rows of
+                the reference dataset during initialization. Defaults to False.
+            impute (bool, optional): Whether to impute the data using FastICA
+                during initialization. Defaults to False.
+            batch_size (int, optional): The batch size. Defaults to 512.
         """
 
         # First, initialize the different parameters.
@@ -314,20 +338,19 @@ class spotnmf:
     def build_optimizer(
         self, params, lr: float, optim_name: str
     ) -> torch.optim.Optimizer:
-        """Generates the optimizer. The PyTorch LBGS implementation is
-        parametrized following the discussion in https://discuss.pytorch.org/
-        t/unclear-purpose-of-max-iter-kwarg-in-the-lbfgs-optimizer/65695.
+        """Build the optimizer used to update the dual variable.
+
+        The PyTorch LBFGS implementation is parametrized following the
+        discussion in https://discuss.pytorch.org/t/unclear-purpose-of-max-iter-kwarg-in-the-lbfgs-optimizer/65695.
 
         Args:
-            params (Iterable of Tensors):
-                The parameters to be optimized.
-            lr (float):
-                Learning rate of the optimizer.
-            optim_name (str):
-                Name of the optimizer, among `'lbfgs'`, `'sgd'`, `'adam'`
+            params (Iterable[torch.Tensor]): The parameters to be optimized.
+            lr (float): The learning rate of the optimizer.
+            optim_name (str): The name of the optimizer, among ``"lbfgs"``,
+                ``"sgd"`` or ``"adam"``.
 
         Returns:
-            torch.optim.Optimizer: The optimizer.
+            torch.optim.Optimizer: The configured optimizer.
         """
         if optim_name == "lbfgs":
             return optim.LBFGS(
@@ -351,14 +374,18 @@ class spotnmf:
         pbar,
         device: str,
     ) -> None:
-        """Optimize a given function.
+        """Optimize the dual variable with respect to a given loss function.
+
+        Runs the inner optimization loop over the dual variable ``G``,
+        updating the progress bar and checking for early stopping every
+        few steps.
 
         Args:
-            loss_fn (Callable): The function to optimize.
+            loss_fn (Callable): The loss function to minimize.
             max_iter (int): The maximum number of iterations.
-            history (List): A list to append the losses to.
+            history (list): A list to which the losses are appended.
             tol (float): The tolerance before early stopping.
-            pbar (A tqdm progress bar): The progress bar.
+            pbar (tqdm.tqdm): The progress bar to update.
             device (str): The device to work on.
         """
 
@@ -409,11 +436,14 @@ class spotnmf:
 
     @torch.no_grad()
     def total_dual_loss(self) -> torch.Tensor:
-        """Compute the total dual loss. This is only used by the user and for,
-        early stopping, not by the optimization algorithm.
+        """Compute the total dual loss.
+
+        This is used for monitoring and early stopping only, not by the
+        optimization algorithm itself. It combines the OT dual loss, the
+        Lagrange multiplier term, and the entropy terms for ``H`` and ``W``.
 
         Returns:
-            torch.Tensor: The loss
+            torch.Tensor: The total dual loss.
         """
 
         # Initialize the loss to zero.
@@ -452,10 +482,10 @@ class spotnmf:
         return loss
 
     def loss_fn_h(self) -> torch.Tensor:
-        """Computes the loss for the update of `H`.
+        """Compute the loss for the update of the spectra ``H``.
 
         Returns:
-            torch.Tensor: The loss.
+            torch.Tensor: The loss for the ``H`` optimization step.
         """
         loss_h = 0
 
@@ -485,10 +515,10 @@ class spotnmf:
         return loss_h
 
     def loss_fn_w(self) -> torch.Tensor:
-        """Return the loss for the optimization of W
+        """Compute the loss for the update of the usage ``W``.
 
         Returns:
-            torch.Tensor: The loss
+            torch.Tensor: The loss for the ``W`` optimization step.
         """
         loss_w, htgw = 0, 0
 
@@ -520,20 +550,30 @@ class spotnmf:
     
 
 def run_spotnmf(adata_spatial, components, seed=42, **kwargs):
-    """
-    Run the spotnmf model with flexible parameters provided via kwargs.
+    """Run the spotnmf model with flexible parameters provided via kwargs.
+
+    Seeds the random number generators, builds and trains a
+    :class:`spotnmf` model, then returns the learned factors as DataFrames.
 
     Args:
-        adata_spatial: Input spatial data in an AnnData object.
-        components: Number of factorss.
-        mod: The modality to use (default is 'simulated').
-        **kwargs: Additional parameters for OT and training, including:
-            - h: Regularization parameter for h (default 0.01).
-            - w: Regularization parameter for w (default 1e-2).
-            - eps: Entropic regularization (default 5e-3).
-            - lr: Learning rate (default 0.001).
-            - optim_name: Optimizer name (default 'adam').
-            - cost: Cost function (default 'cosine').
+        adata_spatial (anndata.AnnData): Input spatial data as an AnnData
+            object.
+        components (int): The number of factors to learn.
+        seed (int, optional): The random seed for reproducibility.
+            Defaults to 42.
+        **kwargs: Additional parameters for the model and training. These
+            override the defaults for ``cost``, ``optim_name``,
+            ``tol_inner``, ``tol_outer``, ``max_iter``, ``max_iter_inner``
+            and ``device``, and must supply the required keys ``h``
+            (entropy regularization for the spectra), ``w`` (entropy
+            regularization for the usage), ``eps`` (entropic
+            regularization), ``lr`` (learning rate) and ``normalize_rows``.
+
+    Returns:
+        tuple: A tuple ``(results, losses)`` where ``results`` is a dict with
+        keys ``"topics_per_spot"`` and ``"genes_per_topic"`` mapping to
+        pandas.DataFrame objects, and ``losses`` is the list of recorded
+        total dual losses during training.
     """
     seed_all(seed)
     

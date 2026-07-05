@@ -6,16 +6,20 @@ pd.options.display.float_format = '{:f}'.format
 
 
 def compute_glm_coefficients(Z, U, family=sm.families.Gaussian()):
-    """
-    Computes the regression coefficients for each gene using a Generalized Linear Model (GLM).
-    
-    Parameters:
-    - Z: numpy array of shape (num_samples, num_genes), the z-scored gene expression matrix.
-    - U: numpy array of shape (num_samples, num_gep), the un-normalized consensus usage matrix.
-    - family: statsmodels GLM family, default is Gaussian (OLS will be similliar).
-    
+    """Compute regression coefficients for each gene using a Generalized Linear Model (GLM).
+
+    A separate GLM is fit for each gene independently.
+
+    Args:
+        Z (numpy.ndarray): Z-scored gene expression matrix of shape
+            (num_samples, num_genes).
+        U (numpy.ndarray): Un-normalized consensus usage matrix of shape
+            (num_samples, num_gep).
+        family: statsmodels GLM family. Defaults to Gaussian (equivalent to OLS).
+
     Returns:
-    - B: numpy array of shape (num_genes, num_gep + 1), GLM coefficients for each gene.
+        numpy.ndarray: GLM coefficients for each gene, of shape
+        (num_genes, num_gep + 1).
     """
 
     B = []  # Initialize list to store coefficients for each gene
@@ -36,25 +40,24 @@ def compute_glm_coefficients(Z, U, family=sm.families.Gaussian()):
 
 
 def calculate_marker_genes_topics_df(adata_spatial, rf_usages, model_type="ols"):
-    """
-    Performs Ordinary Least Squares (OLS) regression or General Linar Model to calculate regression coefficients 
-    of marker genes for each topic, based on the spatial data and reference usages.
-    
-    Parameters:
-    - adata_spatial: AnnData
-        An AnnData object containing spatial transcriptomic data with gene expression matrix (X) 
-        and spot metadata (obs).
-    - rf_usages: DataFrame
-        A DataFrame with reference usages for each topic, indexed by spot identifiers, 
-        aligning with `adata_spatial.obs.index`.
-    - model_type: string
-        type of regression model
-    
+    """Calculate regression coefficients of marker genes for each topic.
+
+    Performs Ordinary Least Squares (OLS) regression or a Generalized Linear Model
+    to compute regression coefficients of marker genes for each topic, based on the
+    spatial data and reference usages.
+
+    Args:
+        adata_spatial (anndata.AnnData): An AnnData object containing spatial
+            transcriptomic data with the gene expression matrix (``X``) and spot
+            metadata (``obs``).
+        rf_usages (pandas.DataFrame): Reference usages for each topic, indexed by
+            spot identifiers, aligning with ``adata_spatial.obs.index``.
+        model_type (str): Type of regression model, either ``"ols"`` or ``"glm"``.
+            Defaults to ``"ols"``.
+
     Returns:
-    - usage_coef_df: DataFrame
-        A DataFrame containing the regression coefficients for each gene-topic pair. 
-        Rows represent genes, and columns represent topics, with coefficients computed 
-        using OLS regression.
+        pandas.DataFrame: Regression coefficients for each gene-topic pair. Rows
+        represent genes and columns represent topics.
     """
     
     # Normalize gene expression matrix (z-score normalization: (T - mean) / std) for each gene

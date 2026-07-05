@@ -85,8 +85,27 @@ spatial_color_map = LinearSegmentedColormap.from_list("", ['cornsilk', 'magenta'
 
 
 def plot_df_heatmap(df, title_name, x_name, y_name, results_dir_path, cmap = "Blues", is_cluster = False):
-    """
-    Plot a DataFrame as a heatmap or clustered heatmap and save as PDF.
+    """Plot a DataFrame as a heatmap (optionally clustered) and save it as a PDF.
+
+    When clustering is requested, a seaborn clustermap is produced; if clustering
+    fails due to recursion or memory limits on very tall matrices, the function
+    falls back to a plain (unclustered) heatmap. Figure size scales with the
+    DataFrame's shape.
+
+    Args:
+        df (pandas.DataFrame): Data to plot; values are cast to float and NaNs
+            filled with 0.
+        title_name (str): Title shown on the plot and used in the output file name.
+        x_name (str): Label for the x-axis.
+        y_name (str): Label for the y-axis.
+        results_dir_path (str): Directory where the PDF is written.
+        cmap (str): Matplotlib/seaborn colormap name. Defaults to "Blues".
+        is_cluster (bool): If True, attempt a clustered heatmap (row and column
+            clustering); otherwise draw a plain heatmap. Defaults to False.
+
+    Saves:
+        A ``clustermap_{title_name}.pdf`` or ``heatmap_{title_name}.pdf`` file in
+        ``results_dir_path``.
     """
     fig_size = [10 + df.shape[1]/4, 10 + df.shape[0]/6]
     if is_cluster:
@@ -132,19 +151,20 @@ def plot_df_heatmap(df, title_name, x_name, y_name, results_dir_path, cmap = "Bl
     
 
 def plot_spatial_topic(adata_spatial, topic, axe, use_scanpy=False):
-    """
-    Plot a single spatial topic on a given matplotlib axis.
+    """Plot a single spatial topic on a given matplotlib axis.
 
-    Parameters
-    ----------
-    adata_spatial : AnnData
-        AnnData object with spatial info.
-    topic : str
-        Column name in adata_spatial.obs to plot.
-    axe : matplotlib.axes.Axes
-        Axis to plot on.
-    use_scanpy : bool
-        Use scanpy.pl.spatial (True) or direct scatter (False).
+    Args:
+        adata_spatial (anndata.AnnData): AnnData object with spatial information.
+            When ``use_scanpy`` is False, ``obs`` must contain "X" and "Y"
+            coordinate columns and the ``topic`` column.
+        topic (str): Column name in ``adata_spatial.obs`` to color the points by.
+        axe (matplotlib.axes.Axes): Axis to plot on.
+        use_scanpy (bool): If True, use ``scanpy.pl.spatial``; otherwise draw a
+            direct scatter plot. Defaults to False.
+
+    Returns:
+        matplotlib.collections.PathCollection: The scatter/mappable object, usable
+        for building a shared colorbar.
     """
     if use_scanpy:
         # Use Scanpy's built-in spatial plotting function
@@ -175,15 +195,29 @@ def plot_spatial_topic(adata_spatial, topic, axe, use_scanpy=False):
     return scatter
 
 def plot_spatial_all_topics(adata_spatial, rf_usages, results_dir_path, title_name="Spatial Topics Plot", fig_width = None, fig_height = None, is_show=False):
-    """
-    Plot multiple spatial topics on a grid of subplots and save the figure as a PDF.
+    """Plot multiple spatial topics on a grid of subplots and save the figure as a PDF.
 
-    Parameters:
-    - adata_spatial: AnnData object with spatial coordinates in .obs.
-    - rf_usages: DataFrame, each column is a topic to plot, normalized within the function.
-    - results_dir_path: str, directory to save the output PDF.
-    - title_name: str, title for the entire figure.
-    - is_show: bool, if True displays the plot; otherwise, only saves it.
+    Each column of ``rf_usages`` is joined into ``adata_spatial.obs`` and drawn on
+    its own subplot via :func:`plot_spatial_topic`. The grid is sized to
+    approximately square. A shared colorbar labeled "Intensity" is added.
+
+    Args:
+        adata_spatial (anndata.AnnData): AnnData object with spatial coordinates in
+            ``obs`` ("X" and "Y" columns).
+        rf_usages (pandas.DataFrame): Topic usages where each column is a topic to
+            plot; joined onto ``adata_spatial.obs`` with NaNs filled with 0.
+        results_dir_path (str): Directory to save the output PDF (created if needed).
+        title_name (str): Title for the entire figure and part of the output file
+            name. Defaults to "Spatial Topics Plot".
+        fig_width (float): Overall figure width; if not set, derived from the grid
+            layout. Defaults to None.
+        fig_height (float): Overall figure height; if not set, derived from the grid
+            layout. Defaults to None.
+        is_show (bool): If True, display the plot in addition to saving it.
+            Defaults to False.
+
+    Saves:
+        A ``topics_plot_{title_name}.pdf`` file in ``results_dir_path``.
     """
     params = adata_spatial.uns.get("params", {})
 
@@ -246,6 +280,36 @@ def plot_spatial_all_topics(adata_spatial, rf_usages, results_dir_path, title_na
 
 def plot_spatial_all_topics_aggr_manuscript(adata, rf_usages, results_dir_path, title_name="Spatial Topics Plot",
                                             same_legend = False, plot_lots=True, COLS=None, ROWS=None, filter_th=1):
+    """Plot per-sample spatial maps for each topic in a manuscript-ready multi-page PDF.
+
+    For every topic, each sample in ``adata.obs['sample_id']`` is drawn with
+    ``scanpy.pl.spatial`` on a fixed ROWS x COLS grid, one PDF page per full grid.
+    The color scale is anchored to the third-largest value of the topic. An
+    optional percentile filter zeroes out low usages before plotting.
+
+    Args:
+        adata (anndata.AnnData): AnnData object with a "sample_id" column in ``obs``
+            and spatial images suitable for ``scanpy.pl.spatial`` (img_key="hires").
+        rf_usages (pandas.DataFrame): Topic usages where each column is a topic;
+            joined onto ``adata.obs`` (existing overlapping columns are dropped
+            first) and NaNs filled with 0.
+        results_dir_path (str): Directory to save the output PDF (created if needed).
+        title_name (str): Base title and part of the output file name. Defaults to
+            "Spatial Topics Plot".
+        same_legend (bool): Accepted for API consistency; not used to alter scaling
+            in this function. Defaults to False.
+        plot_lots (bool): Accepted for API consistency. Defaults to True.
+        COLS (int): Number of subplot columns per page; if None, derived to be
+            approximately square. Defaults to None.
+        ROWS (int): Number of subplot rows per page; if None, derived from ``COLS``
+            and the number of samples. Defaults to None.
+        filter_th (float): Quantile threshold in [0, 1]; when below 1, usages below
+            the per-topic percentile are set to 0 and only positive spots are
+            plotted. Defaults to 1.
+
+    Saves:
+        A ``topics_plot_{title_name}_printable.pdf`` file in ``results_dir_path``.
+    """
     os.makedirs(results_dir_path, exist_ok=True)
 
     if(filter_th < 1):
@@ -347,7 +411,43 @@ def plot_spatial_all_topics_aggr_manuscript(adata, rf_usages, results_dir_path, 
 
 def plot_spatial_all_topics_aggr(adata, rf_usages, results_dir_path, title_name="Spatial Topics Plot",
                                   same_legend=False, plot_topic=True, COLS=None, ROWS=None, image_key=None, filter_th = 1.0):
-    
+    """Plot per-sample spatial maps for each topic, one PDF page per topic.
+
+    For each topic, every sample in ``adata.obs['sample_id']`` is drawn with
+    ``scanpy.pl.spatial`` on a ROWS x COLS grid and written as its own page in a
+    single multi-page PDF. The per-panel color scale is anchored to the
+    third-largest value (or, when ``same_legend`` is True, to the topic-wide
+    third-largest value shared across samples). Known dataset layouts (e.g. "BT53",
+    "pdx_merge" in ``results_dir_path``) set sample ordering and column counts, and
+    ``printable_rotate_dict`` may flip axes per sample.
+
+    Args:
+        adata (anndata.AnnData): AnnData object with a "sample_id" column in ``obs``
+            and spatial images suitable for ``scanpy.pl.spatial``.
+        rf_usages (pandas.DataFrame): Topic usages where each column is a topic;
+            joined onto ``adata.obs`` (overlapping columns dropped first) with NaNs
+            filled with 0.
+        results_dir_path (str): Directory to save the output PDF (created if needed).
+        title_name (str): Base title and part of the output file name. Defaults to
+            "Spatial Topics Plot".
+        same_legend (bool): If True, use a single color scale per topic shared across
+            all samples; otherwise scale each sample panel independently. Defaults to
+            False.
+        plot_topic (bool): If True, color spots by the topic value with a colorbar;
+            if False, draw the plain spatial image. Defaults to True.
+        COLS (int): Number of subplot columns; if None, derived to be approximately
+            square (overridden for known datasets). Defaults to None.
+        ROWS (int): Number of subplot rows; if None, derived from ``COLS`` and the
+            number of samples. Defaults to None.
+        image_key (str): ``img_key`` passed to ``scanpy.pl.spatial`` to select the
+            tissue image. Defaults to None.
+        filter_th (float): Quantile threshold in [0, 1]; when below 1, usages below
+            the per-topic percentile are set to 0. Defaults to 1.0.
+
+    Saves:
+        A ``topics_plot_{title_name}.pdf`` file in ``results_dir_path``.
+    """
+
     os.makedirs(results_dir_path, exist_ok=True)
 
     if(filter_th < 1):
@@ -435,6 +535,34 @@ def plot_spatial_all_topics_aggr(adata, rf_usages, results_dir_path, title_name=
             gc.collect()
 
 def plot_benchmark_methods_topics(results_dir, adata_spatial, experiments_list, fig_width = None, fig_height = None, use_scanpy=False, is_show=False):
+    """Plot a grid comparing ground-truth cell-type maps against multiple methods and save as PDF.
+
+    Builds a grid with one row per cell type. The first column shows the normalized
+    ground-truth spatial map (from ``adata_spatial.uns["ground_truth"]``); each
+    remaining column shows the corresponding topic map loaded from a method's saved
+    results. A shared colorbar labeled "Intensity" is added.
+
+    Args:
+        results_dir (str): Root directory containing per-sample method result
+            subdirectories; also used to derive the analysis output path.
+        adata_spatial (anndata.AnnData): AnnData object with spatial coordinates in
+            ``obs`` ("X"/"Y") and ``uns`` entries "dataset_name", "params", and
+            "ground_truth".
+        experiments_list (list): Method/experiment names whose per-spot results are
+            loaded and plotted, one column per method.
+        fig_width (float): Overall figure width; if not set, derived from the spatial
+            extent and number of methods (capped). Defaults to None.
+        fig_height (float): Overall figure height; if not set, derived from the
+            spatial extent and number of cell types (capped). Defaults to None.
+        use_scanpy (bool): Passed to :func:`plot_spatial_topic` to select
+            ``scanpy.pl.spatial`` vs. a direct scatter. Defaults to False.
+        is_show (bool): If True, display the plot in addition to saving it.
+            Defaults to False.
+
+    Saves:
+        A ``methods_topics_plot_{dataset_name}_.pdf`` file in the analysis directory
+        under ``results_dir``.
+    """
 
     plt.ioff()  # Turn off interactive plotting for faster processing
 

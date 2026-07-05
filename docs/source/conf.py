@@ -20,8 +20,8 @@ sys.path.insert(0, os.path.abspath('../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'spOT-NMF'
-copyright = '2025, Aly O. Abdlkareem'
-author = 'Aly O. Abdlkareem'
+copyright = '2025, Aly Abdelkareem'
+author = 'Aly Abdelkareem'
 
 # The full version, including alpha/beta/rc tags.
 # The distribution is named "spot-nmf"; fall back gracefully if not installed.

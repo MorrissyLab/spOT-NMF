@@ -10,18 +10,13 @@ from matplotlib.image import imread
 import anndata as ad
 
 def check_dir(dir_path):
-    """
-    Create the directory if it doesn't exist, and return its path.
+    """Create the directory if it doesn't exist, and return its path.
 
-    Parameters
-    ----------
-    dir_path : str
-        Path of the directory to create.
+    Args:
+        dir_path (str): Path of the directory to create.
 
-    Returns
-    -------
-    str
-        The same directory path.
+    Returns:
+        str: The same directory path.
     """
     os.makedirs(dir_path, exist_ok=True)
     return dir_path
@@ -35,20 +30,22 @@ def read_adata(
     select_sample=None,
     bin_size=None
 ):
-    """
-    Reads AnnData object based on data mode and parameters.
+    """Read an AnnData object based on the data mode and parameters.
+
+    Dispatches to the Visium HD or Visium spatial readers based on
+    ``data_mode``, falling back to reading a plain ``.h5ad`` file.
 
     Args:
         data_path (str): Path to the AnnData or spatial data.
-        data_mode (str): Mode of the data, e.g., 'visium_hd', 'visium', 'csv', or 'h5ad'.
-        genome (str): Genome reference name (default: mm10 genome).
-        is_aggr (bool, optional): Whether data is aggregated. Defaults to False.
-        is_xenograft (bool, optional): Whether data is from a xenograft model. Defaults to False.
-        select_sample (str, optional): Specific sample name to select. Defaults to None.
-        bin_size (int, optional): Bin size for spatial data. Defaults to None.
+        data_mode (str): Mode of the data, e.g. 'visium_hd', 'visium', or 'h5ad'.
+        genome (str): Genome reference name. Defaults to "mm10".
+        is_aggr (bool): Whether the data is aggregated. Defaults to False.
+        is_xenograft (bool): Whether the data is from a xenograft model. Defaults to False.
+        select_sample (str): Specific sample name to select. Defaults to None.
+        bin_size (int): Bin size for spatial data. Defaults to None.
 
     Returns:
-        AnnData: Loaded AnnData object.
+        anndata.AnnData: Loaded AnnData object.
     """
     if data_mode == "visium_hd":
         adata_spatial = read_visium_hd(
@@ -76,20 +73,18 @@ def read_adata(
     
 
 def load_spatial_image(image_path, mode='original'):
-    """
-    Load a spatial image and return it in the desired color mode.
+    """Load a spatial image and return it in the desired color mode.
 
-    Parameters
-    ----------
-    image_path : str
-        Path to the image file.
-    mode : {'grayscale', 'original', 'interpolated'}, default='original'
-        Mode for processing the image.
+    Args:
+        image_path (str): Path to the image file.
+        mode (str): Mode for processing the image, one of 'grayscale',
+            'original', or 'interpolated'. Defaults to 'original'.
 
-    Returns
-    -------
-    np.ndarray
-        Image array (H, W, 3) in uint8 format.
+    Returns:
+        numpy.ndarray: Image array of shape (H, W, 3) in uint8 format.
+
+    Raises:
+        ValueError: If ``mode`` is not 'grayscale', 'original', or 'interpolated'.
     """
     img = imread(image_path)
     if img.dtype == np.uint8:
@@ -117,28 +112,19 @@ def read_visium_hd_sample(
     sample_adata_path, bin_size=16, genome=None,
     library_id="visium_hd_sample", is_xenograft=False, image_color="grayscale"
 ):
-    """
-    Read a single Visium HD sample and return an AnnData object.
+    """Read a single Visium HD sample and return an AnnData object.
 
-    Parameters
-    ----------
-    sample_adata_path : str
-        Path to the sample directory.
-    bin_size : int, default=16
-        Spatial bin size in microns.
-    genome : str, optional
-        Reference genome (for xenograft support).
-    library_id : str, default='visium_hd_sample'
-        Library/sample identifier.
-    is_xenograft : bool, default=False
-        Whether data is from a xenograft model.
-    image_color : {'grayscale', 'original', 'interpolated'}, default='grayscale'
-        How to load tissue images.
+    Args:
+        sample_adata_path (str): Path to the sample directory.
+        bin_size (int): Spatial bin size in microns. Defaults to 16.
+        genome (str): Reference genome, used only for xenograft support. Defaults to None.
+        library_id (str): Library/sample identifier. Defaults to "visium_hd_sample".
+        is_xenograft (bool): Whether the data is from a xenograft model. Defaults to False.
+        image_color (str): How to load tissue images, one of 'grayscale',
+            'original', or 'interpolated'. Defaults to "grayscale".
 
-    Returns
-    -------
-    ad.AnnData
-        Annotated data object for the sample.
+    Returns:
+        anndata.AnnData: Annotated data object for the sample.
     """
     bin_sampled_path = os.path.join(
         sample_adata_path, f"binned_outputs/square_{int(bin_size):03d}um"
@@ -180,28 +166,20 @@ def read_visium_hd_sample(
 def read_visium_hd(
     adata_path, bin_size=16, genome=None, is_aggr=False, is_xenograft=False, image_color="grayscale"
 ):
-    """
-    Read Visium HD data from a directory, with optional aggregation.
+    """Read Visium HD data from a directory, with optional aggregation.
 
-    Parameters
-    ----------
-    adata_path : str
-        Path to root directory of HD data (single sample or multi-sample).
-    bin_size : int, default=16
-        Bin size for HD samples.
-    genome : str, optional
-        Genome for xenograft mapping.
-    is_aggr : bool, default=False
-        If True, aggregate all samples in directory.
-    is_xenograft : bool, default=False
-        Xenograft data flag.
-    image_color : {'grayscale', 'original', 'interpolated'}, default='grayscale'
-        How to load tissue images.
+    Args:
+        adata_path (str): Path to the root directory of HD data (single sample
+            or multi-sample).
+        bin_size (int): Bin size for HD samples. Defaults to 16.
+        genome (str): Genome for xenograft mapping. Defaults to None.
+        is_aggr (bool): If True, aggregate all samples in the directory. Defaults to False.
+        is_xenograft (bool): Xenograft data flag. Defaults to False.
+        image_color (str): How to load tissue images, one of 'grayscale',
+            'original', or 'interpolated'. Defaults to "grayscale".
 
-    Returns
-    -------
-    ad.AnnData
-        Combined annotated data object.
+    Returns:
+        anndata.AnnData: Combined annotated data object.
     """
     if is_aggr:
         adatas_concat = None
@@ -232,28 +210,18 @@ def read_spatial_data(
     adata_path, genome=None, is_xenograft=False,
     is_aggr=True, is_spatial=True, select_sample=None
 ):
-    """
-    Read spatial transcriptomics data and return AnnData object.
+    """Read spatial transcriptomics data and return an AnnData object.
 
-    Parameters
-    ----------
-    adata_path : str
-        Directory with spatial transcriptomics data.
-    genome : str, optional
-        Genome reference for xenograft.
-    is_xenograft : bool, default=False
-        Xenograft flag (adds cell type classification data).
-    is_aggr : bool, default=True
-        If aggregated data.
-    is_spatial : bool, default=True
-        Whether to load spatial data.
-    select_sample : str, optional
-        Only load samples whose IDs start with this string.
+    Args:
+        adata_path (str): Directory with spatial transcriptomics data.
+        genome (str): Genome reference for xenograft. Defaults to None.
+        is_xenograft (bool): Xenograft flag; adds cell type classification data. Defaults to False.
+        is_aggr (bool): Whether the data is aggregated across samples. Defaults to True.
+        is_spatial (bool): Whether to load spatial data. Defaults to True.
+        select_sample (str): Only keep samples whose IDs start with this string. Defaults to None.
 
-    Returns
-    -------
-    ad.AnnData
-        Processed AnnData object.
+    Returns:
+        anndata.AnnData: Processed AnnData object.
     """
     sample_data_path = os.path.join(adata_path, "filtered_feature_bc_matrix.h5")
     if os.path.exists(sample_data_path):
@@ -313,32 +281,23 @@ def read_spatial_data(
     return adata
 
 def save_list(l, file):
-    """
-    Save a list to a CSV file.
+    """Save a list to a CSV file.
 
-    Parameters
-    ----------
-    l : list
-        List to save.
-    file : str
-        Output file path.
+    Args:
+        l (list): List to save.
+        file (str): Output file path.
     """
     df = pd.DataFrame(l)
     df.to_csv(file, index=False)
 
 def read_gmt_file(gmt_type_file):
-    """
-    Read a .gmt file and return as a DataFrame (geneset format).
+    """Read a .gmt file and return it as a DataFrame in gene set format.
 
-    Parameters
-    ----------
-    gmt_type_file : str
-        Path to .gmt file.
+    Args:
+        gmt_type_file (str): Path to the .gmt file.
 
-    Returns
-    -------
-    pd.DataFrame
-        DataFrame with gene set names as columns.
+    Returns:
+        pandas.DataFrame: DataFrame with gene set names as columns.
     """
     data = []
     with open(gmt_type_file, 'r') as file:
@@ -351,17 +310,15 @@ def read_gmt_file(gmt_type_file):
     return df_cell_types
 
 def save_ranked_genes(result_df, results_file, top_genes=-1):
-    """
-    Save ranked genes per program/celltype to CSV.
+    """Save ranked genes per program/celltype to a CSV file.
 
-    Parameters
-    ----------
-    result_df : pd.DataFrame
-        DataFrame of gene scores.
-    results_file : str
-        Output CSV file path.
-    top_genes : int, default=-1
-        If > 0, only top N genes are saved.
+    For each column of ``result_df``, genes are ranked by descending score and
+    written as a column of gene names, padded to equal length.
+
+    Args:
+        result_df (pandas.DataFrame): DataFrame of gene scores.
+        results_file (str): Output CSV file path.
+        top_genes (int): If greater than 0, only the top N genes are saved. Defaults to -1.
     """
     ranked_data = {
         col: list(result_df[col].dropna().sort_values(ascending=False).index)
@@ -376,26 +333,22 @@ def save_ranked_genes(result_df, results_file, top_genes=-1):
     ranked_indices.to_csv(results_file, index=False)
 
 def load_experiment_result(results_dir_path, sample_name, exp_name, mode, is_annotated=False):
-    """
-    Load experiment result table by mode/sample.
+    """Load an experiment result table by mode and sample.
 
-    Parameters
-    ----------
-    results_dir_path : str
-        Directory where results are saved.
-    sample_name : str
-        Sample identifier.
-    exp_name : str
-        Experiment identifier.
-    mode : str
-        Result mode ('spots', 'genes', 'genescores', etc).
-    is_annotated : bool, default=False
-        If True, remap columns to annotation celltypes.
+    Args:
+        results_dir_path (str): Directory where results are saved.
+        sample_name (str): Sample identifier.
+        exp_name (str): Experiment identifier.
+        mode (str): Result mode, one of 'spots', 'genes', 'genescores',
+            'r_genes', 'r_genescores', 'hvar', or 'annotation'.
+        is_annotated (bool): If True, remap columns to annotation celltypes. Defaults to False.
 
-    Returns
-    -------
-    pd.DataFrame
-        Result DataFrame.
+    Returns:
+        pandas.DataFrame: Result DataFrame.
+
+    Raises:
+        ValueError: If ``mode`` is not a recognized result mode.
+        FileNotFoundError: If the corresponding result file does not exist.
     """
     mode_key_map = {
         "spots": "topics_per_spot",
@@ -426,20 +379,15 @@ def load_experiment_result(results_dir_path, sample_name, exp_name, mode, is_ann
     return results_df
 
 def get_ground_truth(adata_spatial, mode="genes"):
-    """
-    Retrieve ground truth matrix (genes x celltypes or spots) for a dataset.
+    """Retrieve the ground truth matrix (genes x celltypes or spots) for a dataset.
 
-    Parameters
-    ----------
-    adata_spatial : ad.AnnData
-        Annotated spatial dataset.
-    mode : {'genes', 'spots'}, default='genes'
-        Mode for ground truth table.
+    Args:
+        adata_spatial (anndata.AnnData): Annotated spatial dataset.
+        mode (str): Mode for the ground truth table, one of 'genes' or 'spots'.
+            Defaults to "genes".
 
-    Returns
-    -------
-    pd.DataFrame
-        Ground truth table.
+    Returns:
+        pandas.DataFrame: Ground truth table.
     """
     base_dir = "Z:\\MorrissyLab Dropbox\\Visium_profiling\\benchmark"
     data_dir = os.path.join(base_dir, "data")

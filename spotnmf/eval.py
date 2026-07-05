@@ -3,25 +3,24 @@ import rbo
 from sklearn.metrics.pairwise import cosine_similarity
 
 def get_ranking_score(query_list, program_list, rank_type='rbo'):
-    """
-    Compute a ranking-based similarity score between two ranked gene lists.
+    """Compute a ranking-based similarity score between two ranked gene lists.
 
-    Parameters
-    ----------
-    query_list : list of str
-        The reference (ground truth) ranked list of genes.
-    program_list : list of str
-        The predicted ranked list of genes.
-    rank_type : str, default='rbo'
-        Type of ranking score to compute. Options:
-        - 'rbo'    : Rank Biased Overlap (standard)
-        - 'rboext' : Extended RBO
-        - 'mgs'    : Mean Gene Score (inverse-rank sum of matches)
+    Args:
+        query_list (list): Reference (ground truth) ranked list of gene names.
+        program_list (list): Predicted ranked list of gene names.
+        rank_type (str): Type of ranking score to compute. Defaults to
+            ``'rbo'``. Options:
 
-    Returns
-    -------
-    score : float
-        The computed ranking similarity score.
+            - ``'rbo'``: Rank-Biased Overlap (standard).
+            - ``'rboext'``: Extended (extrapolated) Rank-Biased Overlap.
+            - ``'mgs'``: Mean Gene Score (sum of inverse ranks of genes in
+              ``program_list`` that also appear in ``query_list``).
+
+    Returns:
+        float: The computed ranking similarity score.
+
+    Raises:
+        ValueError: If ``rank_type`` is not one of the supported options.
     """
     # Find intersection and ranks for MGS
     intersected_genes = [(x, i + 1) for i, x in enumerate(program_list) if x in query_list]
@@ -37,19 +36,18 @@ def get_ranking_score(query_list, program_list, rank_type='rbo'):
     return score
 
 def get_annotation_from_corr(df_corr):
-    """
-    Given a correlation/similarity matrix, assign each predicted program to the best-matching cell type
-    (one-to-one assignment, greedy).
+    """Greedily assign each program to its best-matching cell type.
 
-    Parameters
-    ----------
-    df_corr : pd.DataFrame
-        Correlation or similarity matrix (programs x cell types).
+    Flattens the correlation/similarity matrix, sorts all pairs in descending
+    order, and assigns programs to cell types one-to-one, ensuring each program
+    and each cell type is used at most once.
 
-    Returns
-    -------
-    annotation_df : pd.DataFrame
-        DataFrame with columns ['program', 'celltype'] representing the assignments.
+    Args:
+        df_corr (pandas.DataFrame): Correlation or similarity matrix indexed by
+            program with cell types as columns.
+
+    Returns:
+        pandas.DataFrame: Assignments with columns ``['program', 'celltype']``.
     """
     annotation = []
     # Flatten and sort all correlations/similarities descendingly
@@ -69,24 +67,31 @@ def annotate_programs_by_ground_truth(
     correlation_type='pearson',
     top_n_features=500
 ):
-    """
-    Annotate predicted gene programs with reference cell types using different similarity/correlation metrics.
+    """Score predicted programs against reference cell types.
 
-    Parameters
-    ----------
-    genes_topics_df : pd.DataFrame
-        DataFrame of gene scores per program (genes x programs).
-    ground_truth_cell_type_gene_df : pd.DataFrame
-        DataFrame of gene scores per ground truth cell type (genes x cell types).
-    correlation_type : str, default='pearson'
-        Metric for similarity/correlation: 'pearson', 'spearman', 'rbo', 'mgs', 'cosine'.
-    top_n_features : int, default=500
-        Number of top genes/features to use for ranking-based metrics.
+    Computes a pairwise similarity/correlation matrix between predicted gene
+    programs and reference (ground truth) cell types using the chosen metric.
+    Ranking-based metrics operate on the top-N feature lists, ``'pearson'`` and
+    ``'spearman'`` correlate full aligned gene vectors, and ``'cosine'``
+    computes cosine similarity between aligned vectors.
 
-    Returns
-    -------
-    df_corr : pd.DataFrame
-        Matrix of pairwise scores between predicted programs and ground truth cell types.
+    Args:
+        genes_topics_df (pandas.DataFrame): Gene (or spot) scores per predicted
+            program, with features as the index and programs as columns.
+        ground_truth_cell_type_gene_df (pandas.DataFrame): Reference scores per
+            cell type, with features as the index and cell types as columns.
+        correlation_type (str): Similarity/correlation metric. Defaults to
+            ``'pearson'``. One of ``'pearson'``, ``'spearman'``, ``'rbo'``,
+            ``'rboext'``, ``'mgs'`` or ``'cosine'``.
+        top_n_features (int): Number of top features used for ranking-based
+            metrics (``'rbo'``, ``'rboext'``, ``'mgs'``). Defaults to 500.
+
+    Returns:
+        pandas.DataFrame: Pairwise scores indexed by program with cell types as
+        columns.
+
+    Raises:
+        ValueError: If ``correlation_type`` is not supported.
     """
     df_corr = pd.DataFrame(index=genes_topics_df.columns, columns=ground_truth_cell_type_gene_df.columns)
 

@@ -4,15 +4,17 @@ from scipy.spatial.distance import cdist
 import numpy as np
 
 def clean_mixed_gene_names(genes_list, genome):
-    """
-    Clean gene names based on genome type.
-    
-    Parameters:
-    - genes_list (list of str): List of gene names that may contain genome prefixes.
-    - genome (str): Genome type, either 'None', 'mm10', or 'GRCh38'.
-    
+    """Clean gene names by stripping genome-specific prefixes.
+
+    Args:
+        genes_list (list): List of gene name strings that may contain genome
+            prefixes (``"mm10___"`` or ``"GRCh38_"``).
+        genome (str): The genome type. If ``"None"``, both prefixes are
+            stripped; if ``"mm10"``, only the ``"mm10___"`` prefix is
+            stripped; otherwise only the ``"GRCh38_"`` prefix is stripped.
+
     Returns:
-    - list of str: Cleaned list of gene names.
+        list: The cleaned list of gene name strings.
     """
     if genome == 'None':
         return [x.replace('mm10___', '').replace('GRCh38_', '') for x in genes_list]
@@ -24,16 +26,19 @@ def clean_mixed_gene_names(genes_list, genome):
 def reference_dataset(
     X, dtype: torch.dtype, device: torch.device
 ) -> torch.Tensor:
-    """Select features, transpose dataset and convert to Tensor.
+    """Transpose the dataset, densify if sparse, and convert to a Tensor.
 
     Args:
-        X (array-like): The input data
-        dtype (torch.dtype): The dtype to create
-        device (torch.device): The device to create on
-        keep_idx (Iterable): The variables to keep.
+        X (numpy.ndarray): The input data, with observations as rows and
+            variables as columns.
+        dtype (torch.dtype): The dtype of the output tensor.
+        device (torch.device): The device to create the tensor on.
 
     Returns:
-        torch.Tensor: The reference dataset A.
+        torch.Tensor: The reference dataset ``A`` (variables by observations).
+
+    Raises:
+        AssertionError: If the input data contains negative values.
     """
 
     # Keep only the highly variable features.
@@ -61,18 +66,26 @@ def compute_ground_cost(
     dtype: torch.dtype,
     device: torch.device,
 ) -> torch.Tensor:
-    """Compute the ground cost (not lazily!)
+    """Compute the ground cost kernel (not lazily).
+
+    Computes a pairwise distance matrix between features, normalizes it by
+    ``eps`` times its maximum, and exponentiates it to form the kernel.
 
     Args:
-        features (array-like): A array with the features to compute the cost on.
-        cost (str): The function to compute the cost. Scipy distances are allowed.
-        force_recompute (bool): Recompute even is there is already a cost matrix saved at the provided path.
-        cost_path (str): Where to look for or where to save the cost.
-        dtype (torch.dtype): The dtype for the output.
-        device (torch.device): The device for the ouput.
+        features (numpy.ndarray): An array with the features to compute the
+            cost on.
+        cost (str): The metric used to compute the cost. All SciPy ``cdist``
+            metrics are allowed; ``"ones"`` uses a uniform off-diagonal cost.
+        eps (float): The entropic regularization used to scale the cost.
+        force_recompute (bool): Whether to recompute the cost even if a cost
+            matrix is already saved at ``cost_path``.
+        cost_path (str): The path to look for or save the cost matrix as a
+            ``.npy`` file.
+        dtype (torch.dtype): The dtype of the output tensor.
+        device (torch.device): The device of the output tensor.
 
     Returns:
-        torch.Tensor: The ground cost
+        torch.Tensor: The ground cost kernel.
     """
 
     # Initialize the `recomputed variable`.
@@ -108,13 +121,13 @@ def compute_ground_cost(
 
 
 def normalize_tensor(X: torch.Tensor) -> torch.Tensor:
-    """Normalize a tensor along columns
+    """Normalize a tensor so that each column sums to one.
 
     Args:
         X (torch.Tensor): The tensor to normalize.
 
     Returns:
-        torch.Tensor: The normalized tensor.
+        torch.Tensor: The column-normalized tensor.
     """
     return X / X.sum(0)
 
@@ -147,10 +160,10 @@ def entropy_dual_loss(Y: torch.Tensor) -> torch.Tensor:
     """Compute the Legendre dual of the entropy.
 
     Args:
-        Y (torch.Tensor): The input parameter.
+        Y (torch.Tensor): The input tensor.
 
     Returns:
-        torch.Tensor: The loss.
+        torch.Tensor: The entropy dual loss.
     """
     return -torch.logsumexp(Y, dim=0).sum()
 
@@ -161,14 +174,15 @@ def ot_dual_loss(
     """Compute the Legendre dual of the entropic OT loss.
 
     Args:
-        A (dict): The input data.
-        G (dict): The dual variable.
-        K (dict): The kernel.
+        A (torch.Tensor): The reference data tensor.
+        G (torch.Tensor): The dual variable tensor.
+        K (torch.Tensor): The ground cost kernel tensor.
         eps (float): The entropic regularization.
-        dim (tuple, optional): How to sum the loss. Defaults to (0, 1).
+        dim (tuple, optional): The dimensions over which to sum the loss.
+            Defaults to (0, 1).
 
     Returns:
-        torch.Tensor: The loss
+        torch.Tensor: The OT dual loss.
     """
 
     log_fG = G / eps
@@ -182,21 +196,20 @@ def ot_dual_loss(
 
 
 def early_stop(history: List, tol: float, nonincreasing: bool = False) -> bool:
-    """Based on a history and a tolerance, whether to stop early or not.
+    """Decide whether to stop early based on a loss history and tolerance.
 
     Args:
-        history (List):
-            The loss history.
-        tol (float):
-            The tolerance before early stopping.
-        nonincreasing (bool, optional):
-            When False, throws an error if the loss goes up. Defaults to False.
-
-    Raises:
-        ValueError: When the loss goes up.
+        history (list): The loss history.
+        tol (float): The tolerance before early stopping.
+        nonincreasing (bool, optional): When True, also stops early if the
+            loss increases beyond the tolerance over the last iterations.
+            Defaults to False.
 
     Returns:
         bool: Whether to stop early.
+
+    Raises:
+        ValueError: If the most recent loss value is not finite.
     """
     # If we have a nan or infinite, die.
     if len(history) > 0 and not torch.isfinite(history[-1]):

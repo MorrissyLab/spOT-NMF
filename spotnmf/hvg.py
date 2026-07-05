@@ -19,18 +19,21 @@ sp.spmatrix.A = property(to_array)
 
 
 def compute_overdispersed_genes_batches(adata, batch_keys=["sample_id"], union_agg=False, **kwargs):
-    """
-    Computes a union set of overdispersed genes across all samples in adata, 
-    using a specified batch_key for grouping.
+    """Compute a union set of overdispersed genes across all samples in an AnnData object.
 
-    Parameters:
-    - adata: AnnData object
-    - batch_keys: list[str], column(s) in adata.obs to group samples by
-    - union_agg: bool, whether to also compute on aggregated data
-    - **kwargs: additional keyword arguments passed to compute_overdispersed_genes
+    Genes are computed per sample using a specified batch key for grouping, and
+    optionally on the aggregated data, then combined into a single unique set.
+
+    Args:
+        adata (anndata.AnnData): Annotated data matrix containing the samples.
+        batch_keys (list): Column(s) in ``adata.obs`` used to group samples by.
+            Defaults to ``["sample_id"]``.
+        union_agg (bool): If True, also compute overdispersed genes on the
+            aggregated data. Defaults to False.
+        **kwargs: Passed through to ``compute_overdispersed_genes``.
 
     Returns:
-    - A list of unique overdispersed genes across samples
+        list: Unique overdispersed gene names across samples.
     """
     odg_list = []
     
@@ -68,44 +71,42 @@ def compute_overdispersed_genes(
     is_show=False,
     verbose=True,
 ):
-    """
-    Filter data and Identifies overdispersed genes from spatial transcriptomic data.
+    """Filter data and identify overdispersed genes from spatial transcriptomic data.
 
-    Parameters:
-    -----------
-    adata_spatial : AnnData
-        Annotated data matrix containing spatial data.
-    gam_k : int, optional (default=5)
-        Smoothing parameter for generalized additive model (GAM).
-    alpha : float, optional (default=0.05)
-        Significance level for identifying overdispersed genes.
-    max_adjusted_variance : float, optional (default=1e3)
-        Maximum allowable variance for adjusted values.
-    min_adjusted_variance : float, optional (default=1e-3)
-        Minimum allowable variance for adjusted values.
-    removeAbove : float, optional (default=1.0)
-        Threshold above which genes are excluded based on max cell count.
-    removeBelow : float, optional (default=0.05)
-        Threshold below which genes are excluded based on min cell count.
-    min_counts : int, optional (default=1)
-        Minimum counts threshold for filtering spots.
-    min_genes : int, optional (default=1)
-        Minimum number of genes for filtering spots.
-    n_top_genes : int or None, optional (default=None)
-        Maximum number of top overdispersed genes to return.
-    use_unadjusted_pvals : bool, optional (default=False)
-        If True, use unadjusted p-values instead of adjusted p-values.
-    is_show : bool, optional (default=True)
-        If True, plot mean-variance relationships and other statistics.
-    verbose : bool, optional (default=True)
-        If True, display progress and debugging information.
+    Args:
+        adata_spatial (anndata.AnnData): Annotated data matrix containing spatial data.
+        save_dir (str): Directory in which to save diagnostic plots. If None, no
+            plots are saved. Defaults to None.
+        gam_k (int): Smoothing parameter (number of splines) for the generalized
+            additive model (GAM). Defaults to 5.
+        alpha (float): Significance level for identifying overdispersed genes.
+            Defaults to 0.05.
+        max_adjusted_variance (float): Maximum allowable variance for adjusted
+            values. Defaults to 1e3.
+        min_adjusted_variance (float): Minimum allowable variance for adjusted
+            values. Defaults to 1e-3.
+        removeAbove (float): Threshold above which genes are excluded based on max
+            cell count. Defaults to 1.0.
+        removeBelow (float): Threshold below which genes are excluded based on min
+            cell count. Defaults to 0.05.
+        min_counts (int): Minimum counts threshold for filtering spots. Defaults to 1.
+        min_genes (int): Minimum number of genes for filtering spots. Defaults to 1.
+        n_top_genes (int): Maximum number of top overdispersed genes to return. If
+            None, all overdispersed genes are returned. Defaults to None.
+        use_unadjusted_pvals (bool): If True, use unadjusted p-values instead of
+            adjusted p-values. Defaults to False.
+        is_spatial (bool): If True, use SpatialDE to test for spatially variable
+            genes instead of the mean-variance model. Defaults to False.
+        is_show (bool): If True, display the mean-variance and distribution plots.
+            Defaults to False.
+        verbose (bool): If True, display progress and debugging information.
+            Defaults to True.
 
     Returns:
-    --------
-    adata_spatial : AnnData
-        The updated AnnData object with overdispersion information in `var` attribute.
-    odg : list of str
-        List of names of overdispersed genes.
+        tuple: A tuple ``(adata_spatial, odg)`` where ``adata_spatial``
+        (anndata.AnnData) is the updated AnnData object with overdispersion
+        information in its ``var`` attribute, and ``odg`` (list) is the list of
+        names of overdispersed genes.
     """
     print(f'Selecting Genes with alpha {alpha} and use_unadjusted_pvals {use_unadjusted_pvals} is_spatial {is_spatial}')
     # Initial data summary
@@ -244,35 +245,22 @@ def compute_overdispersed_genes(
     return adata_spatial, odg
 
 def save_hvg_list(l, file):
-    """
-    Save a list of highly variable genes (HVGs) to a CSV file.
+    """Save a list of highly variable genes (HVGs) to a CSV file.
 
-    Parameters
-    ----------
-    l : list
-        List of gene names or identifiers to be saved.
-    file : str
-        Path to the CSV file where the list will be saved.
-
-    Returns
-    -------
-    None
+    Args:
+        l (list): List of gene names or identifiers to be saved.
+        file (str): Path to the CSV file where the list will be saved.
     """
     pd.DataFrame(l).to_csv(file, index=False, header=False)
 
 
 def load_hvg_list(file_path):
-    """
-    Load a list of highly variable genes (HVGs) from a CSV file.
+    """Load a list of highly variable genes (HVGs) from a CSV file.
 
-    Parameters
-    ----------
-    file_path : str
-        Path to the CSV file containing the list of HVGs.
+    Args:
+        file_path (str): Path to the CSV file containing the list of HVGs.
 
-    Returns
-    -------
-    list
-        List of gene names or identifiers.
+    Returns:
+        list: List of gene names or identifiers.
     """
     return pd.read_csv(file_path, header=None)[0].tolist()

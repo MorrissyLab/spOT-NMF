@@ -350,11 +350,12 @@ def main():
     parser.add_argument("--edge_threshold", type=float, default=0.199, help="Edge threshold.")
     parser.add_argument("--annot_file", default=None, help="Annotation file.")
 
-    parser.add_argument("--lr", type=float, default=0.001, help="Learning rate.")
+    parser.add_argument("--lr", type=float, default=0.01, help="Learning rate.")
     parser.add_argument("--h", type=float, default=0.01, help="H Regularizer parameter.")
     parser.add_argument("--w", type=float, default=0.01, help="W Regularizer parameter.")
-    parser.add_argument("--eps", type=float, default=0.05, help="Entropy.")
-    parser.add_argument("--normalize_rows", action="store_true", help="Normalize rows of input matrix.")
+    parser.add_argument("--eps", type=float, default=0.02, help="Entropy.")
+    parser.add_argument("--normalize_rows", action=argparse.BooleanOptionalAction,
+                        default=True, help="Normalize rows of input matrix (use --no-normalize_rows to disable).")
 
     args = parser.parse_args()
 

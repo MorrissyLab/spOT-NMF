@@ -52,10 +52,10 @@ class spotnmf:
             (very diffuse biological signals).
         w_regularization (float, optional):
             The entropy parameter for the usage. As with `h_regularization`,
-            small values mean sparse vectors. Defaults to 1e-3.
+            small values mean sparse vectors. Defaults to 1e-2.
         eps (float, optional):
             The entropy parameter for epsilon transport. Large values
-            decrease importance of individual genes. Defaults to 5e-2.
+            decrease importance of individual genes. Defaults to 2e-2.
         cost (str, optional):
             The function used to compute an emprical ground cost. All
             metrics from Scipy's `cdist` are allowed. Defaults to 'cosine'.
@@ -73,8 +73,8 @@ class spotnmf:
         factors: int = 50,
         highly_variable: bool = True,
         h_regularization: float = 1e-2,
-        w_regularization: float = 1e-3,
-        eps: float = 5e-2,
+        w_regularization: float = 1e-2,
+        eps: float = 2e-2,
         cost: str = "cosine",
         pca_cost: bool = False,
         cost_path: dict = None,
@@ -205,11 +205,11 @@ class spotnmf:
         max_iter: int = 50,
         device: torch.device = "cpu",
         dtype: torch.dtype = torch.double,
-        lr: float = 1,
-        optim_name: str = "lbfgs",
+        lr: float = 1e-2,
+        optim_name: str = "adam",
         tol_inner: float = 1e-12,
         tol_outer: float = 1e-4,
-        normalize_rows: bool = False,
+        normalize_rows: bool = True,
         impute: bool = False,
         batch_size = 512,
     ) -> None:
@@ -234,17 +234,20 @@ class spotnmf:
             dtype (torch.dtype, optional): The dtype to work with.
                 Defaults to torch.double.
             lr (float, optional): The learning rate for the optimizer. The
-                default is tuned for LBFGS and should be changed for other
-                optimizers. Defaults to 1.
-            optim_name (str, optional): The optimizer to use (``"lbfgs"``,
-                ``"sgd"`` or ``"adam"``). LBFGS is advised, but requires more
-                memory. Defaults to "lbfgs".
+                default (1e-2) is tuned for adam; use ~1 for LBFGS.
+                Defaults to 1e-2.
+            optim_name (str, optional): The optimizer to use (``"adam"``,
+                ``"lbfgs"`` or ``"sgd"``). Adam is the default and recommended:
+                it optimizes the OT dual variable stably. LBFGS is *not* advised
+                -- over many outer iterations it lets the dual variable drift
+                toward zero, collapsing the usage matrix to a uniform per-spot
+                mixture (no deconvolution signal). Defaults to "adam".
             tol_inner (float, optional): The tolerance for the inner iterations
                 before early stopping. Defaults to 1e-12.
             tol_outer (float, optional): The tolerance for the outer iterations
                 before early stopping. Defaults to 1e-4.
             normalize_rows (bool, optional): Whether to normalize the rows of
-                the reference dataset during initialization. Defaults to False.
+                the reference dataset during initialization. Defaults to True.
             impute (bool, optional): Whether to impute the data using FastICA
                 during initialization. Defaults to False.
             batch_size (int, optional): The batch size. Defaults to 512.
@@ -561,13 +564,15 @@ def run_spotnmf(adata_spatial, components, seed=42, **kwargs):
         components (int): The number of factors to learn.
         seed (int, optional): The random seed for reproducibility.
             Defaults to 42.
-        **kwargs: Additional parameters for the model and training. These
-            override the defaults for ``cost``, ``optim_name``,
+        **kwargs: Additional parameters for the model and training, all
+            optional (sensible tuned defaults are provided): ``h`` (entropy
+            regularization for the spectra, default 1e-2), ``w`` (entropy
+            regularization for the usage, default 1e-2), ``eps`` (entropic
+            regularization, default 2e-2), ``lr`` (learning rate, default
+            1e-2), ``normalize_rows`` (default True), ``cost`` (default
+            ``"cosine"``), ``optim_name`` (default ``"adam"``), plus
             ``tol_inner``, ``tol_outer``, ``max_iter``, ``max_iter_inner``
-            and ``device``, and must supply the required keys ``h``
-            (entropy regularization for the spectra), ``w`` (entropy
-            regularization for the usage), ``eps`` (entropic
-            regularization), ``lr`` (learning rate) and ``normalize_rows``.
+            and ``device``.
 
     Returns:
         tuple: A tuple ``(results, losses)`` where ``results`` is a dict with
@@ -577,8 +582,15 @@ def run_spotnmf(adata_spatial, components, seed=42, **kwargs):
     """
     seed_all(seed)
     
-    # Define default values
+    # Define default values. The regularization/optimizer defaults below were
+    # tuned on the STARmap deconvolution benchmark (see scripts/benchmark/); they
+    # can still be overridden via kwargs.
     defaults = {
+        "h": 1e-2,             # entropic regularization on the spectra
+        "w": 1e-2,             # entropic regularization on the usage
+        "eps": 2e-2,           # entropic-OT smoothing
+        "lr": 1e-2,            # optimizer learning rate (tuned for adam)
+        "normalize_rows": True,
         "cost": "cosine",
         "optim_name": "adam",
         "tol_inner": 1e-12,

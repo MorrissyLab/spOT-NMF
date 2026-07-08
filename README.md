@@ -136,12 +136,13 @@ adata = spot.io.read_adata(
 
 # === Model Parameters === #
 model_params = {
-    "lr": 0.001,         # Learning rate
+    "lr": 0.01,          # Learning rate (tuned for the adam optimizer)
     "h": 0.01,           # H regularization
     "w": 0.01,           # W regularization
-    "eps": 0.05,         # Epsilon
+    "eps": 0.02,         # Epsilon
     "normalize_rows": True,
 }
+# These match the package defaults, so `model_params` can be omitted entirely.
 
 # === Run Factorization === #
 results = spot.cli.run_experiment(

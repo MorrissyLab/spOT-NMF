@@ -37,10 +37,11 @@ from .models import run_spotnmf
 # ``factorizer_params`` dict passed to ``Dataset.initialize_cnmf``).
 DEFAULT_PARAMS = {
     "h": 1e-2,             # entropic regularization on the spectra (gene loadings)
-    "w": 1e-3,             # entropic regularization on the usage (spot loadings)
-    "eps": 5e-2,           # entropic-OT smoothing
-    "lr": 1e-3,            # optimizer learning rate (tuned for the adam default)
-    "normalize_rows": False,
+    "w": 1e-2,             # entropic regularization on the usage (spot loadings)
+    "eps": 2e-2,           # entropic-OT smoothing
+    "lr": 1e-2,            # optimizer learning rate (tuned for the adam default)
+    "normalize_rows": True,
+    "cost": "cosine",      # ground-cost metric between genes
 }
 
 

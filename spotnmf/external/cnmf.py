@@ -557,50 +557,73 @@ class cNMF():
         with open(self.paths['nmf_run_parameters'], 'w') as F:
             yaml.dump(run_params, F)
     
-    def _otmf(self, X, components, **ot_kwargs):
-        from mudata import MuData
-        from spotnmf.models import spotnmf
+    def _otmf(self, X, components, spectra=None, **ot_kwargs):
+        """Factorize (or usage-refit) with spOT-NMF, mirroring ``self._nmf``.
 
-        defaults = {
-            "h": 0.01,
-            "w": 1e-2,
-            "eps": 5e-3,
-            "lr": 0.001,
-            "optim_name": "adam",
-            "cost": "cosine"
-        }
-        
-        # Set parameters from defaults
-        mod = "simulated"
-        h_reg = defaults["h"]
-        w_reg = defaults["w"]
-        eps = defaults["eps"]
-        lr = defaults["lr"]
-        optim_name = defaults["optim_name"]
-        cost = defaults["cost"]
+        With ``spectra=None`` this runs a full OT-NMF replicate and returns
+        ``(spectra_k_x_genes, usages_cells_x_k)``. With a fixed ``spectra``
+        (``k x genes``) it holds the spectra fixed and solves only the OT
+        usages -- the optimal-transport analogue of cNMF's NNLS refit
+        (``non_negative_factorization(..., update_H=False)``) -- and returns
+        ``(None, usages_cells_x_k)``.
 
-        # Create MuData object
-        mdata = MuData({mod: X})
+        Tuned defaults (adam, ``eps=2e-2``, ``lr=1e-2``, ``normalize_rows=True``,
+        cosine cost) match :func:`spotnmf.models.run_spotnmf`; the device is
+        auto-selected (GPU when available, else CPU). ``ot_kwargs`` overrides any
+        of these.
+        """
+        import torch as _torch
+        from spotnmf.models import run_spotnmf, spotnmf as _SpotNMF
 
-        # Define the model with the selected parameters
-        model = spotnmf(
-            latent_dim=int(components),
-            h_regularization={mod: h_reg},
-            w_regularization=w_reg,
-            eps=eps,
-            cost=cost,
-            pca_cost=False
+        # Coerce the input to a dense AnnData that the current model understands,
+        # flagging every column highly-variable (HVG selection already happened).
+        if hasattr(X, "X"):
+            mat = X.X.toarray() if hasattr(X.X, "toarray") else np.asarray(X.X)
+            obs_index, var_index = X.obs.index, X.var.index
+        else:
+            mat = np.asarray(X)
+            obs_index = var_index = None
+        adata = sc.AnnData(
+            X=np.asarray(mat, dtype=np.float64),
+            obs=pd.DataFrame(index=obs_index),
+            var=pd.DataFrame(index=var_index),
         )
+        adata.var["highly_variable"] = True
 
-        # Train the model with selected parameters
-        model.train(mdata, lr=lr, optim_name=optim_name, max_iter=2,
-                    tol_inner=1e-10, tol_outer=0.0001,
-                    device='cuda', normalize_rows=False, impute=False)
-        
-        spectra = mdata[mod].uns["H_OT"].T
-        usages = mdata.obsm["W_OT"]
+        params = {
+            "h": 1e-2, "w": 1e-2, "eps": 2e-2, "lr": 1e-2,
+            "normalize_rows": True, "cost": "cosine", "optim_name": "adam",
+            "max_iter": 100, "max_iter_inner": 1000,
+            "device": "cuda" if _torch.cuda.is_available() else "cpu",
+        }
+        params.update(ot_kwargs)
 
-        return(spectra, usages)
+        if spectra is None:
+            # Full replicate factorization.
+            results, _ = run_spotnmf(adata, components=int(components),
+                                     seed=14, **params)
+            spectra_out = results["genes_per_topic"].to_numpy().T   # (k x genes)
+            usages_out = results["topics_per_spot"].to_numpy()       # (cells x k)
+            return (spectra_out, usages_out)
+
+        # Fixed-spectra OT usage refit (H frozen to the consensus programs).
+        sp_arr = spectra.values if hasattr(spectra, "values") else np.asarray(spectra)
+        model = _SpotNMF(
+            factors=int(sp_arr.shape[0]),
+            h_regularization=params["h"],
+            w_regularization=params["w"],
+            eps=params["eps"],
+            cost=params["cost"],
+            pca_cost=False,
+        )
+        model.transform(
+            adata, spectra=sp_arr, lr=params["lr"],
+            optim_name=params["optim_name"], normalize_rows=params["normalize_rows"],
+            max_iter=params["max_iter"], max_iter_inner=params["max_iter_inner"],
+            impute=False, device=params["device"],
+        )
+        usages_out = adata.obsm["W_OT"]                              # (cells x k)
+        return (None, usages_out)
 
 
 
@@ -742,11 +765,16 @@ class cNMF():
         if(method_type == "nmf"):
             (_, rf_usages) = self._nmf(X, nmf_kwargs=refit_nmf_kwargs)
         elif(method_type == "ot"):
-            (_, rf_usages) = self._otmf(normcounts, components=spectra.shape[0])
-        
+            # Hold the (consensus) spectra fixed and solve only the OT usages.
+            # Align spectra columns to the data's gene order first.
+            sp = spectra
+            if hasattr(sp, "reindex") and hasattr(normcounts, "var"):
+                sp = sp.reindex(columns=normcounts.var.index)
+            (_, rf_usages) = self._otmf(normcounts, components=sp.shape[0], spectra=sp)
+
         if (type(X) is pd.DataFrame) and (type(spectra) is pd.DataFrame):
             rf_usages = pd.DataFrame(rf_usages, index=X.index, columns=spectra.index)
-          
+
         return(rf_usages)
     
     
@@ -765,7 +793,11 @@ class cNMF():
         usage : pandas.DataFrame or numpy.ndarray, cells X programs
             Non-negative spectra of expression programs
         """
-        return self.refit_usage(tpm.copy().transpose(), usage.T, method_type).T
+        # The TPM/z-score spectra used for gene scoring are method-agnostic and
+        # are always obtained by least squares (as in cNMF). The OT solve only
+        # replaces the per-spot *usage* deconvolution, not the gene-score spectra
+        # (the OT model's support is the gene axis and does not transpose).
+        return self.refit_usage(tpm.copy().transpose(), usage.T, "nmf").T
 
 
     def consensus(self, k, density_threshold=0.5, local_neighborhood_size = 0.30, show_clustering = True,
@@ -1239,7 +1271,7 @@ def run_cnmf(
                 # continue instead of break to try other components
                 continue
 
-        results = load_results(sample_name, temp_dir, components[0], density_threshold=0.10, method_type="nmf")
+        results = load_results(sample_name, temp_dir, components[0], density_threshold=0.10, method_type=method_type)
 
 
     finally:

@@ -176,6 +176,29 @@ def run_algorithm(adata, name, algorithm, n_iter, k, out_root,
         factorizer_params=factorizer_params,
     )
 
+    if consensus == "spotnmf_ot":
+        # spOT-NMF's *own* consensus: cluster replicate OT spectra (cNMF-style)
+        # then refit usages with the fixed-spectra OT solve -- keeps the OT
+        # usages instead of mosaicMPI's NNLS refit. Runs on the same normalized
+        # matrix mosaicMPI feeds its consensus replicates, for a fair comparison.
+        from spotnmf.models import run_spotnmf_consensus
+        norm = ad.read_h5ad(run.paths["normalized_counts"])
+        X = norm.X.toarray() if hasattr(norm.X, "toarray") else np.asarray(norm.X)
+        sub = ad.AnnData(X=np.asarray(X, dtype=np.float64),
+                         obs=pd.DataFrame(index=norm.obs.index),
+                         var=pd.DataFrame(index=norm.var.index))
+        sub.var["highly_variable"] = True
+        with open(os.devnull, "w") as _null, \
+                contextlib.redirect_stdout(_null), contextlib.redirect_stderr(_null):
+            res, _losses, stability = run_spotnmf_consensus(
+                sub, components=k, n_iter=n_iter, seed=0,
+                return_stability=True, **(factorizer_params or {}))
+        usage = res["topics_per_spot"]
+        usage.index = norm.obs.index
+        usage.columns = [str(i + 1) for i in range(k)]
+        return {"usage": usage, "seconds": time.time() - t0,
+                "stability": stability, "recon_err": np.nan}
+
     if not consensus:
         # Single factorization on mosaicMPI's normalized input matrix, using each
         # method's *own* usage matrix (no consensus, no NNLS refit). This isolates
@@ -269,10 +292,11 @@ def main():
 
     configs = [
         # (label, backend, n_iter, factorizer_params, consensus)
-        ("NMF",             "cnmf",    1,      None,        False),  # single scikit-learn NMF (own usages)
-        ("spOT-NMF-native", "spotnmf", 1,      spot_params, False),  # single OT-NMF (own OT usages)
-        ("cNMF",            "cnmf",    n_iter, None,        True),   # consensus scikit-learn NMF
-        ("spOT-NMF",        "spotnmf", n_iter, spot_params, True),   # consensus OT-NMF (mosaicMPI refit)
+        ("NMF",             "cnmf",    1,      None,        False),         # single scikit-learn NMF (own usages)
+        ("spOT-NMF-native", "spotnmf", 1,      spot_params, False),         # single OT-NMF (own OT usages)
+        ("cNMF",            "cnmf",    n_iter, None,        True),          # consensus scikit-learn NMF (NNLS refit)
+        ("spOT-NMF",        "spotnmf", n_iter, spot_params, True),          # consensus OT spectra + mosaicMPI NNLS refit
+        ("spOT-NMF-consensus-OT", "spotnmf", n_iter, spot_params, "spotnmf_ot"),  # consensus OT spectra + OT usage refit
     ]
 
     rows = []

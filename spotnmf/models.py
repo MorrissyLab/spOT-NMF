@@ -338,6 +338,128 @@ class spotnmf:
         adata_spatial.uns["H_OT"] = self.H.cpu().numpy()
         adata_spatial.obsm["W_OT"] = self.W.T.cpu().numpy()
 
+    def transform(
+        self,
+        adata_spatial,
+        spectra,
+        max_iter_inner: int = 1000,
+        max_iter: int = 50,
+        device: torch.device = "cpu",
+        dtype: torch.dtype = torch.double,
+        lr: float = 1e-2,
+        optim_name: str = "adam",
+        tol_inner: float = 1e-12,
+        tol_outer: float = 1e-4,
+        normalize_rows: bool = True,
+        impute: bool = False,
+    ) -> None:
+        """Infer OT usages for fixed spectra (usage-only refit).
+
+        This is the optimal-transport analogue of cNMF's NNLS usage refit
+        (scikit-learn's ``non_negative_factorization(..., update_H=False)``):
+        the spectra ``H`` are *frozen* to ``spectra`` -- e.g. the consensus
+        programs obtained by clustering replicate factorizations -- and only
+        the usage ``W`` is solved for. It runs the same entropic-OT dual ascent
+        as :meth:`train`, but performs the ``W`` step only and never updates
+        ``H``. On completion ``W`` is stored in ``adata_spatial.obsm["W_OT"]``
+        and the (unchanged) ``H`` in ``adata_spatial.uns["H_OT"]``.
+
+        Args:
+            adata_spatial (anndata.AnnData): The input spatial AnnData object.
+                Its highly-variable columns must align with the rows/columns of
+                ``spectra`` (see below).
+            spectra (numpy.ndarray or torch.Tensor): The fixed spectra, either
+                as ``(genes x factors)`` or ``(factors x genes)``; it is
+                oriented to ``(genes x factors)`` and column-normalized like a
+                trained ``H``. ``genes`` must match the number of
+                highly-variable features in ``adata_spatial``.
+            max_iter_inner (int, optional): Max inner iterations for the ``W``
+                (dual-variable) optimization. Defaults to 1000.
+            max_iter (int, optional): Max outer iterations. Defaults to 50.
+            device (torch.device, optional): Device to work on. Defaults "cpu".
+            dtype (torch.dtype, optional): Working dtype. Defaults torch.double.
+            lr (float, optional): Learning rate (tuned for adam). Defaults 1e-2.
+            optim_name (str, optional): Optimizer; adam recommended (see
+                :meth:`train`). Defaults "adam".
+            tol_inner (float, optional): Inner early-stopping tolerance.
+            tol_outer (float, optional): Outer early-stopping tolerance.
+            normalize_rows (bool, optional): Row-normalize the reference dataset
+                during initialization. Defaults True.
+            impute (bool, optional): FastICA imputation during init. Defaults
+                False.
+        """
+
+        # Initialize A, K, G (and throwaway random H/W) from the data.
+        self.init_parameters(
+            adata_spatial,
+            dtype=dtype,
+            device=device,
+            normalize_rows=normalize_rows,
+            impute=impute,
+        )
+
+        if adata_spatial.uns is None:
+            adata_spatial.uns = {}
+
+        # Freeze the spectra to the supplied (consensus) programs. Accept either
+        # orientation and normalize columns the way a trained H is normalized.
+        spectra = torch.as_tensor(np.asarray(spectra), dtype=dtype, device=device)
+        if spectra.shape[0] != self.n_var:
+            if spectra.shape[1] == self.n_var:
+                spectra = spectra.T
+            else:
+                raise ValueError(
+                    f"spectra shape {tuple(spectra.shape)} is incompatible with "
+                    f"{self.n_var} highly-variable genes"
+                )
+        if spectra.shape[1] != self.factors:
+            raise ValueError(
+                f"spectra has {spectra.shape[1]} factors, expected {self.factors}"
+            )
+        # Guard against zero columns before column-normalization.
+        spectra = spectra.clamp_min(0) + 1e-12
+        self.H = utils.normalize_tensor(spectra)
+
+        self.lr = lr
+        self.optim_name = optim_name
+
+        # Reset loss histories (a fresh solve).
+        self.losses_w, self.losses_h, self.losses = [], [], []
+
+        pbar = tqdm(total=max_iter, position=0, leave=True)
+
+        try:
+            for _ in range(max_iter):
+
+                # Optimize the dual variable for the (frozen-H) W subproblem.
+                self.optimize(
+                    loss_fn=self.loss_fn_w,
+                    max_iter=max_iter_inner,
+                    tol=tol_inner,
+                    history=self.losses_w,
+                    pbar=pbar,
+                    device=device,
+                )
+
+                # Update the usage W from the dual variable. H stays fixed.
+                htgw = self.H.T @ self.G
+                coef = np.log(self.factors) / (self.w_regularization)
+                self.W = F.softmin(coef * htgw.detach(), dim=0)
+                del htgw
+
+                pbar.update(1)
+                self.losses.append(self.total_dual_loss().cpu().detach())
+
+                # Early stopping on the (W-only) outer objective.
+                if utils.early_stop(self.losses, tol_outer, nonincreasing=True):
+                    break
+
+        except KeyboardInterrupt:
+            print("Transform interrupted.")
+
+        adata_spatial.uns["H_OT"] = self.H.cpu().numpy()
+        adata_spatial.obsm["W_OT"] = self.W.T.cpu().numpy()
+
     def build_optimizer(
         self, params, lr: float, optim_name: str
     ) -> torch.optim.Optimizer:
@@ -641,4 +763,178 @@ def run_spotnmf(adata_spatial, components, seed=42, **kwargs):
     for key_matrix in results:
         results[key_matrix].columns = [f"ot_{x+1}" for x in results[key_matrix].columns]
 
+    return results, model.losses
+
+
+def _cluster_consensus_spectra(spectra_pool, k, density_threshold, local_neighborhood_size):
+    """Cluster pooled replicate spectra into ``k`` consensus programs.
+
+    Mirrors cNMF's consensus clustering (:meth:`spotnmf.external.cnmf.cNMF.consensus`):
+    L2-normalize every replicate program, optionally drop local-density
+    outliers, KMeans into ``k`` clusters, and take the per-cluster median as the
+    consensus spectrum (renormalized to a probability distribution).
+
+    Args:
+        spectra_pool (pandas.DataFrame): ``(n_iter*k) x genes`` pooled replicate
+            spectra (each row is one program from one replicate).
+        k (int): Number of consensus programs.
+        density_threshold (float): Local-density outlier threshold (>=2 disables
+            filtering), matching cNMF's ``local_density_threshold``.
+        local_neighborhood_size (float): Fraction of replicate programs used as
+            neighbors for the density estimate, matching cNMF.
+
+    Returns:
+        tuple: ``(median_spectra, stability)`` where ``median_spectra`` is a
+        ``k x genes`` DataFrame and ``stability`` is the KMeans silhouette score
+        (``nan`` if it cannot be computed).
+    """
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import silhouette_score
+    from sklearn.metrics.pairwise import euclidean_distances
+
+    # Rescale every replicate program to unit L2 norm (cNMF's l2_spectra).
+    l2 = spectra_pool.div(np.sqrt((spectra_pool ** 2).sum(axis=1)), axis=0)
+
+    # Local-density outlier filtering (skipped when threshold >= 2).
+    n_iter_est = max(1, l2.shape[0] // k)
+    n_neighbors = int(local_neighborhood_size * l2.shape[0] / k)
+    if density_threshold < 2 and n_neighbors >= 1 and l2.shape[0] > n_neighbors + 1:
+        dists = euclidean_distances(l2.values)
+        part = np.argpartition(dists, n_neighbors + 1)[:, : n_neighbors + 1]
+        nn = dists[np.arange(dists.shape[0])[:, None], part]
+        local_density = nn.sum(1) / n_neighbors
+        keep = local_density < density_threshold
+        if keep.sum() >= k:
+            l2 = l2.loc[keep]
+
+    km = KMeans(n_clusters=k, n_init=10, random_state=1)
+    labels = km.fit_predict(l2.values)
+    labels = pd.Series(labels, index=l2.index)
+
+    stability = float("nan")
+    try:
+        stability = float(silhouette_score(l2.values, labels, metric="euclidean"))
+    except Exception:
+        pass
+
+    median_spectra = l2.groupby(labels).median()
+    median_spectra = median_spectra.div(median_spectra.sum(axis=1), axis=0)
+    return median_spectra, stability
+
+
+def run_spotnmf_consensus(
+    adata_spatial,
+    components,
+    n_iter: int = 10,
+    seed: int = 42,
+    density_threshold: float = 0.5,
+    local_neighborhood_size: float = 0.30,
+    return_stability: bool = False,
+    **kwargs,
+):
+    """Consensus spOT-NMF: cluster replicate OT spectra, then OT-refit usages.
+
+    This is spOT-NMF's proper consensus, structured exactly like cNMF
+    (:func:`spotnmf.external.cnmf.run_cnmf`) with one deliberate difference: the
+    final usage refit uses spOT-NMF's *fixed-spectra optimal-transport* solve
+    (:meth:`spotnmf.transform`) instead of cNMF's NNLS. Concretely:
+
+    1. Run ``n_iter`` independent spOT-NMF factorizations (seeds ``seed`` ..
+       ``seed + n_iter - 1``), collecting each replicate's spectra.
+    2. Pool and cluster the replicate spectra into ``components`` consensus
+       programs (L2-normalize, density-filter, KMeans, per-cluster median) --
+       identical to cNMF.
+    3. Freeze those consensus programs and solve only the usages with the
+       entropic-OT dual ascent, so the consensus usages keep the OT geometry
+       rather than reverting to least squares.
+
+    Args:
+        adata_spatial (anndata.AnnData): Input spatial data.
+        components (int): Number of programs/factors ``k``.
+        n_iter (int, optional): Number of replicate factorizations. Defaults 10.
+        seed (int, optional): Base random seed. Defaults 42.
+        density_threshold (float, optional): cNMF local-density outlier
+            threshold (>=2 disables filtering). Defaults 0.5.
+        local_neighborhood_size (float, optional): cNMF neighbor fraction.
+            Defaults 0.30.
+        return_stability (bool, optional): If True, also return the KMeans
+            silhouette stability. Defaults False.
+        **kwargs: Forwarded to :func:`run_spotnmf` / :meth:`spotnmf.transform`
+            (``h``, ``w``, ``eps``, ``lr``, ``normalize_rows``, ``cost``,
+            ``optim_name``, ``max_iter``, ``max_iter_inner``, ``device`` ...);
+            the same tuned defaults apply.
+
+    Returns:
+        tuple: ``(results, losses)`` -- or ``(results, losses, stability)`` when
+        ``return_stability`` is True -- where ``results`` has the same
+        ``"topics_per_spot"`` / ``"genes_per_topic"`` DataFrames as
+        :func:`run_spotnmf`.
+    """
+    k = int(components)
+
+    # Resolve the same tuned defaults used by run_spotnmf / transform.
+    defaults = {
+        "h": 1e-2, "w": 1e-2, "eps": 2e-2, "lr": 1e-2,
+        "normalize_rows": True, "cost": "cosine", "optim_name": "adam",
+        "tol_inner": 1e-12, "tol_outer": 0.00001,
+        "max_iter": 100, "max_iter_inner": 1000,
+        "device": "cuda" if torch.cuda.is_available() else "cpu",
+    }
+    defaults.update(kwargs)
+
+    gene_list = adata_spatial.var[adata_spatial.var.highly_variable].index
+
+    # 1. Replicate factorizations (each on a fresh copy so uns/obsm aren't shared).
+    spectra_frames = []
+    for i in range(n_iter):
+        rep = adata_spatial.copy()
+        res, _ = run_spotnmf(rep, components=k, seed=seed + i, **kwargs)
+        # genes_per_topic is (genes x k); transpose to (k x genes) programs.
+        prog = res["genes_per_topic"].T
+        prog.index = [f"iter{i}_topic{t + 1}" for t in range(k)]
+        prog.columns = gene_list
+        spectra_frames.append(prog)
+    spectra_pool = pd.concat(spectra_frames, axis=0)
+
+    # 2. Cluster into consensus programs (cNMF-style).
+    median_spectra, stability = _cluster_consensus_spectra(
+        spectra_pool, k, density_threshold, local_neighborhood_size
+    )
+
+    # 3. OT usage refit with the consensus spectra held fixed.
+    seed_all(seed)
+    model = spotnmf(
+        factors=k,
+        h_regularization=defaults["h"],
+        w_regularization=defaults["w"],
+        eps=defaults["eps"],
+        cost=defaults["cost"],
+        pca_cost=False,
+    )
+    refit = adata_spatial.copy()
+    model.transform(
+        refit,
+        spectra=median_spectra.reindex(columns=gene_list).to_numpy(),  # (k x genes)
+        lr=defaults["lr"],
+        optim_name=defaults["optim_name"],
+        tol_inner=defaults["tol_inner"],
+        tol_outer=defaults["tol_outer"],
+        normalize_rows=defaults["normalize_rows"],
+        max_iter=defaults["max_iter"],
+        max_iter_inner=defaults["max_iter_inner"],
+        impute=False,
+        device=defaults["device"],
+    )
+
+    df_topics_per_spot = pd.DataFrame(refit.obsm["W_OT"], index=adata_spatial.obs.index)
+    df_genes_per_topic = pd.DataFrame(refit.uns["H_OT"], index=gene_list)
+    results = {
+        "topics_per_spot": df_topics_per_spot,
+        "genes_per_topic": df_genes_per_topic,
+    }
+    for key_matrix in results:
+        results[key_matrix].columns = [f"ot_{x + 1}" for x in results[key_matrix].columns]
+
+    if return_stability:
+        return results, model.losses, stability
     return results, model.losses

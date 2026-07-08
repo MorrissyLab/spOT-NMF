@@ -147,7 +147,7 @@ def match_and_score(usage: pd.DataFrame, gt_prop: pd.DataFrame) -> dict:
 # Running one algorithm through mosaicMPI
 # --------------------------------------------------------------------------- #
 def run_algorithm(adata, name, algorithm, n_iter, k, out_root,
-                  factorizer_params=None, consensus=True):
+                  factorizer_params=None, consensus=True, n_hvf=None):
     """Run one backend through mosaicMPI and return usages + rank stats.
 
     When ``consensus`` is False (the plain-NMF baseline) we run a *single*
@@ -155,6 +155,11 @@ def run_algorithm(adata, name, algorithm, n_iter, k, out_root,
     feed its consensus replicates, using mosaicMPI's own KL solver settings. This
     isolates the effect of consensus: same input, same solver, no replicate
     clustering / refit.
+
+    ``n_hvf`` controls feature selection: ``None`` uses the full gene panel (right
+    for small curated panels like the STARmap slide); an integer selects the top-N
+    overdispersed genes (``odscore``) so larger transcriptome-wide datasets stay
+    tractable, matching the manuscript's overdispersed-gene selection.
     """
     run_name = f"bench_{name}"
     out_dir = str(out_root / name)
@@ -162,9 +167,13 @@ def run_algorithm(adata, name, algorithm, n_iter, k, out_root,
         shutil.rmtree(out_dir)
 
     ds = mosaicmpi.Dataset(adata.copy())
-    # Use the full targeted gene panel as features so all backends see the same
-    # inputs (the STARmap panel is small and already curated).
-    ds.select_hvf(feature_list=list(adata.var_names), score_type="odscore")
+    if n_hvf is None:
+        # Use the full targeted gene panel as features so all backends see the same
+        # inputs (a small, already-curated panel such as the STARmap slide).
+        ds.select_hvf(feature_list=list(adata.var_names), score_type="odscore")
+    else:
+        # Transcriptome-wide dataset: select the top-N overdispersed genes.
+        ds.select_hvf(score_type="odscore", top_n=min(n_hvf, adata.n_vars))
 
     t0 = time.time()
     run = ds.initialize_cnmf(
@@ -249,18 +258,33 @@ def run_algorithm(adata, name, algorithm, n_iter, k, out_root,
             "stability": stability, "recon_err": recon_err}
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--data", default=str(DEFAULT_DATA))
-    ap.add_argument("--out", default=str(REPO / "results" / "benchmark_mosaic"))
-    ap.add_argument("--quick", action="store_true",
-                    help="fast smoke test (few replicates / iterations)")
-    args = ap.parse_args()
+def run_benchmark(data_path, out_dir, quick=False, n_hvf=None, dataset_label=None,
+                  n_iter_override=None, spot_max_iter=None, spot_max_iter_inner=None,
+                  spot_overrides=None):
+    """Run the full backend comparison on one dataset and return its summary.
 
-    out_root = Path(args.out)
+    :param data_path: path to an ``adata_spatial.h5ad`` with ``uns['ground_truth']``.
+    :param out_dir: directory for this dataset's outputs (summary + per-cell-type CSVs).
+    :param quick: fast smoke settings (fewer replicates / iterations).
+    :param n_hvf: top-N overdispersed genes to select (None = full panel).
+    :param dataset_label: label used in the returned summary (defaults to the
+        dataset_name in ``uns`` or the file stem).
+    :param n_iter_override: replicate count for *all* consensus backends (fair
+        across methods); overrides the quick/full default. Large slides use a
+        smaller value to stay tractable.
+    :param spot_max_iter: override spOT-NMF's outer-iteration cap (large slides).
+    :param spot_max_iter_inner: override spOT-NMF's inner-iteration cap.
+    :param spot_overrides: dict merged into the spOT-NMF params (e.g.
+        ``{"w": 0.05}``). The usage-entropy ``w`` is the key deconvolution knob:
+        small ``w`` gives peaked (near one-hot) per-spot usages -- right for crisp
+        single-cell-type panels -- while larger ``w`` gives softer, graded
+        mixtures that fit genuinely mixed spots. It is best tuned per dataset.
+    :return: the summary DataFrame indexed by algorithm.
+    """
+    out_root = Path(out_dir)
     out_root.mkdir(parents=True, exist_ok=True)
 
-    adata = ad.read_h5ad(args.data)
+    adata = ad.read_h5ad(data_path)
     # mosaicMPI round-trips usages through TSV files; a purely numeric obs index
     # gets reparsed as int and then fails to align, so use non-numeric spot names.
     adata.obs_names = ["spot" + str(i) for i in range(adata.n_obs)]
@@ -270,11 +294,15 @@ def main():
     gt.index = adata.obs_names
     gt_prop = _row_normalize(gt.astype(float))
     k = gt.shape[1]
-    print(f"Dataset: {adata.uns.get('dataset_name')}  spots={adata.n_obs} "
-          f"genes={adata.n_vars}  ground-truth cell types (k)={k}")
+    ds_label = dataset_label or adata.uns.get("dataset_name") or Path(data_path).stem
+    print(f"Dataset: {ds_label}  spots={adata.n_obs} "
+          f"genes={adata.n_vars}  ground-truth cell types (k)={k}  "
+          f"n_hvf={'all' if n_hvf is None else n_hvf}")
 
     # n_iter must be >= 4 or mosaicMPI's consensus neighbourhood collapses to 0.
-    n_iter = 6 if args.quick else 12
+    n_iter = 6 if quick else 12
+    if n_iter_override is not None:
+        n_iter = n_iter_override
     # IMPORTANT: use the adam optimizer. spOT-NMF's LBFGS path leaves the OT dual
     # variable G ~unchanged, so W = softmin(coef * H.T @ G) collapses to a uniform
     # per-spot mixture (usage_dispersion == 0) and carries no deconvolution signal
@@ -285,10 +313,20 @@ def main():
     # Tuned via scripts/benchmark/sweep_spotnmf.py (72-config GPU sweep):
     # eps=0.02, h=0.01, w=0.01, normalize_rows=True, cosine cost was best.
     spot_params = {"device": device, "optim_name": "adam", "lr": 1e-2,
-                   "max_iter": 20 if args.quick else 50,
-                   "max_iter_inner": 60 if args.quick else 150,
+                   "max_iter": 20 if quick else 50,
+                   "max_iter_inner": 60 if quick else 150,
                    "eps": 0.02, "h": 1e-2, "w": 1e-2,
                    "normalize_rows": True, "cost": "cosine"}
+    if spot_max_iter is not None:
+        spot_params["max_iter"] = spot_max_iter
+    if spot_max_iter_inner is not None:
+        spot_params["max_iter_inner"] = spot_max_iter_inner
+    if spot_overrides:
+        spot_params.update(spot_overrides)
+    if n_iter_override is not None or spot_max_iter is not None or spot_overrides:
+        print(f"  overrides: n_iter={n_iter}  spot max_iter={spot_params['max_iter']} "
+              f"max_iter_inner={spot_params['max_iter_inner']}  "
+              f"w={spot_params['w']} eps={spot_params['eps']}")
 
     configs = [
         # (label, backend, n_iter, factorizer_params, consensus)
@@ -303,7 +341,8 @@ def main():
     per_ct_all = {}
     for label, backend, niter, fp, consensus in configs:
         print(f"\n=== {label}  (backend={backend}, n_iter={niter}, consensus={consensus}) ===")
-        res = run_algorithm(adata, label, backend, niter, k, out_root, fp, consensus)
+        res = run_algorithm(adata, label, backend, niter, k, out_root, fp,
+                            consensus, n_hvf=n_hvf)
         scores = match_and_score(res["usage"], gt_prop)
         per_ct_all[label] = scores.pop("per_celltype")
         rows.append({
@@ -319,6 +358,7 @@ def main():
               f"({res['seconds']:.1f}s)")
 
     summary = pd.DataFrame(rows).set_index("algorithm")
+    summary.insert(0, "dataset", ds_label)
     summary.to_csv(out_root / "summary.csv")
     for label, df in per_ct_all.items():
         df.to_csv(out_root / f"per_celltype_{label}.csv")
@@ -339,6 +379,20 @@ def main():
     except Exception as e:  # plotting is best-effort
         print(f"(plotting skipped: {e})")
     print(f"Results written to: {out_root}")
+
+    return summary
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--data", default=str(DEFAULT_DATA))
+    ap.add_argument("--out", default=str(REPO / "results" / "benchmark_mosaic"))
+    ap.add_argument("--quick", action="store_true",
+                    help="fast smoke test (few replicates / iterations)")
+    ap.add_argument("--n_hvf", type=int, default=None,
+                    help="top-N overdispersed genes to select (default: full panel)")
+    args = ap.parse_args()
+    run_benchmark(args.data, args.out, quick=args.quick, n_hvf=args.n_hvf)
 
 
 def make_plots(summary, per_ct_all, out_root):

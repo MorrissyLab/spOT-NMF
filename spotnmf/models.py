@@ -766,28 +766,149 @@ def run_spotnmf(adata_spatial, components, seed=42, **kwargs):
     return results, model.losses
 
 
-def _cluster_consensus_spectra(spectra_pool, k, density_threshold, local_neighborhood_size):
-    """Cluster pooled replicate spectra into ``k`` consensus programs.
+def _l1_normalize_rows(M):
+    """Rescale each row of a non-negative array to sum to 1 (a distribution)."""
+    return M / np.clip(M.sum(axis=1, keepdims=True), 1e-12, None)
 
-    Mirrors cNMF's consensus clustering (:meth:`spotnmf.external.cnmf.cNMF.consensus`):
-    L2-normalize every replicate program, optionally drop local-density
-    outliers, KMeans into ``k`` clusters, and take the per-cluster median as the
-    consensus spectrum (renormalized to a probability distribution).
+
+def _aggregate_programs(stacked, aggregate):
+    """Aggregate matched replicate programs ``(n_iter, k, genes)`` over replicates.
+
+    spOT-NMF spectra are probability distributions over genes, so the natural
+    consensus is a *distribution barycenter*, not cNMF's coordinate-wise median:
+
+    * ``"geomean"`` -- normalized geometric mean, i.e. the **KL barycenter** of
+      the distributions (the OT/information-geometry-native aggregation). Best on
+      RMSE/JSD and on mixed-spot data in the spOT-NMF benchmark.
+    * ``"mean"`` -- arithmetic mean (the mixture barycenter); most robust on PCC.
+    * ``"median"`` -- cNMF's choice; kept for comparison. Over-sparsifies
+      distribution-valued spectra and can wipe out the consensus benefit.
+    """
+    if aggregate == "median":
+        return np.median(stacked, axis=0)
+    if aggregate == "mean":
+        return stacked.mean(axis=0)
+    if aggregate == "geomean":
+        return np.exp(np.log(np.clip(stacked, 1e-12, None)).mean(axis=0))
+    raise ValueError(f"unknown aggregate {aggregate!r}")
+
+
+def _cross_replicate_agreement(pool):
+    """Reproducibility of replicate factorizations, and a medoid reference.
+
+    For every pair of replicates, Hungarian-match their programs by cosine and
+    average the matched similarities; the mean over all pairs is a direct
+    reproducibility measure (1.0 = every replicate finds identical programs) that
+    predicts consensus quality far better than a KMeans silhouette. The medoid
+    replicate (highest total agreement) is returned for use as a matching anchor.
+
+    Args:
+        pool (numpy.ndarray): ``(n_iter, k, genes)`` replicate spectra.
+
+    Returns:
+        tuple: ``(agreement, ref_index, unit_rows, dist_rows)`` where ``unit_rows``
+        are L2-normalized programs (for cosine matching) and ``dist_rows`` are the
+        L1-normalized programs (distributions, for aggregation).
+    """
+    from scipy.optimize import linear_sum_assignment
+
+    n_iter = pool.shape[0]
+    dists = [_l1_normalize_rows(pool[i]) for i in range(n_iter)]
+    units = [d / np.clip(np.linalg.norm(d, axis=1, keepdims=True), 1e-12, None)
+             for d in dists]
+    pair = np.zeros((n_iter, n_iter))
+    for i in range(n_iter):
+        for j in range(i + 1, n_iter):
+            C = units[i] @ units[j].T
+            r, c = linear_sum_assignment(-C)
+            pair[i, j] = pair[j, i] = C[r, c].mean()
+    ref = int(pair.sum(axis=1).argmax())
+    agreement = float(pair[np.triu_indices(n_iter, 1)].mean()) if n_iter > 1 else 1.0
+    return agreement, ref, units, dists
+
+
+def _consensus_by_matching(k, aggregate, ref, units, dists):
+    """Balanced consensus by cross-replicate program matching.
+
+    Hungarian-matches every replicate's ``k`` programs to a medoid reference
+    replicate, so each consensus program is the barycenter of exactly one matched
+    program per replicate. Unlike free KMeans on the pooled programs, this
+    guarantees balance (one program per replicate per cluster). It suits
+    high-``k`` cases where KMeans clusters become unbalanced, but -- lacking
+    KMeans' local-density outlier filter -- it can be pulled by an outlier
+    replicate on noisier (crisp, lower-agreement) data, so it is not the default.
+    """
+    from scipy.optimize import linear_sum_assignment
+
+    aligned = [dists[ref]]
+    for j in range(len(dists)):
+        if j == ref:
+            continue
+        C = units[ref] @ units[j].T
+        r, c = linear_sum_assignment(-C)
+        order = np.empty(k, dtype=int)
+        order[r] = c
+        aligned.append(dists[j][order])
+    return _l1_normalize_rows(_aggregate_programs(np.stack(aligned), aggregate))
+
+
+def _cluster_consensus_spectra(spectra_pool, k, density_threshold,
+                               local_neighborhood_size, n_iter=None,
+                               method="kmeans", aggregate="mean"):
+    """Aggregate pooled replicate spectra into ``k`` consensus programs.
+
+    Adapts cNMF's consensus to spOT-NMF's optimal-transport nature. The key
+    change from cNMF is the **aggregation**: spOT-NMF spectra are probability
+    distributions over genes, for which cNMF's coordinate-wise *median*
+    over-sparsifies and can erase the consensus benefit entirely; a distribution
+    barycenter (``"mean"`` = mixture, default, or ``"geomean"`` = KL barycenter)
+    is both principled and empirically better (e.g. +0.03 PCC on the mixed-spot
+    MOB benchmark, neutral on crisp panels). Clustering strategy (``method``):
+
+    * ``"kmeans"`` (default): cNMF-style L2-normalize + local-density outlier
+      filter + KMeans, then aggregate each cluster. The density filter keeps it
+      robust even when clusters are somewhat unbalanced.
+    * ``"match"``: balanced cross-replicate Hungarian matching
+      (:func:`_consensus_by_matching`) -- guarantees one program per replicate
+      per cluster; helps at high ``k`` where KMeans unbalances, but has no outlier
+      filter. Requires ``n_iter`` and a pool of exactly ``n_iter*k`` rows.
+
+    Regardless of ``method``, ``stability`` is reported as the cross-replicate
+    program agreement (:func:`_cross_replicate_agreement`) when the pool can be
+    reshaped, falling back to the KMeans silhouette otherwise.
 
     Args:
         spectra_pool (pandas.DataFrame): ``(n_iter*k) x genes`` pooled replicate
-            spectra (each row is one program from one replicate).
+            spectra, ordered replicate-by-replicate (each block of ``k`` rows is
+            one replicate's programs).
         k (int): Number of consensus programs.
-        density_threshold (float): Local-density outlier threshold (>=2 disables
-            filtering), matching cNMF's ``local_density_threshold``.
-        local_neighborhood_size (float): Fraction of replicate programs used as
-            neighbors for the density estimate, matching cNMF.
+        density_threshold (float): KMeans-path local-density outlier threshold
+            (>=2 disables filtering), matching cNMF's ``local_density_threshold``.
+        local_neighborhood_size (float): KMeans-path neighbor fraction (cNMF).
+        n_iter (int, optional): Number of replicates (enables agreement +
+            ``"match"``).
+        method (str, optional): ``"kmeans"`` (default) or ``"match"``.
+        aggregate (str, optional): ``"mean"`` (default), ``"geomean"`` (KL
+            barycenter) or ``"median"`` (cNMF).
 
     Returns:
-        tuple: ``(median_spectra, stability)`` where ``median_spectra`` is a
-        ``k x genes`` DataFrame and ``stability`` is the KMeans silhouette score
-        (``nan`` if it cannot be computed).
+        tuple: ``(consensus_spectra (k x genes DataFrame), stability)``.
     """
+    genes = spectra_pool.columns
+
+    reshapeable = n_iter is not None and spectra_pool.shape[0] == n_iter * k
+    agreement = float("nan")
+    if reshapeable:
+        pool = spectra_pool.to_numpy().reshape(n_iter, k, -1)
+        agreement, ref, units, dists = _cross_replicate_agreement(pool)
+
+    if method == "match":
+        if not reshapeable:
+            raise ValueError("method='match' needs n_iter and an n_iter*k pool")
+        consensus = _consensus_by_matching(k, aggregate, ref, units, dists)
+        return pd.DataFrame(consensus, columns=genes), agreement
+
+    # -- cNMF-style KMeans (default) -----------------------------------------
     from sklearn.cluster import KMeans
     from sklearn.metrics import silhouette_score
     from sklearn.metrics.pairwise import euclidean_distances
@@ -796,30 +917,40 @@ def _cluster_consensus_spectra(spectra_pool, k, density_threshold, local_neighbo
     l2 = spectra_pool.div(np.sqrt((spectra_pool ** 2).sum(axis=1)), axis=0)
 
     # Local-density outlier filtering (skipped when threshold >= 2).
-    n_iter_est = max(1, l2.shape[0] // k)
     n_neighbors = int(local_neighborhood_size * l2.shape[0] / k)
     if density_threshold < 2 and n_neighbors >= 1 and l2.shape[0] > n_neighbors + 1:
-        dists = euclidean_distances(l2.values)
-        part = np.argpartition(dists, n_neighbors + 1)[:, : n_neighbors + 1]
-        nn = dists[np.arange(dists.shape[0])[:, None], part]
+        dmat = euclidean_distances(l2.values)
+        part = np.argpartition(dmat, n_neighbors + 1)[:, : n_neighbors + 1]
+        nn = dmat[np.arange(dmat.shape[0])[:, None], part]
         local_density = nn.sum(1) / n_neighbors
         keep = local_density < density_threshold
         if keep.sum() >= k:
             l2 = l2.loc[keep]
 
     km = KMeans(n_clusters=k, n_init=10, random_state=1)
-    labels = km.fit_predict(l2.values)
-    labels = pd.Series(labels, index=l2.index)
+    labels = pd.Series(km.fit_predict(l2.values), index=l2.index)
 
-    stability = float("nan")
-    try:
-        stability = float(silhouette_score(l2.values, labels, metric="euclidean"))
-    except Exception:
-        pass
+    if not reshapeable:
+        try:
+            agreement = float(silhouette_score(l2.values, labels, metric="euclidean"))
+        except Exception:
+            pass
 
-    median_spectra = l2.groupby(labels).median()
-    median_spectra = median_spectra.div(median_spectra.sum(axis=1), axis=0)
-    return median_spectra, stability
+    agg = l2.groupby(labels).apply(
+        lambda g: pd.Series(_aggregate_rows(g.to_numpy(), aggregate), index=l2.columns))
+    agg = agg.div(agg.sum(axis=1), axis=0)
+    return agg, agreement
+
+
+def _aggregate_rows(rows, aggregate):
+    """Aggregate a set of program rows ``(m, genes)`` into one ``(genes,)``."""
+    if aggregate == "median":
+        return np.median(rows, axis=0)
+    if aggregate == "mean":
+        return rows.mean(axis=0)
+    if aggregate == "geomean":
+        return np.exp(np.log(np.clip(rows, 1e-12, None)).mean(axis=0))
+    raise ValueError(f"unknown aggregate {aggregate!r}")
 
 
 def run_spotnmf_consensus(
@@ -829,20 +960,36 @@ def run_spotnmf_consensus(
     seed: int = 42,
     density_threshold: float = 0.5,
     local_neighborhood_size: float = 0.30,
+    consensus_method: str = "kmeans",
+    aggregate: str = "mean",
     return_stability: bool = False,
     **kwargs,
 ):
-    """Consensus spOT-NMF: cluster replicate OT spectra, then OT-refit usages.
+    """Consensus spOT-NMF: aggregate replicate OT spectra, then OT-refit usages.
 
-    This is spOT-NMF's proper consensus, structured exactly like cNMF
-    (:func:`spotnmf.external.cnmf.run_cnmf`) with one deliberate difference: the
-    final usage refit uses spOT-NMF's *fixed-spectra optimal-transport* solve
-    (:meth:`spotnmf.transform`) instead of cNMF's NNLS. Concretely:
+    Structured like cNMF's consensus but adapted to spOT-NMF's optimal-transport
+    nature. The key departure from cNMF is the **aggregation**: spOT-NMF spectra
+    are probability distributions over genes, so replicate programs are combined
+    with a distribution barycenter -- ``aggregate="mean"`` (mixture barycenter,
+    default) or ``"geomean"`` (KL barycenter) -- rather than cNMF's
+    coordinate-wise ``"median"``, which over-sparsifies distributions and can
+    erase the consensus benefit (e.g. +0.03 PCC on the mixed-spot MOB benchmark,
+    neutral on crisp panels; see ``scripts/benchmark/``). ``consensus_method``
+    selects clustering: ``"kmeans"`` (default, cNMF-style with density filtering)
+    or ``"match"`` (balanced cross-replicate Hungarian matching, better at high
+    ``k`` where KMeans clusters unbalance). ``stability`` is reported as the
+    cross-replicate program agreement, a truer reproducibility measure than a
+    KMeans silhouette.
+
+    The final usage refit uses spOT-NMF's *fixed-spectra optimal-transport* solve
+    (:meth:`spotnmf.transform`); note that on genuinely mixed-spot data a plain
+    NNLS refit of these consensus spectra can deconvolve better than the OT refit
+    (whose usages are more peaked). Concretely:
 
     1. Run ``n_iter`` independent spOT-NMF factorizations (seeds ``seed`` ..
        ``seed + n_iter - 1``), collecting each replicate's spectra.
-    2. Pool and cluster the replicate spectra into ``components`` consensus
-       programs (L2-normalize, density-filter, KMeans, per-cluster median) --
+    2. Pool and aggregate the replicate spectra into ``components`` consensus
+       programs (KMeans + mixture-barycenter mean by default) --
        identical to cNMF.
     3. Freeze those consensus programs and solve only the usages with the
        entropic-OT dual ascent, so the consensus usages keep the OT geometry
@@ -857,6 +1004,12 @@ def run_spotnmf_consensus(
             threshold (>=2 disables filtering). Defaults 0.5.
         local_neighborhood_size (float, optional): cNMF neighbor fraction.
             Defaults 0.30.
+        consensus_method (str, optional): Clustering for the consensus spectra --
+            ``"kmeans"`` (default, cNMF-style with density filtering) or
+            ``"match"`` (balanced cross-replicate matching). Defaults ``"kmeans"``.
+        aggregate (str, optional): Distribution barycenter for combining matched
+            programs -- ``"mean"`` (default), ``"geomean"`` (KL barycenter) or
+            ``"median"`` (cNMF). Defaults ``"mean"``.
         return_stability (bool, optional): If True, also return the KMeans
             silhouette stability. Defaults False.
         **kwargs: Forwarded to :func:`run_spotnmf` / :meth:`spotnmf.transform`
@@ -896,9 +1049,10 @@ def run_spotnmf_consensus(
         spectra_frames.append(prog)
     spectra_pool = pd.concat(spectra_frames, axis=0)
 
-    # 2. Cluster into consensus programs (cNMF-style).
+    # 2. Aggregate into consensus programs (balanced matching + KL barycenter).
     median_spectra, stability = _cluster_consensus_spectra(
-        spectra_pool, k, density_threshold, local_neighborhood_size
+        spectra_pool, k, density_threshold, local_neighborhood_size,
+        n_iter=n_iter, method=consensus_method, aggregate=aggregate,
     )
 
     # 3. OT usage refit with the consensus spectra held fixed.

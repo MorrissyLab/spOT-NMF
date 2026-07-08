@@ -23,7 +23,7 @@ import pandas as pd
 pd.options.display.float_format = '{:f}'.format
 from typing import Union
 
-from spotnmf.models import run_spotnmf
+from spotnmf.models import run_spotnmf, run_spotnmf_consensus
 from spotnmf.gscore import calculate_marker_genes_topics_df
 from spotnmf import io, pl, annotate, enrichment, hvg, niche_networks
 
@@ -184,6 +184,8 @@ def run_experiment(
     edge_threshold: float = 0.199,
     annot_file: Union[str, None] = None,
     model_params={},
+    consensus: bool = False,
+    n_iter: int = 10,
     **kwargs,
 ):
     """Run a complete spotnmf experiment: gene selection, model training, gene ranking, and optional plotting/annotation/networks.
@@ -226,8 +228,17 @@ def run_experiment(
             0.199.
         annot_file (str | None): Optional annotation file for network plotting.
             Defaults to None.
-        model_params (dict): Extra keyword arguments forwarded to ``run_spotnmf``.
-            Defaults to an empty dict.
+        model_params (dict): Extra keyword arguments forwarded to ``run_spotnmf``
+            (or ``run_spotnmf_consensus`` when ``consensus=True``). Defaults to an
+            empty dict.
+        consensus (bool): If True, run consensus spOT-NMF -- ``n_iter`` replicate
+            factorizations clustered into consensus programs with an
+            optimal-transport usage refit (:func:`spotnmf.models.run_spotnmf_consensus`)
+            -- instead of a single factorization. More robust and, on the STARmap
+            deconvolution benchmark, more accurate, at ``n_iter``x the runtime.
+            Defaults to False.
+        n_iter (int): Number of replicate factorizations when ``consensus=True``.
+            Defaults to 10.
         **kwargs: Additional keyword arguments forwarded to the gene-selection
             routines.
 
@@ -288,8 +299,14 @@ def run_experiment(
                 f"--hvg_file, or use a dataset with more expression variability."
             )
 
-    # Run topic model
-    results, losses = run_spotnmf(adata_spatial, components=k, **model_params)
+    # Run topic model (single factorization, or consensus over n_iter replicates).
+    if consensus:
+        print(f"Running consensus spOT-NMF over {n_iter} replicates")
+        results, losses = run_spotnmf_consensus(
+            adata_spatial, components=k, n_iter=n_iter, **model_params
+        )
+    else:
+        results, losses = run_spotnmf(adata_spatial, components=k, **model_params)
 
     # Save matrices
     for key, df in results.items():
@@ -357,6 +374,12 @@ def main():
     parser.add_argument("--normalize_rows", action=argparse.BooleanOptionalAction,
                         default=True, help="Normalize rows of input matrix (use --no-normalize_rows to disable).")
 
+    parser.add_argument("--consensus", action="store_true",
+                        help="Run consensus spOT-NMF (cluster --n_iter replicate "
+                             "factorizations, then OT usage refit) instead of a single run.")
+    parser.add_argument("--n_iter", type=int, default=10,
+                        help="Number of replicate factorizations for --consensus (default: 10).")
+
     args = parser.parse_args()
 
     # Validate required arguments
@@ -399,7 +422,8 @@ def main():
             genome=args.genome, hvg_file=args.hvg_file,
             annotate=True, plot=True, network=True,
             is_visium=is_visium, is_xenograft=args.is_xeno, is_aggr=args.is_aggr,
-            model_params=model_params
+            model_params=model_params,
+            consensus=args.consensus, n_iter=args.n_iter,
         )
     elif args.run_type == "deconvolve":
         run_experiment(
@@ -407,7 +431,8 @@ def main():
             genome=args.genome, hvg_file=args.hvg_file,
             annotate=False, plot=False, network=False,
             is_visium=is_visium, is_xenograft=args.is_xeno, is_aggr=args.is_aggr,
-            model_params=model_params
+            model_params=model_params,
+            consensus=args.consensus, n_iter=args.n_iter,
         )
     elif args.run_type == "plot":
         plot_programs(args.results_dir, args.sample_name, adata_spatial, is_visium=is_visium, genome=args.genome, is_xenograft=args.is_xeno, is_aggr=args.is_aggr)

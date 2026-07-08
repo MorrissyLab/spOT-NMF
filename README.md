@@ -167,6 +167,57 @@ spot.cli.annotate_programs(
 
 ```
 
+### Consensus mode (more robust, more accurate)
+
+By default spOT-NMF runs a **single** factorization. For a more robust and
+typically more accurate result you can run **consensus** mode: it fits several
+factorization replicates, clusters them into consensus programs (cNMF-style),
+and then refits the per-spot usages with a fixed-spectra **optimal-transport**
+solve — so the consensus keeps spOT-NMF's OT usage geometry rather than reverting
+to least squares. On the packaged simulated STARmap benchmark, consensus mode was
+the top performer across accuracy metrics (see `scripts/benchmark/`).
+
+Enable it from the CLI with `--consensus` (control replicate count with
+`--n_iter`, default 10):
+
+```bash
+spotnmf deconvolve \
+  --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --data_mode h5ad \
+  --results_dir ./results --k 5 \
+  --consensus --n_iter 10
+```
+
+…or from Python via `run_experiment(consensus=True, n_iter=...)`:
+
+```python
+results = spot.cli.run_experiment(
+    adata_spatial=adata,
+    k=5,
+    sample_name=SAMPLE_NAME,
+    results_dir=str(RESULTS_DIR),
+    genome=GENOME,
+    consensus=True,   # cluster n_iter replicates + OT usage refit
+    n_iter=10,        # number of replicate factorizations
+    model_params=model_params,
+)
+```
+
+For direct, lower-level control you can also call the consensus routine on its
+own — it mirrors `run_spotnmf` but returns consensus factors:
+
+```python
+results, losses = spot.models.run_spotnmf_consensus(
+    adata_spatial=adata,
+    components=5,
+    n_iter=10,
+)
+# results["topics_per_spot"] : per-spot usages (spots x programs)
+# results["genes_per_topic"] : consensus spectra (genes x programs)
+```
+
+> Consensus runs `n_iter` factorizations, so it takes roughly `n_iter`× longer
+> than a single run. A GPU is recommended for larger datasets.
+
 ---
 
 ## 📓 Tutorials

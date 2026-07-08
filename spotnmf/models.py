@@ -926,6 +926,14 @@ def run_spotnmf_consensus(
         device=defaults["device"],
     )
 
+    # Write the consensus factors back onto the input AnnData so callers get the
+    # same obsm["W_OT"]/uns["H_OT"] contract as run_spotnmf (the replicate loop
+    # above only ever mutated copies, so the original is untouched until now).
+    if adata_spatial.uns is None:
+        adata_spatial.uns = {}
+    adata_spatial.uns["H_OT"] = refit.uns["H_OT"]
+    adata_spatial.obsm["W_OT"] = refit.obsm["W_OT"]
+
     df_topics_per_spot = pd.DataFrame(refit.obsm["W_OT"], index=adata_spatial.obs.index)
     df_genes_per_topic = pd.DataFrame(refit.uns["H_OT"], index=gene_list)
     results = {

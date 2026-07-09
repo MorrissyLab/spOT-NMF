@@ -14,9 +14,6 @@
 
 `spOT-NMF` is a Python package for unsupervised deconvolution and discovery of gene programs in spatial transcriptomics. It integrates **Optimal Transport (OT)** into a non-negative matrix factorization (NMF) framework, enabling robust topic modeling, high-resolution spatial deconvolution, and rich biological annotation.
 
-This package supports the analyses in:
-**spOT-NMF: Optimal Transport-Based Matrix Factorization for Accurate Deconvolution of Spatial Transcriptomics** — bioRxiv (2025). DOI: **10.1101/2025.08.02.668292**
-
 ---
 
 ## ✨ Key Features
@@ -113,106 +110,44 @@ spotnmf network    --sample_name SAMPLE1 --results_dir ./results --usage_thresho
 ```
 
 > The `network` command reuses the per-spot usages written by `deconvolve`. On
-> small datasets no topic pairs may pass `--n_bins` / `--edge_threshold`; in that
-> case it prints a notice and skips plotting — lower the thresholds to force a graph.
+> small datasets no topic pairs may pass `--n_bins` / `--edge_threshold`; lower
+> the thresholds to force a graph.
 
 ### Python / Notebooks
 
 ```python
-from pathlib import Path
 import spotnmf as spot
 
-# === Configuration === #
-DATA_PATH = Path("data/test_data/dataset10_adata_spatial.h5ad")
-RESULTS_DIR = Path(r"/data/test_results/")
-SAMPLE_NAME = "TestSample"
-GENOME = "mm10"
+adata = spot.io.read_adata("data/sample1.h5ad", data_mode="h5ad")
 
-# === Read Data === #
-adata = spot.io.read_adata(
-    data_path=DATA_PATH,
-    data_mode="h5ad"
-)
-
-# === Model Parameters === #
-model_params = {
-    "lr": 0.01,          # Learning rate (tuned for the adam optimizer)
-    "h": 0.01,           # H regularization
-    "w": 0.01,           # W regularization
-    "eps": 0.02,         # Epsilon
-    "normalize_rows": True,
-}
-# These match the package defaults, so `model_params` can be omitted entirely.
-
-# === Run Factorization === #
 results = spot.cli.run_experiment(
     adata_spatial=adata,
-    k=5,                        # Number of ranks
-    sample_name=SAMPLE_NAME,
-    results_dir=str(RESULTS_DIR),
-    genome=GENOME,
-    annotate=False,
-    plot=False,
-    network=False,
-    is_visium=True,
-    model_params=model_params,
+    k=5,                       # number of programs
+    sample_name="SAMPLE1",
+    results_dir="./results",
+    genome="GRCh38",
 )
-
-# === Annotate Programs === #
-spot.cli.annotate_programs(
-    results_dir=str(RESULTS_DIR),
-    sample_name=SAMPLE_NAME,
-    genome=GENOME,
-)
-
 ```
+
+Model hyperparameters (`lr`, `h`, `w`, `eps`, …) default to tuned values; pass a
+`model_params` dict to override them. See the **[full pipeline tutorial](docs/source/tutorials/full_pipeline.ipynb)**
+for a complete walkthrough (HVG selection, annotation, spatial plots, and validation).
 
 ### Consensus mode (more robust, more accurate)
 
-By default spOT-NMF runs a **single** factorization. For a more robust and
-typically more accurate result you can run **consensus** mode: it fits several
-factorization replicates, clusters them into consensus programs (cNMF-style),
-and then refits the per-spot usages with a fixed-spectra **optimal-transport**
-solve — so the consensus keeps spOT-NMF's OT usage geometry rather than reverting
-to least squares. On the packaged simulated STARmap benchmark, consensus mode was
-the top performer across accuracy metrics (see `scripts/benchmark/`).
+By default spOT-NMF runs a **single** factorization. In **consensus** mode it fits
+several replicates, clusters them into consensus programs (cNMF-style), and refits
+the per-spot usages with a fixed-spectra **optimal-transport** solve — keeping
+spOT-NMF's OT usage geometry rather than reverting to least squares. On the packaged
+simulated STARmap benchmark it was the top performer across accuracy metrics
+(see `scripts/benchmark/`).
 
-Enable it from the CLI with `--consensus` (control replicate count with
-`--n_iter`, default 10):
+Enable it with `--consensus` on the CLI or `consensus=True` in Python; `--n_iter`
+(default 10) controls the replicate count.
 
 ```bash
-spotnmf deconvolve \
-  --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --data_mode h5ad \
-  --results_dir ./results --k 5 \
-  --consensus --n_iter 10
-```
-
-…or from Python via `run_experiment(consensus=True, n_iter=...)`:
-
-```python
-results = spot.cli.run_experiment(
-    adata_spatial=adata,
-    k=5,
-    sample_name=SAMPLE_NAME,
-    results_dir=str(RESULTS_DIR),
-    genome=GENOME,
-    consensus=True,   # cluster n_iter replicates + OT usage refit
-    n_iter=10,        # number of replicate factorizations
-    model_params=model_params,
-)
-```
-
-For direct, lower-level control you can also call the consensus routine on its
-own — it mirrors `run_spotnmf` but returns consensus factors:
-
-```python
-results, losses = spot.models.run_spotnmf_consensus(
-    adata_spatial=adata,
-    components=5,
-    n_iter=10,
-)
-# results["topics_per_spot"] : per-spot usages (spots x programs)
-# results["genes_per_topic"] : consensus spectra (genes x programs)
+spotnmf deconvolve --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad \
+  --data_mode h5ad --results_dir ./results --k 5 --consensus --n_iter 10
 ```
 
 > Consensus runs `n_iter` factorizations, so it takes roughly `n_iter`× longer
@@ -222,15 +157,15 @@ results, losses = spot.models.run_spotnmf_consensus(
 
 ## 📓 Tutorials
 
-A fully worked, **well-commented notebook** runs the entire pipeline end-to-end on the
-small example dataset that ships with the repo (CPU-only, ~1 minute) — loading data,
-selecting HVGs, running the OT-NMF deconvolution, mapping programs spatially, extracting
-marker genes, and validating the recovered programs against ground-truth cell types. All
-figures are pre-rendered in the notebook.
+Fully worked, **well-commented notebooks** run on the packaged example dataset with
+figures pre-rendered, so GitHub displays them directly in the browser.
 
-* **[Full pipeline tutorial →](docs/source/tutorials/full_pipeline.ipynb)** (`docs/source/tutorials/full_pipeline.ipynb`)
-
-> GitHub renders the notebook (with figures) directly in the browser — just click the link.
+* **[Full pipeline tutorial →](docs/source/tutorials/full_pipeline.ipynb)** — data
+  loading, HVG selection, OT-NMF deconvolution, spatial mapping, marker extraction, and
+  validation against ground-truth cell types, end-to-end.
+* **[Proximity (niche) networks →](docs/source/tutorials/proximity_networks.ipynb)** —
+  build a program–program co-occurrence network from the usage matrix, detect niches with
+  Infomap, and render the network + connection heatmap (step-by-step and one-call).
 
 ---
 
@@ -302,9 +237,9 @@ Please cite:
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contributing & Support
 
-We welcome ideas, bug reports, and feature requests—**please open a GitHub Issue**:
+Questions, ideas, bug reports, and feature requests—**please open a GitHub Issue**:
 [https://github.com/MorrissyLab/spOT-NMF/issues](https://github.com/MorrissyLab/spOT-NMF/issues)
 
 ---
@@ -312,10 +247,3 @@ We welcome ideas, bug reports, and feature requests—**please open a GitHub Iss
 ## 📜 License
 
 GPL-3.0. See **LICENSE** for details.
-
----
-
-## 💬 Support
-
-Questions or need help? Open an Issue:
-[https://github.com/MorrissyLab/spOT-NMF/issues](https://github.com/MorrissyLab/spOT-NMF/issues)

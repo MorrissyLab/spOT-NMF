@@ -854,7 +854,7 @@ def _consensus_by_matching(k, aggregate, ref, units, dists):
 
 def _cluster_consensus_spectra(spectra_pool, k, density_threshold,
                                local_neighborhood_size, n_iter=None,
-                               method="kmeans", aggregate="mean"):
+                               method="match", aggregate="mean"):
     """Aggregate pooled replicate spectra into ``k`` consensus programs.
 
     Adapts cNMF's consensus to spOT-NMF's optimal-transport nature. The key
@@ -865,13 +865,16 @@ def _cluster_consensus_spectra(spectra_pool, k, density_threshold,
     is both principled and empirically better (e.g. +0.03 PCC on the mixed-spot
     MOB benchmark, neutral on crisp panels). Clustering strategy (``method``):
 
-    * ``"kmeans"`` (default): cNMF-style L2-normalize + local-density outlier
-      filter + KMeans, then aggregate each cluster. The density filter keeps it
-      robust even when clusters are somewhat unbalanced.
-    * ``"match"``: balanced cross-replicate Hungarian matching
-      (:func:`_consensus_by_matching`) -- guarantees one program per replicate
-      per cluster; helps at high ``k`` where KMeans unbalances, but has no outlier
-      filter. Requires ``n_iter`` and a pool of exactly ``n_iter*k`` rows.
+    * ``"match"`` (default): balanced cross-replicate Hungarian matching
+      (:func:`_consensus_by_matching`) -- guarantees one program per replicate per
+      cluster. This is the safer default across ``k``: free KMeans becomes badly
+      unbalanced at high ``k`` and can collapse the consensus *below* a single run
+      (e.g. k=29 stereo-seq: KMeans 0.16 vs single-run 0.22 vs match 0.23 PCC).
+      Requires ``n_iter`` and a pool of exactly ``n_iter*k`` rows.
+    * ``"kmeans"``: cNMF-style L2-normalize + local-density outlier filter +
+      KMeans, then aggregate each cluster. Competitive only at low ``k`` (its
+      density filter can slightly beat matching on crisp low-``k`` panels); avoid
+      at high ``k``.
 
     Regardless of ``method``, ``stability`` is reported as the cross-replicate
     program agreement (:func:`_cross_replicate_agreement`) when the pool can be
@@ -960,7 +963,7 @@ def run_spotnmf_consensus(
     seed: int = 42,
     density_threshold: float = 0.5,
     local_neighborhood_size: float = 0.30,
-    consensus_method: str = "kmeans",
+    consensus_method: str = "match",
     aggregate: str = "mean",
     return_stability: bool = False,
     **kwargs,
@@ -975,11 +978,12 @@ def run_spotnmf_consensus(
     coordinate-wise ``"median"``, which over-sparsifies distributions and can
     erase the consensus benefit (e.g. +0.03 PCC on the mixed-spot MOB benchmark,
     neutral on crisp panels; see ``scripts/benchmark/``). ``consensus_method``
-    selects clustering: ``"kmeans"`` (default, cNMF-style with density filtering)
-    or ``"match"`` (balanced cross-replicate Hungarian matching, better at high
-    ``k`` where KMeans clusters unbalance). ``stability`` is reported as the
-    cross-replicate program agreement, a truer reproducibility measure than a
-    KMeans silhouette.
+    selects clustering: ``"match"`` (default, balanced cross-replicate Hungarian
+    matching -- the safer choice across ``k``, since free KMeans unbalances at
+    high ``k`` and can collapse the consensus below a single run) or ``"kmeans"``
+    (cNMF-style with density filtering, competitive only at low ``k``).
+    ``stability`` is reported as the cross-replicate program agreement, a truer
+    reproducibility measure than a KMeans silhouette.
 
     The final usage refit uses spOT-NMF's *fixed-spectra optimal-transport* solve
     (:meth:`spotnmf.transform`); note that on genuinely mixed-spot data a plain
@@ -989,8 +993,7 @@ def run_spotnmf_consensus(
     1. Run ``n_iter`` independent spOT-NMF factorizations (seeds ``seed`` ..
        ``seed + n_iter - 1``), collecting each replicate's spectra.
     2. Pool and aggregate the replicate spectra into ``components`` consensus
-       programs (KMeans + mixture-barycenter mean by default) --
-       identical to cNMF.
+       programs (balanced matching + mixture-barycenter mean by default).
     3. Freeze those consensus programs and solve only the usages with the
        entropic-OT dual ascent, so the consensus usages keep the OT geometry
        rather than reverting to least squares.
@@ -1005,8 +1008,8 @@ def run_spotnmf_consensus(
         local_neighborhood_size (float, optional): cNMF neighbor fraction.
             Defaults 0.30.
         consensus_method (str, optional): Clustering for the consensus spectra --
-            ``"kmeans"`` (default, cNMF-style with density filtering) or
-            ``"match"`` (balanced cross-replicate matching). Defaults ``"kmeans"``.
+            ``"match"`` (default, balanced cross-replicate matching) or
+            ``"kmeans"`` (cNMF-style with density filtering). Defaults ``"match"``.
         aggregate (str, optional): Distribution barycenter for combining matched
             programs -- ``"mean"`` (default), ``"geomean"`` (KL barycenter) or
             ``"median"`` (cNMF). Defaults ``"mean"``.

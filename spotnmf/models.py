@@ -771,16 +771,92 @@ def _l1_normalize_rows(M):
     return M / np.clip(M.sum(axis=1, keepdims=True), 1e-12, None)
 
 
-def _aggregate_programs(stacked, aggregate):
+def _gene_ground_cost(adata_spatial, gene_list, cost, normalize_rows):
+    """Genes x genes ground cost on the model's normalized reference.
+
+    Reproduces :meth:`spotnmf.init_parameters`'s reference construction (row/column
+    normalization of the highly-variable expression matrix) and computes the
+    pairwise gene distance with the model's ``cost`` metric, so the Wasserstein
+    barycenter transports mass under the same geometry the factorization uses.
+    """
+    from scipy.spatial.distance import cdist
+
+    X = adata_spatial[:, adata_spatial.var["highly_variable"]].X
+    X = X.toarray() if hasattr(X, "toarray") else np.asarray(X)
+    A = np.asarray(X, dtype=np.float64).T.copy()      # genes x spots
+    A += 1e-6
+    if normalize_rows:
+        mean_row_sum = A.sum(1).mean()
+        A /= A.sum(1, keepdims=True) * mean_row_sum
+    A /= A.sum(0, keepdims=True)
+    features = 1e-6 + A
+    metric = cost if isinstance(cost, str) else "cosine"
+    if metric == "ones":
+        return 1.0 - np.eye(features.shape[0])
+    return cdist(features, features, metric=metric)
+
+
+def _wasserstein_barycenter(dists, kernel, weights=None,
+                            max_iter=1000, tol=1e-5):
+    """Entropic Wasserstein barycenter of gene-distributions (Benamou et al. IBP).
+
+    Computes the fixed-support entropic Wasserstein barycenter of the columns of
+    ``dists`` (each a distribution over the same gene support) using Iterative
+    Bregman Projections with the Gibbs ``kernel = exp(-M/reg)`` derived from the
+    gene ground cost ``M``. Because the barycenter transports mass between similar
+    genes (per the OT geometry the model itself uses), it denoises the consensus
+    program in an OT-native way that a coordinate-wise mean/geomean cannot.
+
+    Args:
+        dists (numpy.ndarray): ``(genes, S)`` non-negative columns (each summed to
+            one) -- the ``S`` matched replicate programs for one consensus cluster.
+        kernel (numpy.ndarray): ``(genes, genes)`` Gibbs kernel ``exp(-M/reg)``.
+        weights (numpy.ndarray, optional): length-``S`` barycentric weights
+            (uniform by default).
+        max_iter (int, optional): Max IBP iterations. Defaults 1000.
+        tol (float, optional): Convergence tolerance on the barycenter. Defaults 1e-5.
+
+    Returns:
+        numpy.ndarray: ``(genes,)`` barycenter distribution (sums to one).
+    """
+    n, S = dists.shape
+    if weights is None:
+        weights = np.ones(S) / S
+    u = np.ones((n, S)) / n
+    UKv = u * (kernel @ (dists / np.clip(kernel @ u, 1e-300, None)))
+    bar = np.exp(np.log(np.clip(UKv, 1e-300, None)) @ weights)
+    for cpt in range(max_iter):
+        u = (bar[:, None] / np.clip(UKv, 1e-300, None)) * u
+        UKv = u * (kernel @ (dists / np.clip(kernel @ u, 1e-300, None)))
+        bar_new = np.exp(np.log(np.clip(UKv, 1e-300, None)) @ weights)
+        if cpt % 10 == 0 and np.abs(bar_new - bar).sum() < tol:
+            bar = bar_new
+            break
+        bar = bar_new
+    s = bar.sum()
+    return bar / s if s > 0 else np.ones(n) / n
+
+
+def _bary_kernel(cost_matrix, bary_reg):
+    """Gibbs kernel ``exp(-M/reg)`` from a (max-normalized) gene ground cost."""
+    M = np.asarray(cost_matrix, dtype=np.float64)
+    M = M / (M.max() + 1e-12)
+    return np.exp(-M / bary_reg)
+
+
+def _aggregate_programs(stacked, aggregate, cost_matrix=None, bary_reg=0.1):
     """Aggregate matched replicate programs ``(n_iter, k, genes)`` over replicates.
 
     spOT-NMF spectra are probability distributions over genes, so the natural
     consensus is a *distribution barycenter*, not cNMF's coordinate-wise median:
 
+    * ``"wasserstein"`` -- entropic **Wasserstein barycenter** under the gene
+      ground cost (the fully OT-native aggregation; requires ``cost_matrix``).
+      Best on crisp/mixed panels in the spOT-NMF benchmark and lets the safe
+      ``match`` clustering reach the accuracy that otherwise needed ``kmeans``.
     * ``"geomean"`` -- normalized geometric mean, i.e. the **KL barycenter** of
-      the distributions (the OT/information-geometry-native aggregation). Best on
-      RMSE/JSD and on mixed-spot data in the spOT-NMF benchmark.
-    * ``"mean"`` -- arithmetic mean (the mixture barycenter); most robust on PCC.
+      the distributions. Best on low-k mixed data (e.g. MOB).
+    * ``"mean"`` -- arithmetic mean (the mixture barycenter); robust on PCC.
     * ``"median"`` -- cNMF's choice; kept for comparison. Over-sparsifies
       distribution-valued spectra and can wipe out the consensus benefit.
     """
@@ -790,6 +866,14 @@ def _aggregate_programs(stacked, aggregate):
         return stacked.mean(axis=0)
     if aggregate == "geomean":
         return np.exp(np.log(np.clip(stacked, 1e-12, None)).mean(axis=0))
+    if aggregate == "wasserstein":
+        if cost_matrix is None:
+            raise ValueError("aggregate='wasserstein' requires cost_matrix")
+        kernel = _bary_kernel(cost_matrix, bary_reg)
+        k = stacked.shape[1]
+        # stacked[:, c, :] is (S, genes); barycenter wants (genes, S).
+        return np.stack([_wasserstein_barycenter(stacked[:, c, :].T, kernel)
+                         for c in range(k)])
     raise ValueError(f"unknown aggregate {aggregate!r}")
 
 
@@ -827,7 +911,8 @@ def _cross_replicate_agreement(pool):
     return agreement, ref, units, dists
 
 
-def _consensus_by_matching(k, aggregate, ref, units, dists):
+def _consensus_by_matching(k, aggregate, ref, units, dists,
+                           cost_matrix=None, bary_reg=0.1):
     """Balanced consensus by cross-replicate program matching.
 
     Hungarian-matches every replicate's ``k`` programs to a medoid reference
@@ -849,12 +934,14 @@ def _consensus_by_matching(k, aggregate, ref, units, dists):
         order = np.empty(k, dtype=int)
         order[r] = c
         aligned.append(dists[j][order])
-    return _l1_normalize_rows(_aggregate_programs(np.stack(aligned), aggregate))
+    return _l1_normalize_rows(_aggregate_programs(
+        np.stack(aligned), aggregate, cost_matrix=cost_matrix, bary_reg=bary_reg))
 
 
 def _cluster_consensus_spectra(spectra_pool, k, density_threshold,
                                local_neighborhood_size, n_iter=None,
-                               method="match", aggregate="mean"):
+                               method="match", aggregate="mean",
+                               cost_matrix=None, bary_reg=0.1):
     """Aggregate pooled replicate spectra into ``k`` consensus programs.
 
     Adapts cNMF's consensus to spOT-NMF's optimal-transport nature. The key
@@ -908,7 +995,8 @@ def _cluster_consensus_spectra(spectra_pool, k, density_threshold,
     if method == "match":
         if not reshapeable:
             raise ValueError("method='match' needs n_iter and an n_iter*k pool")
-        consensus = _consensus_by_matching(k, aggregate, ref, units, dists)
+        consensus = _consensus_by_matching(k, aggregate, ref, units, dists,
+                                           cost_matrix=cost_matrix, bary_reg=bary_reg)
         return pd.DataFrame(consensus, columns=genes), agreement
 
     # -- cNMF-style KMeans (default) -----------------------------------------
@@ -940,12 +1028,14 @@ def _cluster_consensus_spectra(spectra_pool, k, density_threshold,
             pass
 
     agg = l2.groupby(labels).apply(
-        lambda g: pd.Series(_aggregate_rows(g.to_numpy(), aggregate), index=l2.columns))
+        lambda g: pd.Series(_aggregate_rows(
+            g.to_numpy(), aggregate, cost_matrix=cost_matrix, bary_reg=bary_reg),
+            index=l2.columns))
     agg = agg.div(agg.sum(axis=1), axis=0)
     return agg, agreement
 
 
-def _aggregate_rows(rows, aggregate):
+def _aggregate_rows(rows, aggregate, cost_matrix=None, bary_reg=0.1):
     """Aggregate a set of program rows ``(m, genes)`` into one ``(genes,)``."""
     if aggregate == "median":
         return np.median(rows, axis=0)
@@ -953,6 +1043,12 @@ def _aggregate_rows(rows, aggregate):
         return rows.mean(axis=0)
     if aggregate == "geomean":
         return np.exp(np.log(np.clip(rows, 1e-12, None)).mean(axis=0))
+    if aggregate == "wasserstein":
+        if cost_matrix is None:
+            raise ValueError("aggregate='wasserstein' requires cost_matrix")
+        dists = _l1_normalize_rows(np.clip(rows, 0, None) + 1e-12)
+        kernel = _bary_kernel(cost_matrix, bary_reg)
+        return _wasserstein_barycenter(dists.T, kernel)
     raise ValueError(f"unknown aggregate {aggregate!r}")
 
 
@@ -965,6 +1061,9 @@ def run_spotnmf_consensus(
     local_neighborhood_size: float = 0.30,
     consensus_method: str = "match",
     aggregate: str = "mean",
+    bary_reg: float = 0.1,
+    refit: str = "nnls",
+    refit_w: float = None,
     return_stability: bool = False,
     **kwargs,
 ):
@@ -1011,8 +1110,25 @@ def run_spotnmf_consensus(
             ``"match"`` (default, balanced cross-replicate matching) or
             ``"kmeans"`` (cNMF-style with density filtering). Defaults ``"match"``.
         aggregate (str, optional): Distribution barycenter for combining matched
-            programs -- ``"mean"`` (default), ``"geomean"`` (KL barycenter) or
+            programs -- ``"mean"`` (default, mixture barycenter), ``"geomean"``
+            (KL barycenter; best on low-k mixed data e.g. MOB), ``"wasserstein"``
+            (entropic **Wasserstein barycenter** under the gene ground cost -- the
+            fully OT-native aggregation; best on crisp/higher-k panels and lets the
+            safe ``match`` clustering reach ``kmeans``-level accuracy) or
             ``"median"`` (cNMF). Defaults ``"mean"``.
+        bary_reg (float, optional): Entropic regularization for the ``"wasserstein"``
+            barycenter (larger = more OT smoothing across similar genes). ~0.1
+            worked best in the benchmark. Defaults 0.1.
+        refit (str, optional): How to solve the final usages against the frozen
+            consensus spectra -- ``"nnls"`` (default; scikit-learn least-squares
+            refit as in cNMF) or ``"ot"`` (fixed-spectra entropic-OT solve via
+            :meth:`transform`). NNLS gives graded usages that deconvolve mixed
+            spots better and the best PCC across the benchmark datasets; OT keeps
+            the peaked OT usage geometry and wins RMSE/JSD on crisp panels.
+            Defaults ``"nnls"``.
+        refit_w (float, optional): Usage-entropy for the ``"ot"`` refit only,
+            decoupled from the replicate training ``w`` (smaller = more peaked).
+            ``None`` reuses the training ``w``. Defaults None.
         return_stability (bool, optional): If True, also return the KMeans
             silhouette stability. Defaults False.
         **kwargs: Forwarded to :func:`run_spotnmf` / :meth:`spotnmf.transform`
@@ -1052,47 +1168,85 @@ def run_spotnmf_consensus(
         spectra_frames.append(prog)
     spectra_pool = pd.concat(spectra_frames, axis=0)
 
-    # 2. Aggregate into consensus programs (balanced matching + KL barycenter).
+    # 2. Aggregate into consensus programs. For the OT-native Wasserstein
+    #    barycenter, build the gene ground cost (same cosine-on-normalized-
+    #    reference geometry the model uses) so mass transports between similar
+    #    genes; other aggregates ignore it.
+    cost_matrix = None
+    if aggregate == "wasserstein":
+        cost_matrix = _gene_ground_cost(
+            adata_spatial, gene_list, defaults["cost"], defaults["normalize_rows"])
     median_spectra, stability = _cluster_consensus_spectra(
         spectra_pool, k, density_threshold, local_neighborhood_size,
         n_iter=n_iter, method=consensus_method, aggregate=aggregate,
+        cost_matrix=cost_matrix, bary_reg=bary_reg,
     )
 
-    # 3. OT usage refit with the consensus spectra held fixed.
+    # Consensus spectra as (genes x k) and (k x genes), aligned to gene_list.
+    consensus_kg = median_spectra.reindex(columns=gene_list).to_numpy()  # (k x genes)
+    consensus_gk = consensus_kg.T                                        # (genes x k)
+
+    # 3. Refit the usages against the FROZEN consensus spectra. Two options:
+    #   * "nnls" (default): least-squares usage refit (scikit-learn
+    #     ``non_negative_factorization(..., update_H=False)``), i.e. cNMF's refit.
+    #     Its graded usages deconvolve genuinely mixed spots better and give the
+    #     best PCC across datasets in the spOT-NMF benchmark (STARmap/seqFISH/MOB).
+    #   * "ot": the fixed-spectra entropic-OT solve (:meth:`transform`). Keeps the
+    #     OT usage geometry (more peaked); best RMSE/JSD on crisp panels. The
+    #     usage peakiness can be tuned separately from training via ``refit_w``.
+    if refit not in ("nnls", "ot"):
+        raise ValueError(f"refit must be 'nnls' or 'ot', got {refit!r}")
     seed_all(seed)
-    model = spotnmf(
-        factors=k,
-        h_regularization=defaults["h"],
-        w_regularization=defaults["w"],
-        eps=defaults["eps"],
-        cost=defaults["cost"],
-        pca_cost=False,
-    )
-    refit = adata_spatial.copy()
-    model.transform(
-        refit,
-        spectra=median_spectra.reindex(columns=gene_list).to_numpy(),  # (k x genes)
-        lr=defaults["lr"],
-        optim_name=defaults["optim_name"],
-        tol_inner=defaults["tol_inner"],
-        tol_outer=defaults["tol_outer"],
-        normalize_rows=defaults["normalize_rows"],
-        max_iter=defaults["max_iter"],
-        max_iter_inner=defaults["max_iter_inner"],
-        impute=False,
-        device=defaults["device"],
-    )
+    refit_losses = []
+    if refit == "nnls":
+        from sklearn.decomposition import non_negative_factorization
+
+        Xhv = adata_spatial[:, adata_spatial.var["highly_variable"]].X
+        Xhv = Xhv.toarray() if hasattr(Xhv, "toarray") else np.asarray(Xhv)
+        Xhv = np.ascontiguousarray(Xhv, dtype=np.float64)
+        W, H_used, _ = non_negative_factorization(
+            Xhv, H=np.ascontiguousarray(consensus_kg), n_components=k,
+            init="custom", update_H=False, solver="cd", max_iter=500,
+            random_state=seed)
+        W_out = W                       # (spots x k)
+        H_out = H_used.T                # (genes x k)
+    else:  # refit == "ot"
+        model = spotnmf(
+            factors=k,
+            h_regularization=defaults["h"],
+            w_regularization=refit_w if refit_w is not None else defaults["w"],
+            eps=defaults["eps"],
+            cost=defaults["cost"],
+            pca_cost=False,
+        )
+        refit_adata = adata_spatial.copy()
+        model.transform(
+            refit_adata,
+            spectra=consensus_kg,  # (k x genes)
+            lr=defaults["lr"],
+            optim_name=defaults["optim_name"],
+            tol_inner=defaults["tol_inner"],
+            tol_outer=defaults["tol_outer"],
+            normalize_rows=defaults["normalize_rows"],
+            max_iter=defaults["max_iter"],
+            max_iter_inner=defaults["max_iter_inner"],
+            impute=False,
+            device=defaults["device"],
+        )
+        W_out = refit_adata.obsm["W_OT"]      # (spots x k)
+        H_out = refit_adata.uns["H_OT"]       # (genes x k)
+        refit_losses = model.losses
 
     # Write the consensus factors back onto the input AnnData so callers get the
     # same obsm["W_OT"]/uns["H_OT"] contract as run_spotnmf (the replicate loop
     # above only ever mutated copies, so the original is untouched until now).
     if adata_spatial.uns is None:
         adata_spatial.uns = {}
-    adata_spatial.uns["H_OT"] = refit.uns["H_OT"]
-    adata_spatial.obsm["W_OT"] = refit.obsm["W_OT"]
+    adata_spatial.uns["H_OT"] = H_out
+    adata_spatial.obsm["W_OT"] = W_out
 
-    df_topics_per_spot = pd.DataFrame(refit.obsm["W_OT"], index=adata_spatial.obs.index)
-    df_genes_per_topic = pd.DataFrame(refit.uns["H_OT"], index=gene_list)
+    df_topics_per_spot = pd.DataFrame(W_out, index=adata_spatial.obs.index)
+    df_genes_per_topic = pd.DataFrame(H_out, index=gene_list)
     results = {
         "topics_per_spot": df_topics_per_spot,
         "genes_per_topic": df_genes_per_topic,
@@ -1101,5 +1255,5 @@ def run_spotnmf_consensus(
         results[key_matrix].columns = [f"ot_{x + 1}" for x in results[key_matrix].columns]
 
     if return_stability:
-        return results, model.losses, stability
-    return results, model.losses
+        return results, refit_losses, stability
+    return results, refit_losses

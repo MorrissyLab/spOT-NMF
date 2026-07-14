@@ -260,7 +260,7 @@ def run_algorithm(adata, name, algorithm, n_iter, k, out_root,
 
 def run_benchmark(data_path, out_dir, quick=False, n_hvf=None, dataset_label=None,
                   n_iter_override=None, spot_max_iter=None, spot_max_iter_inner=None,
-                  spot_overrides=None):
+                  spot_overrides=None, consensus_overrides=None):
     """Run the full backend comparison on one dataset and return its summary.
 
     :param data_path: path to an ``adata_spatial.h5ad`` with ``uns['ground_truth']``.
@@ -279,6 +279,13 @@ def run_benchmark(data_path, out_dir, quick=False, n_hvf=None, dataset_label=Non
         small ``w`` gives peaked (near one-hot) per-spot usages -- right for crisp
         single-cell-type panels -- while larger ``w`` gives softer, graded
         mixtures that fit genuinely mixed spots. It is best tuned per dataset.
+    :param consensus_overrides: dict merged into the ``spOT-NMF-consensus`` config
+        only, selecting the consensus algorithm: ``consensus_method``
+        (``"match"``/``"kmeans"``), ``aggregate`` (``"mean"``/``"geomean"``/
+        ``"median"``) and ``refit`` (``"nnls"``/``"ot"``). The NNLS refit + the
+        per-dataset-best (method, aggregate) is the tuned consensus; like ``w``,
+        the best choice is dataset-dependent (STARmap: kmeans+mean; seqFISH:
+        match+median; MOB: geomean) -- see ``scripts/benchmark/consensus_refit_sweep.py``.
     :return: the summary DataFrame indexed by algorithm.
     """
     out_root = Path(out_dir)
@@ -328,13 +335,29 @@ def run_benchmark(data_path, out_dir, quick=False, n_hvf=None, dataset_label=Non
               f"max_iter_inner={spot_params['max_iter_inner']}  "
               f"w={spot_params['w']} eps={spot_params['eps']}")
 
+    # The tuned package consensus: consensus spectra (per-dataset best method/
+    # aggregate) + NNLS usage refit. Overridable per dataset like ``w``.
+    consensus_params = dict(spot_params)
+    consensus_params.setdefault("refit", "nnls")
+    if consensus_overrides:
+        consensus_params.update(consensus_overrides)
+    # The OT-native consensus config keeps the fixed-spectra OT usage refit.
+    consensus_ot_params = dict(spot_params)
+    consensus_ot_params["refit"] = "ot"
+    if consensus_overrides:  # allow method/aggregate tuning, but force OT refit
+        consensus_ot_params.update({kk: vv for kk, vv in consensus_overrides.items()
+                                    if kk != "refit"})
+    if consensus_overrides:
+        print(f"  consensus overrides: {consensus_overrides}")
+
     configs = [
         # (label, backend, n_iter, factorizer_params, consensus)
         ("NMF",             "cnmf",    1,      None,        False),         # single scikit-learn NMF (own usages)
         ("spOT-NMF-native", "spotnmf", 1,      spot_params, False),         # single OT-NMF (own OT usages)
         ("cNMF",            "cnmf",    n_iter, None,        True),          # consensus scikit-learn NMF (NNLS refit)
         ("spOT-NMF",        "spotnmf", n_iter, spot_params, True),          # consensus OT spectra + mosaicMPI NNLS refit
-        ("spOT-NMF-consensus-OT", "spotnmf", n_iter, spot_params, "spotnmf_ot"),  # consensus OT spectra + OT usage refit
+        ("spOT-NMF-consensus-OT", "spotnmf", n_iter, consensus_ot_params, "spotnmf_ot"),  # consensus spectra + OT usage refit
+        ("spOT-NMF-consensus", "spotnmf", n_iter, consensus_params, "spotnmf_ot"),  # tuned consensus spectra + NNLS refit
     ]
 
     rows = []

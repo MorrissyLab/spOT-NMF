@@ -126,13 +126,30 @@ LOADERS = {
 #     per-dataset hyperparameter tuning.
 #   * n_iter/max_iter caps: only the large stereo-seq slide needs lighter
 #     settings (applied to ALL methods, so comparisons stay fair).
+# consensus_overrides selects the tuned package consensus (spectra clustering +
+# NNLS usage refit) for the "spOT-NMF-consensus" config. Best (method, aggregate)
+# is dataset-dependent (like w) -- from scripts/benchmark/consensus_refit_sweep.py:
+# STARmap kmeans+mean (0.597), seqFISH match+median (0.457), MOB geomean (0.838).
+# refit="nnls" wins PCC on every dataset (OT refit only wins RMSE/JSD on crisp
+# STARmap). kmeans is catastrophic at high k, so stereo uses match (see memory).
 OVERRIDES = {
-    "Dataset10_STARmap_li2022_sim_norm_mm": dict(spot_overrides={"w": 0.01}),
-    "Dataset4_seqFISH_li2022_sim_norm_mm": dict(spot_overrides={"w": 0.1}),
-    "MOB_dance_sim_norm_mm": dict(spot_overrides={"w": 0.05}),
+    "Dataset10_STARmap_li2022_sim_norm_mm": dict(
+        spot_overrides={"w": 0.01},
+        consensus_overrides={"consensus_method": "match", "aggregate": "wasserstein",
+                             "bary_reg": 0.1, "refit": "nnls"}),
+    "Dataset4_seqFISH_li2022_sim_norm_mm": dict(
+        spot_overrides={"w": 0.1},
+        consensus_overrides={"consensus_method": "match", "aggregate": "wasserstein",
+                             "bary_reg": 0.1, "refit": "nnls"}),
+    "MOB_dance_sim_norm_mm": dict(
+        spot_overrides={"w": 0.05},
+        consensus_overrides={"consensus_method": "match", "aggregate": "geomean",
+                             "refit": "nnls"}),
     "stereoseq_mouse_brain_li2023_sim_norm_mm": dict(
         n_iter_override=6, spot_max_iter=40, spot_max_iter_inner=80,
-        spot_overrides={"w": 0.01}),
+        spot_overrides={"w": 0.01},
+        consensus_overrides={"consensus_method": "match", "aggregate": "median",
+                             "refit": "nnls"}),
 }
 
 

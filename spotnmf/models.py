@@ -6,7 +6,7 @@ as described in the publication: Huizing, G.-J., Deutschmann, I. M., Peyré, G.,
 Paired single-cell multi-omics data integration with Mowgli. Nature Communications, 14(1), 7711.
 """
 
-from typing import Callable, List
+from typing import Callable
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -14,6 +14,28 @@ from torch import optim
 from tqdm import tqdm
 import pandas as pd 
 from spotnmf import utils
+
+def _resolve_dtype(dtype):
+    """Map a dtype spec to a torch.dtype.
+
+    Accepts a torch.dtype directly, or a string alias so that callers going
+    through ``run_spotnmf(..., dtype="float32")`` don't need to import torch.
+    The whole OT solve is log-sum-exp stabilized, so ``"float32"`` is safe and,
+    on consumer GPUs where FP64 runs at a fraction of FP32 throughput, much
+    faster and half the memory. Defaults elsewhere remain ``"float64"`` so
+    behaviour is unchanged unless explicitly requested.
+    """
+    if isinstance(dtype, torch.dtype):
+        return dtype
+    aliases = {
+        "float64": torch.float64, "double": torch.float64, "fp64": torch.float64,
+        "float32": torch.float32, "float": torch.float32, "fp32": torch.float32,
+    }
+    key = str(dtype).lower()
+    if key not in aliases:
+        raise ValueError(f"unknown dtype {dtype!r}; use float32 or float64")
+    return aliases[key]
+
 
 def seed_all(seed):
     """Seed all relevant random number generators for reproducibility.
@@ -42,10 +64,6 @@ class spotnmf:
         highly_variable (bool, optional):
             Whether to use highly variable features. Defaults to True.
             For now, only True is supported.
-        use_mod_weight (bool, optional):
-            Whether to use a different weight for each modality and each
-            cell. If `True`, the weights are expected in the `mod_weight`
-            obs field of each modality. Defaults to False.
         h_regularization (float, optional):
             The entropy parameter for the spectra. We advise setting values
             between 0.001 (biological signal driven by very few features) and 1.0
@@ -96,8 +114,8 @@ class spotnmf:
         self.cost_path = cost_path
         self.pca_cost = pca_cost
 
-        # Initialize the loss and statistics histories.
-        self.losses_w, self.losses_h, self.losses = [], [], []
+        # Initialize the (outer) loss history.
+        self.losses = []
 
         self.A, self.H, self.G, self.K = None, None, None, None
 
@@ -109,6 +127,8 @@ class spotnmf:
         force_recompute: bool = False,
         normalize_rows: bool = False,
         impute: bool = False,
+        init: str = "random",
+        row_power: float = 1.0,
     ) -> None:
         """Initialize the model parameters based on the input data.
 
@@ -159,16 +179,21 @@ class spotnmf:
         # for numerical stability.
         self.A += 1e-6
         if normalize_rows:
-            mean_row_sum = self.A.sum(1).mean()
-            self.A /= self.A.sum(1).reshape(-1, 1) * mean_row_sum
+            # Give every gene the same total mass across spots before the column
+            # normalization below (so no gene dominates the OT reference). This
+            # is the single-modality case: the original Mowgli code also scaled by
+            # ``mean_row_sum`` to balance *across modalities*, but with one
+            # modality that uniform factor cancels exactly under the subsequent
+            # column normalization, so it is dropped (and avoids dividing by a
+            # possibly-large scalar, which is slightly safer in float32).
+            # ``row_power`` in (0, 1] interpolates between no row scaling (0) and
+            # full gene-mass equalization (1, the default).
+            self.A /= self.A.sum(1).reshape(-1, 1) ** row_power
         self.A /= self.A.sum(0)
 
-        # Determine which cost function to use.
-        cost = self.cost if isinstance(self.cost, str) else self.cost
-        try:
-            cost_path = self.cost_path
-        except Exception:
-            cost_path = None
+        # The cost metric and any cached-cost path are set in __init__.
+        cost = self.cost
+        cost_path = self.cost_path
 
         # Define the features that the ground cost will be computed on.
         features = 1e-6 + self.A.cpu().numpy()
@@ -182,18 +207,30 @@ class spotnmf:
             features, cost, self.eps, force_recompute, cost_path, dtype, device
         )
 
-        # Initialize the matrices `H`, which should be normalized.
-        self.H = torch.rand(
-            self.n_var, self.factors, device=device, dtype=dtype
-        )
-        self.H = utils.normalize_tensor(self.H)
+        # Initialize the spectra `H` (genes x k) and usage `W` (k x spots).
+        # ``init="nndsvd"`` seeds them from NNDSVD (the deterministic SVD-based
+        # NMF initialization); random NMF starts have high run-to-run variance and
+        # land in poorer local optima, which is much of why the consensus helps.
+        # Both are column-normalized onto the probability simplex like a trained
+        # H/W. ``init="random"`` (default) preserves the original behaviour.
+        if init == "nndsvd":
+            from sklearn.decomposition._nmf import _initialize_nmf
 
-        # Initialize the dual variable `G`
+            Xnn = X_data.toarray() if hasattr(X_data, "toarray") else np.asarray(X_data)
+            Xnn = np.clip(np.asarray(Xnn, dtype=np.float64), 0, None)
+            W0, H0 = _initialize_nmf(Xnn, self.factors, init="nndsvda", random_state=0)
+            self.H = utils.normalize_tensor(
+                torch.as_tensor(H0.T, device=device, dtype=dtype).clamp_min(1e-12))
+            self.W = utils.normalize_tensor(
+                torch.as_tensor(W0.T, device=device, dtype=dtype).clamp_min(1e-12))
+        else:
+            self.H = torch.rand(self.n_var, self.factors, device=device, dtype=dtype)
+            self.H = utils.normalize_tensor(self.H)
+            self.W = torch.rand(self.factors, self.n_obs, device=device, dtype=dtype)
+            self.W = utils.normalize_tensor(self.W)
+
+        # Initialize the dual variable `G`.
         self.G = torch.zeros_like(self.A, requires_grad=True)
-
-        # Initialize the shared factor `W`, which should be normalized.
-        self.W = torch.rand(self.factors, self.n_obs, device=device, dtype=dtype)
-        self.W = utils.normalize_tensor(self.W)
 
         # Clean up.
         del keep_idx, features
@@ -211,7 +248,15 @@ class spotnmf:
         tol_outer: float = 1e-4,
         normalize_rows: bool = True,
         impute: bool = False,
-        batch_size = 512,
+        init: str = "random",
+        damping: float = 1.0,
+        persist_optimizer: bool = False,
+        w_anneal: float = 1.0,
+        analytic_grad: bool = None,
+        row_power: float = 1.0,
+        batch_size: int = None,
+        g_tail: int = 0,
+        readout_temp: float = 1.0,
     ) -> None:
         """Train the spotnmf model on an input AnnData object.
 
@@ -250,7 +295,6 @@ class spotnmf:
                 the reference dataset during initialization. Defaults to True.
             impute (bool, optional): Whether to impute the data using FastICA
                 during initialization. Defaults to False.
-            batch_size (int, optional): The batch size. Defaults to 512.
         """
 
         # First, initialize the different parameters.
@@ -259,7 +303,9 @@ class spotnmf:
             dtype=dtype,
             device=device,
             normalize_rows=normalize_rows,
-            impute=impute
+            impute=impute,
+            init=init,
+            row_power=row_power,
         )
 
         # This is needed to save things in uns if it doesn't exist.
@@ -269,8 +315,33 @@ class spotnmf:
         self.lr = lr
         self.optim_name = optim_name
 
-        # Initialize the loss histories.
-        self.losses_w, self.losses_h, self.losses = [], [], []
+        # Analytic (closed-form) dual gradient vs autograd. It is the same
+        # gradient (to ~1e-14 in float64) but skips the autograd backward, whose
+        # per-step overhead dominates in float32 (1.8-2.2x faster). In float64 the
+        # step is matmul-bound, so it is no faster (occasionally slower on large
+        # gene panels). Default (``None``) therefore auto-selects: on for float32,
+        # off for float64.
+        if analytic_grad is None:
+            analytic_grad = dtype == torch.float32
+        grad_w = self._grad_w if analytic_grad else None
+        grad_h = self._grad_h if analytic_grad else None
+
+        # Optional persistent dual optimizer: reuse one optimizer (and its Adam
+        # moment estimates) across every inner solve instead of rebuilding it each
+        # block. Because G is warm-started, rebuilding throws away momentum and
+        # re-warms every block; persisting can converge the dual with fewer steps.
+        self.persist_optimizer = persist_optimizer
+        self._persist_opt = None
+
+        # Entropy/temperature annealing on the usage regularizer w. The W update
+        # temperature is coef = log(k)/w, which is very aggressive for small w and
+        # can make an over-converged dual collapse spots onto a shared program.
+        # With w_anneal > 1 we start at w*w_anneal (gentler, explore broad
+        # structure) and linearly decay to the target w (sharpen, commit late).
+        w_target = self.w_regularization
+
+        # Initialize the (outer) loss history.
+        self.losses = []
 
         # Set up the progress bar.
         pbar = tqdm(total=2 * max_iter, position=0, leave=True)
@@ -278,24 +349,33 @@ class spotnmf:
 
         # This is the main loop, with at most `max_iter` iterations.
         try:
-            for _ in range(max_iter):
+            for t in range(max_iter):
+
+                # Anneal the usage temperature toward the target w.
+                if w_anneal != 1.0 and max_iter > 1:
+                    frac = t / (max_iter - 1)
+                    self.w_regularization = w_target * (1 + (w_anneal - 1) * (1 - frac))
 
                 # Perform the `W` optimization step.
                 self.optimize(
                     loss_fn=self.loss_fn_w,
                     max_iter=max_iter_inner,
                     tol=tol_inner,
-                    history=self.losses_h,
                     pbar=pbar,
-                    device=device,
+                    grad_fn=grad_w,
+                    batch_size=batch_size,
+                    g_tail=g_tail,
                 )
 
-                # Update the shared factor `W`.
-                htgw = self.H.T @ self.G
-                coef = np.log(self.factors) / (self.w_regularization)
-                self.W = F.softmin(coef * htgw.detach(), dim=0)
-                # Clean up.
-                del htgw
+                # Update the shared factor `W` (optionally damped). Damping
+                # relaxes the closed-form softmin update toward the previous value,
+                # H_new -> (1-d)*H_old + d*H_new; since both are column-simplex
+                # distributions the convex combination stays valid. This stabilizes
+                # the outer alternation: the peaked softmin (coef ~ log(k)/w) can
+                # otherwise let an over-converged dual collapse spots onto a shared
+                # program. damping=1.0 recovers the original exact update.
+                W_new = self._usage_from_dual()
+                self.W = W_new if damping >= 1.0 else (1 - damping) * self.W + damping * W_new
 
                 # Update the progress bar.
                 pbar.update(1)
@@ -306,20 +386,20 @@ class spotnmf:
                 # Perform the `H` optimization step.
                 self.optimize(
                     loss_fn=self.loss_fn_h,
-                    device=device,
                     max_iter=max_iter_inner,
                     tol=tol_inner,
-                    history=self.losses_h,
                     pbar=pbar,
+                    grad_fn=grad_h,
+                    batch_size=batch_size,
+                    g_tail=g_tail,
                 )
 
                 # Update the omic specific factors `H`.
                 coef = self.factors * np.log(self.n_var)
                 coef /= self.n_obs * self.h_regularization
 
-                self.H = self.G.detach()
-                self.H = self.H @ self.W.T
-                self.H = F.softmin(coef * self.H, dim=0)
+                H_new = F.softmin(coef * (self.G.detach() @ self.W.T), dim=0)
+                self.H = H_new if damping >= 1.0 else (1 - damping) * self.H + damping * H_new
 
                 # Update the progress bar.
                 pbar.update(1)
@@ -333,6 +413,16 @@ class spotnmf:
 
         except KeyboardInterrupt:
             print("Training interrupted.")
+
+        # Read out the FINAL usages from the converged dual and spectra, rescaling
+        # the softmin inverse temperature by ``readout_temp`` (tau). This recompute
+        # (rather than keeping the loop's last W, which was formed before the final
+        # H update) keeps W consistent with the stored H and makes tau a continuous
+        # knob through 1.0. That single temperature is best for the *optimization*
+        # but not necessarily the deconvolution metric: tau>1 sharpens (crisp
+        # panels, also lowers seed variance), tau<1 softens toward graded
+        # proportions (mixed spots, e.g. MOB); tau=1.0 is the plain softmin readout.
+        self.W = self._usage_from_dual(readout_temp)
 
         # Add H and W to the adata object.
         adata_spatial.uns["H_OT"] = self.H.cpu().numpy()
@@ -352,6 +442,8 @@ class spotnmf:
         tol_outer: float = 1e-4,
         normalize_rows: bool = True,
         impute: bool = False,
+        analytic_grad: bool = None,
+        readout_temp: float = 1.0,
     ) -> None:
         """Infer OT usages for fixed spectra (usage-only refit).
 
@@ -423,8 +515,13 @@ class spotnmf:
         self.lr = lr
         self.optim_name = optim_name
 
-        # Reset loss histories (a fresh solve).
-        self.losses_w, self.losses_h, self.losses = [], [], []
+        # Reset the (outer) loss history (a fresh solve).
+        self.losses = []
+
+        # Auto-select the analytic gradient for float32 (see :meth:`train`).
+        if analytic_grad is None:
+            analytic_grad = dtype == torch.float32
+        grad_w = self._grad_w if analytic_grad else None
 
         pbar = tqdm(total=max_iter, position=0, leave=True)
 
@@ -436,16 +533,12 @@ class spotnmf:
                     loss_fn=self.loss_fn_w,
                     max_iter=max_iter_inner,
                     tol=tol_inner,
-                    history=self.losses_w,
                     pbar=pbar,
-                    device=device,
+                    grad_fn=grad_w,
                 )
 
                 # Update the usage W from the dual variable. H stays fixed.
-                htgw = self.H.T @ self.G
-                coef = np.log(self.factors) / (self.w_regularization)
-                self.W = F.softmin(coef * htgw.detach(), dim=0)
-                del htgw
+                self.W = self._usage_from_dual()
 
                 pbar.update(1)
                 self.losses.append(self.total_dual_loss().cpu().detach())
@@ -456,6 +549,11 @@ class spotnmf:
 
         except KeyboardInterrupt:
             print("Transform interrupted.")
+
+        # Read out the final (frozen-H) usages, rescaled by ``readout_temp``; see
+        # :meth:`train`. Here the W step is the last loop op, so tau=1.0 reproduces
+        # the loop's usages exactly.
+        self.W = self._usage_from_dual(readout_temp)
 
         adata_spatial.uns["H_OT"] = self.H.cpu().numpy()
         adata_spatial.obsm["W_OT"] = self.W.T.cpu().numpy()
@@ -489,15 +587,23 @@ class spotnmf:
             return optim.SGD(params, lr=lr)
         elif optim_name == "adam":
             return optim.Adam(params, lr=lr)
+        elif optim_name == "adamw":
+            return optim.AdamW(params, lr=lr)
+        elif optim_name == "nadam":
+            return optim.NAdam(params, lr=lr)
+        elif optim_name == "rmsprop":
+            return optim.RMSprop(params, lr=lr)
+        raise ValueError(f"unknown optim_name {optim_name!r}")
 
     def optimize(
         self,
         loss_fn: Callable,
         max_iter: int,
-        history: List,
         tol: float,
         pbar,
-        device: str,
+        grad_fn: Callable = None,
+        batch_size: int = None,
+        g_tail: int = 0,
     ) -> None:
         """Optimize the dual variable with respect to a given loss function.
 
@@ -506,18 +612,33 @@ class spotnmf:
         few steps.
 
         Args:
-            loss_fn (Callable): The loss function to minimize.
+            loss_fn (Callable): The loss function to minimize (also used to
+                report the loss for monitoring/early-stopping).
             max_iter (int): The maximum number of iterations.
-            history (list): A list to which the losses are appended.
             tol (float): The tolerance before early stopping.
             pbar (tqdm.tqdm): The progress bar to update.
-            device (str): The device to work on.
+            grad_fn (Callable, optional): If given, a function returning the
+                closed-form gradient of ``loss_fn`` w.r.t. ``G``. It is assigned
+                to ``G.grad`` directly, skipping autograd's forward+backward
+                (the dominant per-step cost). ``loss_fn`` is then evaluated only
+                at the monitoring cadence. ``None`` uses the autograd path.
+            g_tail (int, optional): If >0, replace ``G`` on exit with the mean of
+                the last ``g_tail`` inner iterates (Polyak/tail averaging), to
+                cancel the dual's near-optimum jitter before the peaked-softmin
+                block update. Defaults 0 (off); benchmarked as a no-op (see the
+                ``g_tail`` sweep), kept only as an option.
         """
 
-        # Build the optimizer.
-        optimizer = self.build_optimizer(
-            [self.G], lr=self.lr, optim_name=self.optim_name
-        )
+        # Build the optimizer (or reuse a persistent one across inner solves).
+        if getattr(self, "persist_optimizer", False):
+            if getattr(self, "_persist_opt", None) is None:
+                self._persist_opt = self.build_optimizer(
+                    [self.G], lr=self.lr, optim_name=self.optim_name)
+            optimizer = self._persist_opt
+        else:
+            optimizer = self.build_optimizer(
+                [self.G], lr=self.lr, optim_name=self.optim_name
+            )
 
         # This value will be initially be displayed in the progress bar
         if len(self.losses) > 0:
@@ -525,39 +646,78 @@ class spotnmf:
         else:
             total_loss = "?"
 
+        # The closure is defined once (nothing it closes over changes across
+        # steps) rather than rebuilt every iteration. ``optimizer.step`` returns
+        # this closure's (detached) loss, so we reuse that value for monitoring
+        # and early stopping instead of a second forward pass through ``loss_fn``.
+        def closure():
+            optimizer.zero_grad()
+            loss = loss_fn()
+            loss.backward()
+            return loss.detach()
+
+        # Fresh convergence history for THIS inner solve. The early-stopping
+        # decision must depend only on the current subproblem's progress -- a
+        # persistent list would compare against stale losses from a previous
+        # (different) subproblem, making the check meaningless.
+        local_hist = []
+
+        # Tail-averaging accumulator (Polyak): running sum of the last g_tail
+        # iterates of G, kept as a single buffer rather than g_tail copies.
+        g_sum, g_n = None, 0
+        tail_start = max(0, max_iter - g_tail) if g_tail > 0 else max_iter
+
         # This is the main optimization loop.
         for i in range(max_iter):
 
-            # Define the closure function required by the optimizer.
-            def closure():
-                optimizer.zero_grad()
-                loss = loss_fn()
-                loss.backward()
-                return loss.detach()
+            if grad_fn is None:
+                # Autograd path: step returns the loss the closure just evaluated.
+                loss = optimizer.step(closure)
+            else:
+                # Analytic path: set G.grad directly and step; the loss value is
+                # only needed at the monitoring cadence below. With batch_size a
+                # random spot-column subset is updated each step (block-coordinate
+                # / stochastic dual ascent).
+                if batch_size is not None and batch_size < self.n_obs:
+                    idx = torch.randperm(self.n_obs, device=self.G.device)[:batch_size]
+                    self.G.grad = grad_fn(idx)
+                else:
+                    self.G.grad = grad_fn()
+                optimizer.step()
 
-            # Perform an optimization step.
-            optimizer.step(closure)
+            # Accumulate the tail iterates of G for Polyak averaging.
+            if i >= tail_start:
+                g_det = self.G.detach()
+                if g_sum is None:
+                    g_sum = g_det.clone()
+                else:
+                    g_sum += g_det
+                g_n += 1
 
-            # Every x steps, update the progress bar.
+            # Every x steps, check convergence and update the progress bar.
             if i % 10 == 0:
+                loss = loss_fn().detach() if grad_fn is not None else loss
+                local_hist.append(loss)
 
-                # Add a value to the loss history.
-                history.append(loss_fn().cpu().detach())
-                gpu_mem_alloc = torch.cuda.memory_allocated(device=device) if torch.cuda.is_available() else 0
+                # Attempt early stopping (based on this solve's history only).
+                if utils.early_stop(local_hist, tol):
+                    break
 
-                # Populate the progress bar.
+                # Populate the progress bar (one host sync per 10 steps).
                 pbar.set_postfix(
-                    {
-                        "loss": total_loss,
-                        "loss_inner": history[-1].cpu().numpy(),
-                        "inner_steps": i,
-                        "gpu_memory_allocated": gpu_mem_alloc,
-                    }
+                    {"loss": total_loss, "loss_inner": loss.item(), "inner_steps": i}
                 )
 
-                # Attempt early stopping.
-                if utils.early_stop(history, tol):
-                    break
+        # Replace G with the tail average (Polyak) before the block update reads
+        # it through the peaked softmin. Done in-place so warm-starting and the
+        # W/H softmin updates see the denoised dual.
+        if g_n:
+            self.G.data.copy_(g_sum.div_(g_n))
+            # The dual just jumped to the tail average; a persistent optimizer's
+            # Adam moments still describe the pre-average trajectory, so clear them
+            # to avoid mis-scaled steps on the next inner solve.
+            if getattr(self, "persist_optimizer", False):
+                optimizer.state.clear()
 
     @torch.no_grad()
     def total_dual_loss(self) -> torch.Tensor:
@@ -672,7 +832,83 @@ class spotnmf:
 
         # Return the loss.
         return loss_w
-    
+
+    def _usage_from_dual(self, temp: float = 1.0) -> torch.Tensor:
+        """Usage ``W`` read out from the current dual ``G`` and spectra ``H``.
+
+        ``W = softmin(temp * (log k / w) * HᵀG)`` over the ``k`` factors -- the
+        closed-form entropic-usage update shared by :meth:`train` and
+        :meth:`transform`. ``temp`` (the readout temperature) rescales the softmin
+        inverse temperature ``log(k)/w``: ``temp=1.0`` is the in-loop update;
+        ``temp>1`` sharpens the final usages (crisp panels, also lowers seed
+        variance), ``temp<1`` softens toward graded proportions (mixed spots).
+        """
+        coef = temp * np.log(self.factors) / self.w_regularization
+        return F.softmin(coef * (self.H.T @ self.G).detach(), dim=0)
+
+    @torch.no_grad()
+    def _grad_w(self, idx=None) -> torch.Tensor:
+        """Closed-form gradient of :meth:`loss_fn_w` w.r.t. the dual ``G``.
+
+        Analytic alternative to autograd's backward pass. The entropic-OT dual
+        term has a Sinkhorn-marginal gradient ``v ⊙ (K @ (A / (K @ v)))`` with
+        ``v = exp(G/eps)`` (``K`` is symmetric), and the usage-entropy term's
+        gradient is exactly the ``softmin`` used for the ``W`` update. Verified
+        to match autograd to ~1e-14 (float64); it just avoids building/traversing
+        the autograd graph, which is the dominant per-step cost in float32.
+
+        The W subproblem is separable over spots, so ``idx`` (a spot-column
+        subset) yields the *exact* gradient restricted to those columns (a
+        random block-coordinate step); other columns are left zero.
+        """
+        coef = np.log(self.factors) / self.w_regularization
+        if idx is None:
+            grad = self._ot_grad() - self.H @ F.softmin(coef * (self.H.T @ self.G), dim=0)
+            return grad / self.n_obs
+        Gb = self.G[:, idx]
+        grad_b = self._ot_grad(idx) - self.H @ F.softmin(coef * (self.H.T @ Gb), dim=0)
+        full = torch.zeros_like(self.G)
+        full[:, idx] = grad_b / self.n_obs
+        return full
+
+    @torch.no_grad()
+    def _grad_h(self, idx=None) -> torch.Tensor:
+        """Closed-form gradient of :meth:`loss_fn_h` w.r.t. the dual ``G``.
+
+        Same OT term as :meth:`_grad_w`; the spectra-entropy term's gradient is
+        the ``softmin`` used for the ``H`` update. Verified against autograd to
+        ~1e-14 (float64). See :meth:`_grad_w`. With ``idx`` the OT term is
+        computed on the spot-column subset while the (spot-coupled) entropy term
+        is evaluated on the full ``G`` and sliced -- still the exact partial
+        gradient for those columns.
+        """
+        coef = self.factors * np.log(self.n_var) / (self.n_obs * self.h_regularization)
+        grad_ent = F.softmin(coef * (self.G @ self.W.T), dim=0) @ self.W
+        if idx is None:
+            return (self._ot_grad() - grad_ent) / self.n_obs
+        full = torch.zeros_like(self.G)
+        full[:, idx] = (self._ot_grad(idx) - grad_ent[:, idx]) / self.n_obs
+        return full
+
+    @torch.no_grad()
+    def _ot_grad(self, idx=None) -> torch.Tensor:
+        """Gradient of the entropic-OT dual term w.r.t. ``G`` (shared by W/H).
+
+        ``grad = v ⊙ (K @ (A / (K @ v)))`` with ``v = exp(G/eps)``. Computed with
+        the same per-column log-sum-exp stabilization as :func:`utils.ot_dual_loss`
+        (subtract the per-column max of ``G/eps`` before exp); that constant
+        cancels exactly in the ratio, so the result is unchanged while ``exp`` no
+        longer overflows in float32. The OT term is separable over spots, so
+        ``idx`` restricts the computation to a subset of spot columns (returning
+        ``genes x |idx|``).
+        """
+        G = self.G if idx is None else self.G[:, idx]
+        A = self.A if idx is None else self.A[:, idx]
+        log_v = G / self.eps
+        log_v = log_v - log_v.max(0).values
+        v = torch.exp(log_v)
+        return v * (self.K @ (A / (self.K @ v)))
+
 
 def run_spotnmf(adata_spatial, components, seed=42, **kwargs):
     """Run the spotnmf model with flexible parameters provided via kwargs.
@@ -719,6 +955,33 @@ def run_spotnmf(adata_spatial, components, seed=42, **kwargs):
         "tol_outer": 0.00001,
         "max_iter": 100,
         "max_iter_inner": 1000,
+        "init": "random",
+        "damping": 1.0,
+        "persist_optimizer": False,
+        "w_anneal": 1.0,
+        "row_power": 1.0,
+        # Stochastic spot mini-batching in the (analytic) inner dual ascent.
+        # None = full batch (all spots each step). Only active with analytic_grad.
+        "batch_size": None,
+        # Polyak tail-averaging of the dual G: average the last g_tail inner
+        # iterates before the peaked-softmin block update, to cancel near-optimum
+        # dual jitter (within-run analogue of consensus). 0 = off.
+        "g_tail": 0,
+        # Readout-temperature (tau) for the FINAL stored usages only: rescales the
+        # softmin inverse temperature log(k)/w. >1 sharpens (crisp panels, also
+        # lowers seed variance), <1 softens toward graded proportions (mixed spots
+        # e.g. MOB). 1.0 = usages exactly as trained. Per-dataset, like w.
+        "readout_temp": 1.0,
+        # Closed-form dual gradient instead of autograd (identical gradient to
+        # ~1e-14; skips the backward pass). None auto-selects: on for float32
+        # (1.8-2.2x faster), off for float64 (matmul-bound, no gain). True/False
+        # force it.
+        "analytic_grad": None,
+        # Working precision. "float64" preserves the original behaviour; "float32"
+        # halves memory (G, A, K and Adam's two G-moment buffers) and is much
+        # faster on GPUs with limited FP64 throughput. The OT solve is
+        # log-sum-exp stabilized, so float32 is numerically safe here.
+        "dtype": "float64",
         # Use the GPU when available, otherwise fall back to CPU.
         "device": "cuda" if torch.cuda.is_available() else "cpu",
     }
@@ -746,6 +1009,16 @@ def run_spotnmf(adata_spatial, components, seed=42, **kwargs):
         max_iter=defaults["max_iter"],
         max_iter_inner=defaults["max_iter_inner"],
         impute=False,
+        init=defaults["init"],
+        damping=defaults["damping"],
+        persist_optimizer=defaults["persist_optimizer"],
+        w_anneal=defaults["w_anneal"],
+        analytic_grad=defaults["analytic_grad"],
+        row_power=defaults["row_power"],
+        batch_size=defaults["batch_size"],
+        g_tail=defaults["g_tail"],
+        readout_temp=defaults["readout_temp"],
+        dtype=_resolve_dtype(defaults["dtype"]),
         device=defaults["device"],
     )
 
@@ -1150,6 +1423,10 @@ def run_spotnmf_consensus(
         "normalize_rows": True, "cost": "cosine", "optim_name": "adam",
         "tol_inner": 1e-12, "tol_outer": 0.00001,
         "max_iter": 100, "max_iter_inner": 1000,
+        "dtype": "float64", "analytic_grad": None,
+        # Applies to the refit="ot" usage readout only; NNLS usages have no
+        # softmin temperature, so readout_temp is a no-op when refit="nnls".
+        "readout_temp": 1.0,
         "device": "cuda" if torch.cuda.is_available() else "cpu",
     }
     defaults.update(kwargs)
@@ -1204,10 +1481,13 @@ def run_spotnmf_consensus(
         Xhv = adata_spatial[:, adata_spatial.var["highly_variable"]].X
         Xhv = Xhv.toarray() if hasattr(Xhv, "toarray") else np.asarray(Xhv)
         Xhv = np.ascontiguousarray(Xhv, dtype=np.float64)
+        # scikit-learn's NNLS requires H.dtype == X.dtype. The consensus spectra
+        # inherit the replicate dtype (e.g. float32 when the replicates ran in
+        # float32), so cast them to X's float64 before the refit.
         W, H_used, _ = non_negative_factorization(
-            Xhv, H=np.ascontiguousarray(consensus_kg), n_components=k,
-            init="custom", update_H=False, solver="cd", max_iter=500,
-            random_state=seed)
+            Xhv, H=np.ascontiguousarray(consensus_kg, dtype=Xhv.dtype),
+            n_components=k, init="custom", update_H=False, solver="cd",
+            max_iter=500, random_state=seed)
         W_out = W                       # (spots x k)
         H_out = H_used.T                # (genes x k)
     else:  # refit == "ot"
@@ -1231,6 +1511,9 @@ def run_spotnmf_consensus(
             max_iter=defaults["max_iter"],
             max_iter_inner=defaults["max_iter_inner"],
             impute=False,
+            analytic_grad=defaults["analytic_grad"],
+            readout_temp=defaults["readout_temp"],
+            dtype=_resolve_dtype(defaults["dtype"]),
             device=defaults["device"],
         )
         W_out = refit_adata.obsm["W_OT"]      # (spots x k)

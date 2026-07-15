@@ -169,7 +169,7 @@ def entropy_dual_loss(Y: torch.Tensor) -> torch.Tensor:
 
 
 def ot_dual_loss(
-    A: dict, G: dict, K: dict, eps: float, dim=(0, 1)
+    A: torch.Tensor, G: torch.Tensor, K: torch.Tensor, eps: float, dim=(0, 1)
 ) -> torch.Tensor:
     """Compute the Legendre dual of the entropic OT loss.
 

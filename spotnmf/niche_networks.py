@@ -1,4 +1,5 @@
 import os
+import random
 import numpy as np
 import pandas as pd
 from typing import Union, Tuple
@@ -17,38 +18,36 @@ import igraph as ig
 import seaborn as sns
 
 def compute_pairwise_stats(usage: pd.DataFrame, usage_threshold: Union[int, float], sample: str, save_path=None, file_prefix=None) -> pd.DataFrame:
-    """Compute pairwise statistics for program interactions based on usage counts.
+    """
+    Computes pairwise statistics for program interactions based on usage counts.
 
-    For each ordered pair of programs, counts the number of samples where
-    program_two is present or absent among the samples where program_one is
-    present, using a specified usage threshold. Pairwise statistics are computed
-    in parallel using joblib for efficiency. If ``save_path`` is provided and a
-    cached results file already exists, it is loaded and returned instead of
-    being recomputed.
+    For each pair of programs, calculates the number of samples where program_two is present or absent among those where program_one is present, using a specified usage threshold.
+    Pairwise statistics are computed in parallel using joblib for efficiency.
 
-    Args:
-        usage (pandas.DataFrame): DataFrame with programs as columns and samples
-            as rows, containing usage counts for each program per sample.
-        usage_threshold (Union[int, float]): Threshold for usage counts; a
-            program is considered present in a sample if its count exceeds this
-            value.
-        sample (str): Condition name or sample identifier used to annotate
-            results and name the output columns.
-        save_path (str, optional): Directory to save (or load) the output file.
-            If None, results are computed and returned without being saved.
-            Defaults to None.
-        file_prefix (str, optional): Prefix for the output file name. Defaults to
-            None.
+    Parameters
+    ----------
+    usage : pandas.DataFrame
+        DataFrame with programs as columns and samples as rows, containing usage counts for each program per sample.
+    usage_threshold : int or float
+        Threshold for usage counts; a program is considered present in a sample if its count exceeds this value.
+    sample : str
+        Condition name or sample identifier to annotate results.
+    save_path : str, optional
+        Directory to save the output file. If None, results are not saved.
+    file_prefix : str, optional
+        Prefix for the output file name.
 
-    Returns:
-        pandas.DataFrame: DataFrame with pairwise statistics for each program
-        pair, including the columns: ``group1`` (condition/sample identifier),
-        ``n`` (number of samples considered), ``program_one`` (first program in
-        the pair), ``program_two`` (second program in the pair),
-        ``<sample>_P2pos`` (number of samples where program_two is present, i.e.
-        > threshold, among those where program_one is present), and
-        ``<sample>_P2neg`` (number of samples where program_two is absent, i.e.
-        <= threshold, among those where program_one is present).
+    Returns
+    -------
+    pandas.DataFrame
+        DataFrame with pairwise statistics for each program pair, including:
+        - group1: Condition/sample identifier.
+        - n: Number of samples considered.
+        - program_one: First program in the pair.
+        - program_two: Second program in the pair.
+        - <sample>_P2pos: Number of samples where program_two is present (> threshold) among those where program_one is present.
+        - <sample>_P2neg: Number of samples where program_two is absent (<= threshold) among those where program_one is present.
+        - Additional columns for enrichment values and thresholds if computed.
     """
 
     def _pairwise(p1, p2):
@@ -102,32 +101,32 @@ def compute_pairwise_stats(usage: pd.DataFrame, usage_threshold: Union[int, floa
 
 
 def generate_node_attributes(usage: pd.DataFrame, usage_threshold: Union[int, float], sample: str, prevalence_threshold: int = 100):
-    """Generate node attributes for each program for use in network visualization.
+    """
+    Generates node attributes for each program for use in network visualization.
 
-    Calculates, for each program, the number and proportion of samples where
-    usage exceeds the threshold, and whether the program is prevalent (at least
-    ``prevalence_threshold`` samples above the usage threshold). Duplicate rows
-    for the same sample and program are dropped.
+    Calculates, for each program, the number and proportion of samples where usage exceeds the threshold, and whether the program is prevalent (>=prevalence_threshold samples above threshold).
 
-    Args:
-        usage (pandas.DataFrame): DataFrame with programs as columns and samples
-            as rows, containing usage counts for each program per sample.
-        usage_threshold (Union[int, float]): Threshold for usage counts; a
-            program is considered present in a sample if its count exceeds this
-            value.
-        sample (str): Condition name or sample identifier used to annotate nodes.
-        prevalence_threshold (int): Minimum number of samples above the usage
-            threshold for a program to be considered prevalent. Defaults to 100.
+    Parameters
+    ----------
+    usage : pandas.DataFrame
+        DataFrame with programs as columns and samples as rows, containing usage counts for each program per sample.
+    usage_threshold : int or float
+        Threshold for usage counts; a program is considered present in a sample if its count exceeds this value.
+    sample : str
+        Condition name or sample identifier to annotate nodes.
+    prevalence_threshold : int, optional
+        Minimum number of samples above threshold for a program to be considered prevalent (default: 100).
 
-    Returns:
-        pandas.DataFrame: DataFrame with node attributes for each program,
-        including the columns: ``sample_id`` (identifier for the
-        condition/sample), ``total_spots`` (total number of samples/rows in the
-        usage matrix), ``program`` (program name), ``num_samples_cps_gt_prevalence_threshold``
-        (indicator, 1 or 0, of whether the number of samples with usage >
-        threshold is at least ``prevalence_threshold``), ``cpp`` (number of
-        samples where usage > threshold for the program), and ``proportion``
-        (fraction of samples where usage > threshold for the program).
+    Returns
+    -------
+    pandas.DataFrame
+        DataFrame with node attributes for each program, including:
+        - sample_id: Identifier for the condition/sample.
+        - total_spots: Total number of samples (rows) in the usage matrix.
+        - program: Program name (column in usage).
+        - num_samples_cps_gt_<prevalence_threshold>: Indicator (1/0) if the number of samples with usage > threshold is at least prevalence_threshold (column name is dynamic based on the prevalence_threshold value).
+        - cpp: Number of samples where usage > threshold for the program.
+        - proportion: Fraction of samples where usage > threshold for the program.
     """
 
     total_spots = len(usage)
@@ -151,31 +150,43 @@ def generate_node_attributes(usage: pd.DataFrame, usage_threshold: Union[int, fl
     return node_summary
 
 
-def build_network_graph(stats_df: pd.DataFrame, node_attrs: pd.DataFrame, sample: str, n_bins: int) -> Tuple[nx.DiGraph, nx.DiGraph]:
+def build_network_graph(stats_df: pd.DataFrame, node_attrs: pd.DataFrame, sample: str,
+                        n_bins: int = 0, weight_column: Union[str, None] = None) -> Tuple[nx.DiGraph, nx.DiGraph]:
     """Build a directed NetworkX graph from pairwise statistics and node attributes.
 
     Adds a node for each program (carrying its prevalence attribute) and an edge
-    between each program pair whose sample count meets the minimum bin threshold
-    and that is not a self-loop. Edge weights are taken from the ``<sample>_val``
-    enrichment column, with the absolute value stored as ``weight`` and the
-    signed value as ``weight_col``.
+    for each non-self program pair that passes ``n_bins``. Each edge stores the
+    signed enrichment as ``weight_col``, its magnitude as ``weight`` (community
+    detection and layout require non-negative weights), and its direction of
+    effect as ``sign``.
+
+    The signed value is preferred from ``log2_oe`` when
+    :func:`~spotnmf.niche_stats.cooccurrence_stats` produced the table, and
+    falls back to the legacy ``<sample>_val`` conditional probability otherwise.
+    This distinction matters: ``<sample>_val`` lies in (0, 1) so taking its
+    magnitude was a no-op, but ``log2_oe`` is signed, and collapsing it with
+    ``abs`` would draw a strongly *mutually exclusive* pair as though it were a
+    strongly co-occurring one. ``sign`` keeps the two apart so
+    :func:`detect_communities_infomap` can ignore depletion.
 
     Args:
-        stats_df (pandas.DataFrame): DataFrame containing pairwise statistics for
-            program pairs, including a ``<sample>_val`` column of enrichment
-            values.
-        node_attrs (pandas.DataFrame): DataFrame containing node attributes for
-            each program, including a ``num_samples_cps_gt_*`` prevalence column.
-        sample (str): Condition name used to locate the ``<sample>_val`` edge
-            weight column.
-        n_bins (int): Minimum number of bins (samples) for an edge to be
-            included.
+        stats_df (pandas.DataFrame): Pairwise statistics for program pairs.
+        node_attrs (pandas.DataFrame): Node attributes for each program,
+            including a ``num_samples_cps_gt_*`` prevalence column.
+        sample (str): Condition name used to locate the legacy
+            ``<sample>_val`` edge weight column.
+        n_bins (int): Minimum ``n`` for an edge to be included. Defaults to 0,
+            since edges are normally already filtered by
+            :func:`~spotnmf.niche_stats.select_edges`.
+        weight_column (str | None): Explicit signed-weight column. Auto-detected
+            when None. Defaults to None.
 
-    Returns:
-        Tuple[networkx.DiGraph, networkx.DiGraph]: A tuple ``(graph,
-        graph_filtered)`` where ``graph`` is the full directed graph with all
-        nodes and edges, and ``graph_filtered`` is the subgraph containing only
-        nodes with at least one edge.
+    Returns
+    -------
+    graph : networkx.DiGraph
+        Full directed graph with all nodes and edges.
+    graph_filtered : networkx.DiGraph
+        Subgraph containing only nodes with at least one edge.
     """
 
     graph = nx.DiGraph()
@@ -187,14 +198,18 @@ def build_network_graph(stats_df: pd.DataFrame, node_attrs: pd.DataFrame, sample
                        **{prevalence_col: getattr(row, prevalence_col)}, 
                        name=row.program)
 
+    if weight_column is None:
+        weight_column = "log2_oe" if "log2_oe" in stats_df.columns else f"{sample}_val"
+
     # Only keep edges that meet the threshold
     for row in stats_df.itertuples(index=False):
         if int(row.n) >= n_bins and row.program_one != row.program_two:
-            w = getattr(row, f"{sample}_val")
+            w = getattr(row, weight_column)
             graph.add_edge(row.program_one, 
                            row.program_two, 
                            weight=abs(w), 
-                           weight_col=w)
+                           weight_col=w,
+                           sign=(1 if w >= 0 else -1))
     
     # Compute the filtered graph by removing nodes with no edges
     graph_filtered = graph.subgraph([n for n in graph.nodes if graph.degree[n] > 0]).copy()
@@ -202,25 +217,33 @@ def build_network_graph(stats_df: pd.DataFrame, node_attrs: pd.DataFrame, sample
     return graph, graph_filtered
 
 
-def detect_communities_infomap(graph: nx.DiGraph) -> nx.DiGraph:
+def detect_communities_infomap(graph: nx.DiGraph, seed: int = 0) -> nx.DiGraph:
     """Detect communities (clusters) in a graph using the Infomap algorithm via iGraph.
 
-    Modifies the input graph in place by setting a ``cluster`` node attribute
-    indicating community membership. Nodes that are isolated or otherwise absent
-    from the clustering (including the case where the graph has no weighted
-    edges) are assigned a cluster of ``-1``.
+    This function modifies the input graph in-place by setting a node 'cluster' attribute
+    to indicate community membership.
+
+    Infomap is stochastic, so it is run against a seeded random source: without
+    a seed, two runs on identical input could return different niche labels,
+    which makes the reported niches irreproducible. Edges marked as depleted
+    (``sign == -1``) are excluded, because mutual exclusion is evidence against
+    two programs sharing a niche, not for it.
 
     Args:
         graph (networkx.DiGraph): The input directed graph. Its edges are
             expected to carry ``weight`` and ``weight_col`` attributes.
+        seed (int): Seed for the Infomap random source. Defaults to 0.
 
-    Returns:
-        networkx.DiGraph: The input graph with updated ``cluster`` node
-        attributes.
+    Returns
+    -------
+    networkx.DiGraph
+        The input graph with updated cluster attributes.
     """
     # Convert NetworkX graph to DataFrame and extract weighted edge tuples
     edges_from_nx = nx.to_pandas_edgelist(graph)
     required_cols = {'source', 'target', 'weight', 'weight_col'}
+    if not edges_from_nx.empty and 'sign' in edges_from_nx.columns:
+        edges_from_nx = edges_from_nx[edges_from_nx['sign'] > 0]
     if edges_from_nx.empty or not required_cols.issubset(edges_from_nx.columns):
         # No weighted edges to cluster on; mark every node as unassigned (-1).
         for node in graph.nodes:
@@ -231,8 +254,13 @@ def detect_communities_infomap(graph: nx.DiGraph) -> nx.DiGraph:
     # Create igraph graph with node names as vertex IDs
     ig_graph = ig.Graph.TupleList(edge_tuples, directed=True, vertex_name_attr="name", edge_attrs=["weight", "weight_col"])
 
-    # Run Infomap
-    communities = ig_graph.community_infomap(trials=10, edge_weights="weight")
+    # Run Infomap against a seeded RNG so the partition is reproducible.
+    rng_state = random.Random(seed)
+    try:
+        ig.set_random_number_generator(rng_state)
+        communities = ig_graph.community_infomap(trials=10, edge_weights="weight")
+    finally:
+        ig.set_random_number_generator(random)
 
     # Map node name to community
     membership = communities.membership
@@ -251,18 +279,20 @@ def detect_communities_infomap(graph: nx.DiGraph) -> nx.DiGraph:
 
 
 def get_node_positions(graph: Union[nx.Graph, nx.DiGraph], layout_algorithm: str = 'graphopt') -> dict:
-    """Compute node positions for visualization using an iGraph layout algorithm.
+    """
+    Computes node positions for visualization using a specified iGraph layout algorithm.
 
-    Converts the graph to iGraph, ensures isolated nodes are included, and
-    applies the requested layout algorithm to produce 2D coordinates.
+    Parameters
+    ----------
+    graph : networkx.Graph or networkx.DiGraph
+        The input graph.
+    layout_algorithm : str, optional
+        iGraph layout algorithm to use (e.g., 'circle', 'grid', 'star', 'graphopt').
 
-    Args:
-        graph (Union[networkx.Graph, networkx.DiGraph]): The input graph.
-        layout_algorithm (str): iGraph layout algorithm to use (e.g., 'circle',
-            'grid', 'star', 'graphopt'). Defaults to 'graphopt'.
-
-    Returns:
-        dict: Dictionary mapping node names to (x, y) coordinate tuples.
+    Returns
+    -------
+    pos : dict
+        dictionary mapping node names to (x, y) coordinates.
     """
     # Convert NetworkX graph to DataFrame and extract weighted edge tuples
     edges_from_nx = nx.to_pandas_edgelist(graph)
@@ -290,20 +320,28 @@ def get_node_positions(graph: Union[nx.Graph, nx.DiGraph], layout_algorithm: str
 
 
 def base_plot(graph: Union[nx.Graph, nx.DiGraph], pos: dict, title: Union[str, None] = None, suptitle: Union[str, None] = None):
-    """Draw a network graph with nodes colored by cluster and edges colored by weight.
+    """
+    Plots a network graph with nodes colored by cluster and edges colored by weight.
 
-    Adds legends for clusters and edge weights and adjusts node labels for
-    clarity. If the graph has no nodes or edges, an empty figure is returned.
+    Adds legends for clusters and edge weights, and adjusts node labels for clarity.
 
-    Args:
-        graph (Union[networkx.Graph, networkx.DiGraph]): The input graph.
-        pos (dict): Dictionary mapping node names to (x, y) coordinates.
-        title (Union[str, None]): Title for the plot axes. Defaults to None.
-        suptitle (Union[str, None]): Super title for the figure. Defaults to None.
+    Parameters
+    ----------
+    graph : networkx.Graph or networkx.DiGraph
+        The input graph.
+    pos : dict
+        dictionary mapping node names to (x, y) coordinates.
+    title : str, optional
+        Title for the plot.
+    suptitle : str, optional
+        Super title for the plot.
 
-    Returns:
-        Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]: The figure and
-        axes objects.
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The figure object.
+    ax : matplotlib.axes.Axes
+        The axes object.
     """
     
     fig, ax = plt.subplots(figsize=(20, 15))
@@ -317,9 +355,15 @@ def base_plot(graph: Union[nx.Graph, nx.DiGraph], pos: dict, title: Union[str, N
     edge_weights = [graph[u][v].get('weight') for u, v in graph.edges()]
     edge_colors = [graph[u][v].get('weight_col') for u, v in graph.edges()]
 
-    # Normalize edge weights for width and alpha
-    edge_widths = np.array(edge_weights) + 2
-    edge_alphas = np.array(edge_weights)
+    # Scale width and alpha from the weights' own range rather than using the
+    # raw values. The legacy weights were conditional probabilities in (0, 1),
+    # where feeding them straight to `alpha` happened to work; enrichment
+    # weights such as log2(O/E) are unbounded, and would silently clip.
+    w = np.asarray(edge_weights, dtype=float)
+    w_span = np.ptp(w)
+    w_unit = (w - w.min()) / w_span if w_span > 0 else np.full_like(w, 0.5)
+    edge_widths = 1.0 + 4.0 * w_unit
+    edge_alphas = 0.25 + 0.65 * w_unit
 
     # Draw edges
     edge_cmap = LinearSegmentedColormap.from_list('edge_cmap', ['black', 'magenta'])
@@ -375,13 +419,14 @@ def base_plot(graph: Union[nx.Graph, nx.DiGraph], pos: dict, title: Union[str, N
         fig.suptitle(suptitle, fontsize=14, y=0.02)
 
     # Edge Width and Color Legend
-    # Compute quantiles from edge width data
-    quantiles = np.quantile(edge_widths, [0.25, 0.5, 0.75, 1])
-    labels = [f"{q:.2f}" for q in quantiles]
+    # Label the legend with the underlying weights, not the rescaled widths.
+    probs = [0.25, 0.5, 0.75, 1.0]
+    labels = [f"{q:.2f}" for q in np.quantile(w, probs)]
+    lw_quantiles = np.quantile(edge_widths, probs)
 
     # Create dummy lines with corresponding linewidths
-    edge_legend_lines = [Line2D([0], [0], color='black', lw=w, label=label, alpha=0.8)
-                         for w, label in zip(quantiles, labels)]
+    edge_legend_lines = [Line2D([0], [0], color='black', lw=lw, label=label, alpha=0.8)
+                         for lw, label in zip(lw_quantiles, labels)]
 
     # Add the legend to your plot
     edge_width_legend = ax.legend(handles=edge_legend_lines, title="Edge Weight", loc='lower left')
@@ -393,39 +438,36 @@ def base_plot(graph: Union[nx.Graph, nx.DiGraph], pos: dict, title: Union[str, N
 def plot_network_graph(graph: Union[nx.Graph, nx.DiGraph], pos: dict, sample: str, 
                           n_bins: int, edge_threshold: float, usage_threshold: Union[int, float],
                           save: bool = False, save_path: Union[str, None] = None, prefix: Union[str, None] = None):
-    """Create network visualizations of the full network and cluster-specific subplots.
+    """
+    Creates and saves network visualizations, including the full network and cluster-specific subplots.
 
-    Plots the whole network colored by cluster and, when more than one cluster
-    is present, a second figure with one subplot per cluster. When ``save`` is
-    True the figures are written to a PDF; otherwise they are returned. The
-    ``edge_threshold``, ``n_bins``, and ``usage_threshold`` values are used to
-    annotate the plot titles and build the output file name.
+    Parameters
+    ----------
+    graph : networkx.Graph or networkx.DiGraph
+        The input graph.
+    pos : dict
+        dictionary mapping node names to (x, y) coordinates.
+    sample : str
+        Sample name string.
+    n_bins : int
+        Minimum number of bins for an edge to be included.
+    edge_threshold : float
+        Threshold for edge weights.
+    usage_threshold : int or float
+        Threshold for usage counts.
+    save : bool, optional
+        If True, saves the plots to PDF. If False, returns the figures.
+    save_path : str, optional
+        Directory to save the plots.
+    prefix : str, optional
+        Prefix for the saved file names.
 
-    Args:
-        graph (Union[networkx.Graph, networkx.DiGraph]): The input graph.
-        pos (dict): Dictionary mapping node names to (x, y) coordinates.
-        sample (str): Sample name used in titles and file names.
-        n_bins (int): Minimum number of bins for an edge to be included, used for
-            annotation and file naming.
-        edge_threshold (float): Threshold for edge weights, used for annotation.
-        usage_threshold (Union[int, float]): Threshold for usage counts, used for
-            file naming.
-        save (bool): If True, save the plots to a PDF; if False, return the
-            figures and axes. Defaults to False.
-        save_path (Union[str, None]): Directory to save the plots. Required when
-            ``save`` is True. Defaults to None.
-        prefix (Union[str, None]): Prefix for the saved file name. Defaults to
-            None.
-
-    Returns:
-        Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes, matplotlib.figure.Figure, matplotlib.axes.Axes]:
-        When ``save`` is False, returns ``(fig1, ax1, fig2, ax2)`` where the
-        first pair is the whole-network plot and the second pair is the
-        cluster-split plot (``fig2`` and ``ax2`` are None if fewer than two
-        clusters exist). Returns None when ``save`` is True.
-
-    Raises:
-        ValueError: If ``save`` is True but ``save_path`` is None.
+    Returns
+    -------
+    fig1, ax1 : matplotlib.figure.Figure, matplotlib.axes.Axes
+        Figure and axes for the whole network plot.
+    fig2, ax2 : matplotlib.figure.Figure, matplotlib.axes.Axes
+        Figure and axes for the split cluster plots.
     """
     
     # Create save directory if it doesn't exist
@@ -489,35 +531,84 @@ def plot_network_graph(graph: Union[nx.Graph, nx.DiGraph], pos: dict, sample: st
         return fig1, ax1, fig2, ax2
 
 
-def plot_network_analysis(results_dir: str, sample_name: str, usage_threshold: Union[float, int], n_bins: int, edge_threshold: float, annot_file: Union[str, None]):
-    """Run the full network analysis and visualization pipeline for a sample.
+def plot_network_analysis(results_dir: str, sample_name: str,
+                          usage_threshold: Union[float, int] = 0,
+                          n_bins: int = 0,
+                          edge_threshold: Union[float, None] = None,
+                          annot_file: Union[str, None] = None,
+                          presence_method: str = "otsu",
+                          presence_quantile: float = 0.90,
+                          fdr: float = 0.05,
+                          min_log2_oe: float = 1.0,
+                          min_prevalence_frac: float = 0.01,
+                          null: str = "torus",
+                          n_perm: int = 1000,
+                          coords: Union[np.ndarray, None] = None,
+                          seed: int = 0,
+                          legacy: bool = False,
+                          save_tables: bool = True):
+    """Run the full niche inference and visualization pipeline for a sample.
 
-    Loads per-spot usage data from ``results_dir``, optionally renames program
-    columns using an annotation file, thresholds usages at the 90th percentile,
-    computes pairwise statistics, builds and clusters a network graph, and saves
-    the network plots and the in-group/out-group connection heatmap. If no edges
-    survive the thresholds, the plotting steps are skipped.
+    Loads per-spot usages, calls program presence per program, tests every
+    program pair for co-occurrence enrichment against a spatial null, selects
+    edges by false discovery rate and effect size, detects niches with Infomap,
+    and writes the network plots and the in-group/out-group connection heatmap.
+
+    This replaces the previous fixed-threshold rule (zero every program below
+    its own 90th percentile, then keep pairs whose conditional co-occurrence
+    probability exceeds 0.199). Those two constants were not independent: the
+    per-column quantile forced every program to be present in exactly 10% of
+    spots, so ``0.199`` silently meant "roughly two-fold enrichment over
+    chance". On the CRC test matrix the edges that rule retained span
+    ``log2_oe`` 1.00 to 2.67 -- i.e. it *was* a two-fold enrichment filter,
+    just not written down as one, and its meaning would have changed silently
+    had the quantile moved. The default ``min_log2_oe=1.0`` states the same
+    two-fold target explicitly and holds it fixed regardless of how presence is
+    called.
 
     Args:
         results_dir (str): Directory containing per-sample subfolders used to
             load and save results.
         sample_name (str): Name of the sample to analyze; also names the input
             subfolder and file.
-        usage_threshold (Union[float, int]): Threshold for usage counts to
-            consider a program present in a sample.
-        n_bins (int): Minimum number of bins (samples) for an edge to be included
-            in the network.
-        edge_threshold (float): Threshold for edge weights used to filter the
-            network.
-        annot_file (Union[str, None]): Path to an annotation file with 'Program'
-            and 'Annotation' columns used to rename program columns. If None, no
-            annotations are applied.
+        usage_threshold (Union[float, int]): Legacy usage threshold, used only
+            when ``legacy`` is True. Defaults to 0.
+        n_bins (int): Legacy absolute minimum spot count per edge, used only
+            when ``legacy`` is True. Defaults to 0.
+        edge_threshold (Union[float, None]): Legacy conditional-probability
+            cutoff, used only when ``legacy`` is True. Defaults to None.
+        annot_file (Union[str, None]): Path to an annotation file with
+            'Program' and 'Annotation' columns used to rename program columns.
+            If None, no annotations are applied.
+        presence_method (str): How to call a program present in a spot --
+            ``"otsu"`` (default), ``"mixture"`` or ``"quantile"``. See
+            :func:`~spotnmf.niche_stats.call_presence`.
+        presence_quantile (float): Quantile for ``presence_method="quantile"``.
+            Defaults to 0.90, the previously hard-coded value.
+        fdr (float): Benjamini-Hochberg false discovery rate for edge
+            selection. Defaults to 0.05.
+        min_log2_oe (float): Minimum log2 observed/expected co-occurrence.
+            Defaults to 1.0 (two-fold).
+        min_prevalence_frac (float): Minimum fraction of spots in which both
+            programs must be present. Defaults to 0.01.
+        null (str): Null model -- ``"torus"`` (default), ``"block"`` or
+            ``"label"``. See :func:`~spotnmf.niche_stats.add_permutation_pvalues`.
+        n_perm (int): Number of permutations. Defaults to 1000.
+        coords (Union[numpy.ndarray, None]): Spatial coordinates aligned to the
+            usage index. Parsed from Visium HD barcodes when None.
+        seed (int): Random seed for permutations and Infomap. Defaults to 0.
+        legacy (bool): Reproduce the original fixed-threshold behaviour exactly.
+            Defaults to False.
+        save_tables (bool): Write the per-program presence calls and the full
+            pairwise statistics alongside the figures. Defaults to True.
 
     Raises:
         ValueError: If ``annot_file`` is provided but lacks the required
-            'Program' and 'Annotation' columns.
+            'Program' and 'Annotation' columns, or if ``legacy`` is True and
+            ``edge_threshold`` is None.
     """
-    
+    from spotnmf import niche_stats as nstats
+
     # Load the relevant files
     results_path = os.path.join(results_dir, sample_name)
     rf_usages = pd.read_csv(os.path.join(results_path, f"topics_per_spot_{sample_name}.csv"), index_col=0)
@@ -537,54 +628,105 @@ def plot_network_analysis(results_dir: str, sample_name: str, usage_threshold: U
                             if col in annot_dict else col.replace("ot_", "ot")
                             for col in rf_usages.columns]
 
-    # Filter usages based on the usage threshold
-    for col in rf_usages.columns:
-        thresh = rf_usages[col].quantile(0.90)
-        rf_usages.loc[rf_usages[col] < thresh, col] = 0
+    if legacy:
+        if edge_threshold is None:
+            raise ValueError("edge_threshold is required when legacy=True.")
+        stats_df, presence_info = _legacy_edges(
+            rf_usages, sample_name, usage_threshold, n_bins, edge_threshold, results_path
+        )
+        weight_column = f"{sample_name}_val"
+        graph_n_bins = n_bins
+        # Legacy behaviour: node attributes came from the 90th-percentile-zeroed
+        # usages, so reproduce that here rather than using the raw matrix.
+        node_source = rf_usages.copy()
+        for _col in node_source.columns:
+            _thr = node_source[_col].quantile(0.90)
+            node_source.loc[node_source[_col] < _thr, _col] = 0
+        node_prevalence_threshold = 100
+    else:
+        if coords is None:
+            coords = nstats.coords_from_index(rf_usages.index)
+            if coords is None:
+                print(
+                    "Could not parse spatial coordinates from the usage index; falling back to "
+                    "label permutation. This ignores spatial autocorrelation and is "
+                    "anticonservative -- pass coords=adata.obsm['spatial'] for a valid test."
+                )
 
-    # Compute pairwise statistics
-    stats_df = compute_pairwise_stats(usage=rf_usages, usage_threshold=usage_threshold, sample=sample_name, save_path=results_path)
-    print("Stats DataFrame created and saved.")
+        presence, presence_info = nstats.call_presence(
+            rf_usages, method=presence_method, quantile=presence_quantile, seed=seed
+        )
+        print("Realised prevalence per program: "
+              f"min={presence_info['prevalence'].min():.4f} "
+              f"median={presence_info['prevalence'].median():.4f} "
+              f"max={presence_info['prevalence'].max():.4f}")
 
-    stats_df[f"{sample_name}_val"] = (stats_df[f"{sample_name}_P2pos"] + 1) / (stats_df[f"{sample_name}_P2pos"] + stats_df[f"{sample_name}_P2neg"] + 2)
+        all_stats = nstats.cooccurrence_stats(presence, sample=sample_name)
+        all_stats = nstats.add_permutation_pvalues(
+            all_stats, presence, coords=coords, null=null, n_perm=n_perm, seed=seed
+        )
+        stats_df = nstats.select_edges(
+            all_stats, fdr=fdr, min_log2_oe=min_log2_oe,
+            min_prevalence_frac=min_prevalence_frac,
+        )
+        # `build_network_graph` still reads `<sample>_val`; point it at the
+        # enrichment statistic so the legacy column name keeps working.
+        stats_df[f"{sample_name}_val"] = stats_df["log2_oe"]
+        weight_column = "log2_oe"
+        graph_n_bins = 0
+        # Node prevalence must come from the presence calls. Consensus usages
+        # have no exact zeros, so counting `raw_usage > 0` would report every
+        # program as present in every spot.
+        node_source = presence.astype(int)
+        node_prevalence_threshold = max(int(min_prevalence_frac * len(rf_usages)), 1)
 
-    # Generate binary column for the edge threshold
-    stats_df[f"gt{edge_threshold}"] = (stats_df[f"{sample_name}_val"].abs() > edge_threshold)
+        print(f"Selected {len(stats_df)} of {len(all_stats)} ordered pairs "
+              f"(null={null}, n_perm={n_perm}, FDR<{fdr}, log2(O/E)>={min_log2_oe}).")
 
-    # Subset the stats_df for the specified edge threshold
-    stats_df = stats_df[stats_df[f"gt{edge_threshold}"] == 1]
+        if save_tables:
+            presence_info.to_csv(os.path.join(results_path, f"{sample_name}_presence_calls.csv"))
+            all_stats.to_csv(
+                os.path.join(results_path, f"{sample_name}_cooccurrence_stats.csv"), index=False
+            )
 
     # Generate node attributes
-    node_attrs = generate_node_attributes(rf_usages, usage_threshold, sample_name)
+    node_attrs = generate_node_attributes(
+        node_source, usage_threshold, sample_name,
+        prevalence_threshold=node_prevalence_threshold,
+    )
 
     # Build the network graph
-    graph, graph_filtered = build_network_graph(stats_df, node_attrs, sample_name, n_bins)
+    graph, graph_filtered = build_network_graph(
+        stats_df, node_attrs, sample_name, graph_n_bins, weight_column=weight_column
+    )
     print("Network graph built.")
 
-    # No edges survive the thresholds (common for small datasets) — nothing to plot.
+    # No edges survive the thresholds (common for small datasets) -- nothing to plot.
     if graph.number_of_edges() == 0:
         print(
-            f"No edges meet the thresholds (n_bins={n_bins}, edge_threshold={edge_threshold}) "
-            f"for sample '{sample_name}'; skipping network plots. "
-            f"Lower --n_bins / --edge_threshold or use a larger dataset."
+            f"No edges survived selection for sample '{sample_name}'. "
+            "Relax --fdr or --min_log2_oe, raise --n_perm, or check the realised "
+            "prevalences printed above."
         )
         return
 
+    label = f"FDR<{fdr}, log2(O/E)>={min_log2_oe}" if not legacy else f"|val| > {edge_threshold}"
+
     # Cluster the graph using Infomap and save the results
-    graph = detect_communities_infomap(graph)
+    graph = detect_communities_infomap(graph, seed=seed)
     pos = get_node_positions(graph, layout_algorithm='graphopt')
 
     plot_network_graph(graph=graph, pos=pos, sample=sample_name, 
-                       n_bins=n_bins, edge_threshold=edge_threshold, 
+                       n_bins=graph_n_bins, edge_threshold=label, 
                        usage_threshold=usage_threshold,
                        save=True, save_path=results_path, prefix=sample_name)
 
     # Cluster the filtered graph (no nodes lacking any edges) using Infomap and save the results
-    graph_filtered = detect_communities_infomap(graph_filtered)
+    graph_filtered = detect_communities_infomap(graph_filtered, seed=seed)
     pos_filtered = get_node_positions(graph_filtered, layout_algorithm='graphopt')
 
     plot_network_graph(graph=graph_filtered, pos=pos_filtered, sample=sample_name,
-                       n_bins=n_bins, edge_threshold=edge_threshold, 
+                       n_bins=graph_n_bins, edge_threshold=label, 
                        usage_threshold=usage_threshold,
                        save=True, save_path=results_path, prefix=str(sample_name + "_filtered"))
     print("Network analysis plots saved.")
@@ -602,25 +744,66 @@ def plot_network_analysis(results_dir: str, sample_name: str, usage_threshold: U
     print("Network connections heatmap saved.")
 
 
-def calculate_outgoing_and_incoming_connections(graphobj):
-    """Calculate in-group and out-group connection counts for each node in the graph.
+def _legacy_edges(rf_usages: pd.DataFrame, sample_name: str, usage_threshold, n_bins: int,
+                  edge_threshold: float, results_path: str):
+    """Reproduce the original fixed-threshold edge selection exactly.
 
-    For every node, counts the edges (both incoming and outgoing) that connect
-    it to other members of its own cluster (in-group) and to members of each
-    other cluster (out-group), using the node ``cluster`` attribute.
+    Retained so previously published networks stay reproducible and can be
+    included as one cell of :func:`~spotnmf.niche_stats.parameter_sweep`. Not
+    recommended for new analyses: it applies no null model and no
+    multiple-testing correction across the P(P-1) program pairs tested.
 
     Args:
-        graphobj (Union[networkx.Graph, networkx.DiGraph]): The input graph
-            object whose nodes carry a ``cluster`` attribute.
+        rf_usages (pandas.DataFrame): Spots-by-programs usage matrix.
+        sample_name (str): Sample identifier.
+        usage_threshold (Union[float, int]): Usage above which a program counts
+            as present, applied after the 90th-percentile zeroing.
+        n_bins (int): Minimum absolute spot count for an edge.
+        edge_threshold (float): Conditional-probability cutoff.
+        results_path (str): Directory used to cache pairwise statistics.
 
     Returns:
-        Tuple[pandas.DataFrame, pandas.DataFrame, pandas.DataFrame]: A tuple
-        ``(group_connections, columnannot, rowannot)`` where ``group_connections``
-        holds the per-node in-group and out-group connection counts (one row per
-        program, columns named ``in_Cluster<id>`` / ``out_Cluster<id>``),
-        ``columnannot`` maps each connection column to its connection type and
-        cluster, and ``rowannot`` holds the per-node program and cluster
-        annotations.
+        Tuple[pandas.DataFrame, pandas.DataFrame]: The retained edges and a
+        presence-call summary.
+    """
+    usages = rf_usages.copy()
+    for col in usages.columns:
+        thresh = usages[col].quantile(0.90)
+        usages.loc[usages[col] < thresh, col] = 0
+
+    stats_df = compute_pairwise_stats(
+        usage=usages, usage_threshold=usage_threshold, sample=sample_name,
+        save_path=results_path, file_prefix=sample_name
+    )
+    stats_df[f"{sample_name}_val"] = (
+        (stats_df[f"{sample_name}_P2pos"] + 1)
+        / (stats_df[f"{sample_name}_P2pos"] + stats_df[f"{sample_name}_P2neg"] + 2)
+    )
+    stats_df = stats_df[stats_df[f"{sample_name}_val"].abs() > edge_threshold]
+
+    presence = usages > usage_threshold
+    info = pd.DataFrame({"prevalence": presence.mean(axis=0)})
+    info.index.name = "program"
+    return stats_df, info
+
+
+def calculate_outgoing_and_incoming_connections(graphobj):
+    """
+    Calculate in-group and out-group connections for each node in the graph.
+
+    Parameters
+    ----------
+    graphobj : nx.Graph or nx.DiGraph
+        The input graph object containing nodes and edges.
+    
+    Returns
+    -------
+    group_connections : pd.DataFrame
+        DataFrame with in-group and out-group connections for each node.
+    columnannot : pd.DataFrame
+        DataFrame with column annotations for the connections.
+    rowannot : pd.DataFrame
+        DataFrame with row annotations for the nodes.
     """
     graph = graphobj
 
@@ -681,44 +864,44 @@ def plot_connection_heatmap(group_connections, rowannot: Union[pd.DataFrame, Non
                             cluster_rows: bool = True, cluster_cols: bool = True,
                             suptitle: str = "In-group and Out-group Connection Heatmap", legend_title: str = "n.edges",
                             save: bool = False, save_path: Union[str, None] = None, prefix: Union[str, None] = None) -> Tuple[plt.Figure, plt.Axes]:
-    """Plot a clustered heatmap of group connections with cluster annotations.
+    """
+    Plot a clustered heatmap of group connections with optional row and column cluster annotations and legends.
 
-    Draws a seaborn clustermap of the connection values with optional row and
-    column color bars keyed by cluster, a cluster legend, and a titled colorbar.
-    When ``save`` is True and ``save_path`` is provided, the figure is written to
-    a PDF; otherwise the figure and heatmap axes are returned.
+    Parameters
+    ----------
+    group_connections : pd.DataFrame
+        Square DataFrame of connection values to plot.
+    rowannot : pd.DataFrame, optional
+        DataFrame with at least ['program', 'cluster'] columns for row annotations.
+    columnannot : pd.DataFrame, optional
+        DataFrame with at least ['V1', 'cluster'] columns for column annotations.
+    custom_colors : list of str, optional
+        List of colors to map cluster IDs to colors.
+    figsize : tuple, optional
+        Figure size.
+    cmap : str, optional
+        Colormap for heatmap.
+    cluster_rows : bool, optional
+        Whether to cluster rows.
+    cluster_cols : bool, optional
+        Whether to cluster columns.
+    suptitle : str, optional
+        Title for the whole figure.
+    legend_title : str, optional
+        Title for the heatmap colorbar.
+    save : bool, optional
+        Whether to save the figure.
+    save_path : str or Path, optional
+        Folder to save figure.
+    prefix : str, optional
+        Subfolder or prefix for save_path.
 
-    Args:
-        group_connections (pandas.DataFrame): DataFrame of connection values to
-            plot, with programs as the index and connection columns.
-        rowannot (Union[pandas.DataFrame, None]): DataFrame with at least
-            'program' and 'cluster' columns used for row annotations. If None, no
-            row colors are drawn. Defaults to None.
-        columnannot (Union[pandas.DataFrame, None]): DataFrame with at least 'V1'
-            and 'cluster' columns used for column annotations. If None, no column
-            colors are drawn. Defaults to None.
-        custom_colors (list, optional): List of colors mapping cluster IDs to
-            colors. If None, a built-in six-color palette is used. Defaults to
-            None.
-        figsize (tuple): Figure size. Defaults to (14, 10).
-        cmap (str): Colormap for the heatmap. Defaults to "coolwarm".
-        cluster_rows (bool): Whether to cluster (reorder) rows. Defaults to True.
-        cluster_cols (bool): Whether to cluster (reorder) columns. Defaults to
-            True.
-        suptitle (str): Title for the whole figure. Defaults to "In-group and
-            Out-group Connection Heatmap".
-        legend_title (str): Title for the heatmap colorbar. Defaults to
-            "n.edges".
-        save (bool): Whether to save the figure to a PDF. Defaults to False.
-        save_path (Union[str, None]): Folder in which to save the figure.
-            Required for saving. Defaults to None.
-        prefix (Union[str, None]): Prefix for the saved file name. Defaults to
-            None.
-
-    Returns:
-        Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]: The figure object
-        and the heatmap axes. Returns None when the figure is saved instead of
-        returned.
+    Returns
+    -------
+    fig : plt.Figure
+        Figure object.
+    ax_heatmap : plt.Axes
+        Heatmap axes.
     """
     # Define color map for clusters (default: 0 to 5)
     if custom_colors is None:

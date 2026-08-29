@@ -1,7 +1,7 @@
 from ._version import __version__
 
 # Import lightweight internal modules
-from . import io, models, hvg, annotate, enrichment, niche_networks, utils, eval, gscore, cli
+from . import io, models, hvg, annotate, enrichment, niche_networks, niche_stats, utils, eval, gscore, cli
 
 # Lazy-loading for heavy modules
 def __getattr__(name):
@@ -16,6 +16,6 @@ def __getattr__(name):
 __all__ = [
     "__version__",
     "io", "models", "hvg", "annotate", "enrichment",
-    "niche_networks", "utils", "eval", "gscore", "cli",
+    "niche_networks", "niche_stats", "utils", "eval", "gscore", "cli",
     "pl", "cnmf"
 ]

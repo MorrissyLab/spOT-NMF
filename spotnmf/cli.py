@@ -137,32 +137,128 @@ def annotate_programs(results_dir, sample_name, genome):
         )
 
 
-def plot_networks(results_dir: str, sample_name: str, usage_threshold: Union[float, int], n_bins: int, edge_threshold: float, annot_file: Union[str, None]):
+def plot_networks(results_dir: str, sample_name: str, annot_file: Union[str, None] = None,
+                  presence_method: str = "otsu", presence_quantile: float = 0.90,
+                  fdr: float = 0.05, min_log2_oe: float = 1.0,
+                  min_prevalence_frac: float = 0.01, null: str = "torus",
+                  n_perm: int = 1000, seed: int = 0, legacy: bool = False,
+                  usage_threshold: Union[float, int] = 0, n_bins: int = 0,
+                  edge_threshold: Union[float, None] = None,
+                  adata_spatial=None):
     """Plot niche networks for a given sample.
 
-    Thin wrapper around ``niche_networks.plot_network_analysis`` that builds and
-    plots co-occurrence/niche networks from the sample's saved results.
+    Thin wrapper around ``niche_networks.plot_network_analysis``. Spatial
+    coordinates are taken from ``adata_spatial`` when supplied, and otherwise
+    parsed from Visium HD barcodes in the usage index; without either, the
+    spatial null degrades to label permutation.
 
     Args:
         results_dir (str): Root directory containing the sample's result files.
         sample_name (str): Sample identifier.
-        usage_threshold (float | int): Minimum topic usage for a spot to count
-            toward the network.
-        n_bins (int): Number of spatial bins used when building the network.
-        edge_threshold (float): Minimum edge weight to retain in the network.
         annot_file (str | None): Optional path to an annotation file mapping topics
             to labels; None to skip annotation.
+        presence_method (str): Presence rule -- "otsu", "mixture" or "quantile".
+        presence_quantile (float): Quantile for presence_method="quantile".
+        fdr (float): Benjamini-Hochberg false discovery rate.
+        min_log2_oe (float): Minimum log2 observed/expected enrichment.
+        min_prevalence_frac (float): Minimum fraction of spots per program.
+        null (str): Null model -- "torus", "block" or "label".
+        n_perm (int): Number of permutations.
+        seed (int): Random seed.
+        legacy (bool): Reproduce the original fixed-threshold behaviour.
+        usage_threshold (float | int): Legacy usage threshold (legacy mode only).
+        n_bins (int): Legacy absolute spot count per edge (legacy mode only).
+        edge_threshold (float | None): Legacy co-occurrence cutoff (legacy mode only).
+        adata_spatial (anndata.AnnData | None): Optional AnnData carrying
+            ``obsm["spatial"]`` coordinates for non-Visium-HD platforms.
     """
     print("Plotting niche networks.")
+
+    coords = None
+    if adata_spatial is not None and "spatial" in getattr(adata_spatial, "obsm", {}):
+        coords = adata_spatial.obsm["spatial"]
 
     niche_networks.plot_network_analysis(
         results_dir=results_dir,
         sample_name=sample_name,
+        annot_file=annot_file,
+        presence_method=presence_method,
+        presence_quantile=presence_quantile,
+        fdr=fdr,
+        min_log2_oe=min_log2_oe,
+        min_prevalence_frac=min_prevalence_frac,
+        null=null,
+        n_perm=n_perm,
+        coords=coords,
+        seed=seed,
+        legacy=legacy,
         usage_threshold=usage_threshold,
         n_bins=n_bins,
-        edge_threshold=edge_threshold,
-        annot_file=annot_file
+        edge_threshold=edge_threshold
     )
+
+
+def sweep_networks(results_dir: str, sample_name: str, annot_file: Union[str, None] = None,
+                   n_perm: int = 200, null: str = "torus", seed: int = 0,
+                   adata_spatial=None):
+    """Write a parameter-robustness sweep for a sample's niche network.
+
+    Runs :func:`~spotnmf.niche_stats.parameter_sweep` across presence rules,
+    presence quantiles, FDR levels and enrichment cutoffs, and saves the table
+    to ``<results_dir>/<sample_name>/<sample_name>_niche_parameter_sweep.csv``.
+    This is what turns "why these thresholds?" into a reportable answer: the
+    table shows how the edge set and the niche partition respond across the
+    whole grid rather than at one chosen point.
+
+    Args:
+        results_dir (str): Root directory containing the sample's result files.
+        sample_name (str): Sample identifier.
+        annot_file (str | None): Optional annotation file mapping topics to labels.
+        n_perm (int): Permutations per grid cell. Defaults to 200.
+        null (str): Null model. Defaults to "torus".
+        seed (int): Random seed. Defaults to 0.
+        adata_spatial (anndata.AnnData | None): Optional AnnData carrying
+            ``obsm["spatial"]`` coordinates for non-Visium-HD platforms.
+
+    Returns:
+        pandas.DataFrame: The sweep table.
+    """
+    from spotnmf import niche_stats as nstats
+
+    print("Running niche parameter sweep.")
+    results_path = os.path.join(results_dir, sample_name)
+    usage = pd.read_csv(
+        os.path.join(results_path, f"topics_per_spot_{sample_name}.csv"), index_col=0
+    )
+    if annot_file is not None:
+        annot = pd.read_csv(annot_file)
+        if "Annotation" not in annot.columns or "Program" not in annot.columns:
+            raise ValueError("Annotation file must contain 'Program' and 'Annotation' columns.")
+        annot_dict = dict(zip(annot["Program"], annot["Annotation"]))
+        usage.columns = [
+            col.replace("ot_", "ot") + f"_{annot_dict[col]}" if col in annot_dict
+            else col.replace("ot_", "ot")
+            for col in usage.columns
+        ]
+
+    coords = None
+    if adata_spatial is not None and "spatial" in getattr(adata_spatial, "obsm", {}):
+        coords = adata_spatial.obsm["spatial"]
+
+    sweep = nstats.parameter_sweep(
+        usage, coords=coords, n_perm=n_perm, null=null, seed=seed, sample=sample_name
+    )
+    out_file = os.path.join(results_path, f"{sample_name}_niche_parameter_sweep.csv")
+    sweep.to_csv(out_file, index=False)
+    print(f"Wrote {len(sweep)} parameter combinations to {out_file}")
+
+    stable = sweep[(~sweep["degenerate"]) & (sweep["ari"] >= 0.8)]
+    print(
+        f"{len(stable)} of {len(sweep)} settings are non-degenerate with ARI >= 0.8 "
+        "against the default. Read ari/jaccard together with n_edges: both agreement "
+        "measures saturate trivially on near-empty graphs."
+    )
+    return sweep
 
 
 def run_experiment(
@@ -183,6 +279,15 @@ def run_experiment(
     n_bins: int = 1000,
     edge_threshold: float = 0.199,
     annot_file: Union[str, None] = None,
+    presence_method: str = "otsu",
+    presence_quantile: float = 0.90,
+    fdr: float = 0.05,
+    min_log2_oe: float = 1.0,
+    min_prevalence_frac: float = 0.01,
+    null: str = "torus",
+    n_perm: int = 1000,
+    seed: int = 0,
+    legacy_network: bool = False,
     model_params={},
     consensus: bool = False,
     n_iter: int = 10,
@@ -220,6 +325,16 @@ def run_experiment(
             batch-mode gene selection and aggregate plotting. Defaults to False.
         is_xenograft (bool): Whether the dataset is a xenograft model; passed through
             to plotting. Defaults to False.
+        presence_method (str): Niche presence rule -- "otsu", "mixture" or "quantile".
+        presence_quantile (float): Quantile for presence_method="quantile". Defaults to 0.90.
+        fdr (float): Benjamini-Hochberg false discovery rate for niche edges. Defaults to 0.05.
+        min_log2_oe (float): Minimum log2 observed/expected co-occurrence. Defaults to 1.0.
+        min_prevalence_frac (float): Minimum fraction of spots per program. Defaults to 0.01.
+        null (str): Null model -- "torus", "block" or "label". Defaults to "torus".
+        n_perm (int): Permutations for the niche null. Defaults to 1000.
+        seed (int): Random seed for permutations and Infomap. Defaults to 0.
+        legacy_network (bool): Reproduce the original fixed-threshold niche
+            inference. Defaults to False.
         usage_threshold (float | int): Minimum topic usage used for network plotting.
             Defaults to 0.
         n_bins (int): Number of spatial bins used for network plotting. Defaults to
@@ -333,7 +448,14 @@ def run_experiment(
 
     # Plot networks
     if network:
-        plot_networks(results_dir, sample_name, usage_threshold=usage_threshold, n_bins=n_bins, edge_threshold=edge_threshold, annot_file=annot_file)
+        plot_networks(
+            results_dir, sample_name, annot_file=annot_file,
+            presence_method=presence_method, presence_quantile=presence_quantile,
+            fdr=fdr, min_log2_oe=min_log2_oe, min_prevalence_frac=min_prevalence_frac,
+            null=null, n_perm=n_perm, seed=seed, legacy=legacy_network,
+            usage_threshold=usage_threshold, n_bins=n_bins,
+            edge_threshold=edge_threshold, adata_spatial=adata_spatial,
+        )
 
     # Save timing
     duration = time.time() - start_time
@@ -347,9 +469,11 @@ def run_experiment(
 
 
 def main():
-    """Command-line entry point for running spotnmf experiments (spotnmf, deconvolve, plot, annotate, network)."""
+    """
+    Command-line interface for running spotnmf experiments.
+    """
     parser = argparse.ArgumentParser(description="Run spatial transcriptomics experiments with spotnmf.")
-    parser.add_argument("run_type", choices=["spotnmf", "deconvolve", "plot", "annotate", "network"], help="Type of operation to perform.")
+    parser.add_argument("run_type", choices=["spotnmf", "deconvolve", "plot", "annotate", "network", "network_sweep"], help="Type of operation to perform.")
     parser.add_argument("--sample_name", required=True, help="Sample identifier.")
     parser.add_argument("--results_dir", required=True, help="Directory for saving results.")
 
@@ -362,10 +486,38 @@ def main():
     parser.add_argument("--is_aggr", action="store_true", help="Whether data is aggregated across libraries.")
     parser.add_argument("--select_sample", default=None, help="Subset a specific sample.")
     parser.add_argument("--hvg_file", default=None, help="Precomputed highly variable genes file.")
-    parser.add_argument("--usage_threshold", type=float, default=0, help="Usage threshold.")
-    parser.add_argument("--n_bins", type=int, default=1000, help="Number of bins.")
-    parser.add_argument("--edge_threshold", type=float, default=0.199, help="Edge threshold.")
     parser.add_argument("--annot_file", default=None, help="Annotation file.")
+
+    # --- Niche inference -------------------------------------------------
+    parser.add_argument("--presence_method", default="otsu", choices=["otsu", "mixture", "quantile"],
+                        help="How to call a program present in a spot. 'otsu' (default) picks a "
+                             "per-program threshold by maximizing between-class variance; "
+                             "'quantile' reproduces the legacy fixed cutoff.")
+    parser.add_argument("--presence_quantile", type=float, default=0.90,
+                        help="Quantile used when --presence_method quantile. Default 0.90 -- the "
+                             "value that used to be hard-coded and unreachable from the CLI.")
+    parser.add_argument("--fdr", type=float, default=0.05,
+                        help="Benjamini-Hochberg false discovery rate for edge selection.")
+    parser.add_argument("--min_log2_oe", type=float, default=1.0,
+                        help="Minimum log2 observed/expected co-occurrence. Default 1.0 = two-fold, "
+                             "which is what the legacy --edge_threshold 0.199 encoded implicitly.")
+    parser.add_argument("--min_prevalence_frac", type=float, default=0.01,
+                        help="Both programs must be present in at least this fraction of spots. "
+                             "Replaces the absolute --n_bins, which needed >=10,000 spots to pass.")
+    parser.add_argument("--null", default="torus", choices=["torus", "block", "label"],
+                        help="Null model for the permutation test. 'torus' (default) rigidly "
+                             "translates each program's map, preserving its spatial "
+                             "autocorrelation. 'label' ignores spatial structure and is "
+                             "anticonservative -- use only as a sanity floor.")
+    parser.add_argument("--n_perm", type=int, default=1000, help="Number of permutations.")
+    parser.add_argument("--seed", type=int, default=0, help="Random seed for permutations and Infomap.")
+    parser.add_argument("--legacy_network", action="store_true",
+                        help="Reproduce the original fixed-threshold niche inference "
+                             "(90th-percentile presence + --edge_threshold), for backwards "
+                             "comparison only. Applies no null model or multiple-testing correction.")
+    parser.add_argument("--usage_threshold", type=float, default=0, help="Legacy usage threshold.")
+    parser.add_argument("--n_bins", type=int, default=1000, help="Legacy absolute bin count per edge.")
+    parser.add_argument("--edge_threshold", type=float, default=0.199, help="Legacy edge threshold.")
 
     parser.add_argument("--lr", type=float, default=0.01, help="Learning rate.")
     parser.add_argument("--h", type=float, default=0.01, help="H Regularizer parameter.")
@@ -389,8 +541,12 @@ def main():
         parser.error("--genome is required for 'annotate'.")
     if args.run_type == "plot" and not args.adata_path:
         parser.error("--adata_path is required for 'plot'.")
-    if args.run_type == "network" and (args.usage_threshold is None or args.n_bins is None or args.edge_threshold is None):
-        parser.error("--usage_threshold, --n_bins, and --edge_threshold are required for 'network'.")
+    if args.run_type == "network" and args.legacy_network and (
+        args.usage_threshold is None or args.n_bins is None or args.edge_threshold is None
+    ):
+        parser.error(
+            "--usage_threshold, --n_bins and --edge_threshold are required with --legacy_network."
+        )
 
     is_visium = args.data_mode in {"visium", "visium_hd"}
 
@@ -438,8 +594,22 @@ def main():
         plot_programs(args.results_dir, args.sample_name, adata_spatial, is_visium=is_visium, genome=args.genome, is_xenograft=args.is_xeno, is_aggr=args.is_aggr)
     elif args.run_type == "annotate":
         annotate_programs(args.results_dir, args.sample_name, genome=args.genome)
+    elif args.run_type == "network_sweep":
+        sweep_networks(
+            args.results_dir, args.sample_name, annot_file=args.annot_file,
+            n_perm=args.n_perm, null=args.null, seed=args.seed,
+            adata_spatial=adata_spatial,
+        )
     elif args.run_type == "network":
-        plot_networks(args.results_dir, args.sample_name, args.usage_threshold, args.n_bins, args.edge_threshold, annot_file=args.annot_file)
+        plot_networks(
+            args.results_dir, args.sample_name, annot_file=args.annot_file,
+            presence_method=args.presence_method, presence_quantile=args.presence_quantile,
+            fdr=args.fdr, min_log2_oe=args.min_log2_oe,
+            min_prevalence_frac=args.min_prevalence_frac, null=args.null,
+            n_perm=args.n_perm, seed=args.seed, legacy=args.legacy_network,
+            usage_threshold=args.usage_threshold, n_bins=args.n_bins,
+            edge_threshold=args.edge_threshold, adata_spatial=adata_spatial,
+        )
 
 
 if __name__ == "__main__":

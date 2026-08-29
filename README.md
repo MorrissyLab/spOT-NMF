@@ -60,16 +60,151 @@ python cli.py spotnmf --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --r
 **Basic deconvolution only:**
 
 ```bash
-python cli.py deconvolve --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --results_dir ./results --k 5
+spotnmf deconvolve --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --data_mode h5ad --results_dir ./results --k 5
+spotnmf plot       --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --data_mode h5ad --results_dir ./results
+spotnmf annotate   --sample_name SAMPLE1 --results_dir ./results --genome GRCh38
+spotnmf network    --sample_name SAMPLE1 --results_dir ./results
 ```
 
-**Plot spatial topic usage:**
+> The `network` command reuses the per-spot usages written by `deconvolve`.
+
+#### Niche inference
+
+Niches are inferred by testing every program pair for co-occurrence enrichment
+against a **spatial null**, rather than by applying fixed cutoffs:
+
+```bash
+spotnmf network --sample_name SAMPLE1 --results_dir ./results \
+  --presence_method otsu --null torus --n_perm 1000 \
+  --fdr 0.05 --min_log2_oe 1.0
+```
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `--presence_method` | `otsu` | How a program is called present in a spot. `otsu` thresholds each program on its own usage distribution; `quantile` reproduces the legacy fixed cutoff. |
+| `--presence_quantile` | `0.90` | Quantile used by `--presence_method quantile`. Previously hard-coded and unreachable. |
+| `--null` | `torus` | Null model. `torus` rigidly translates each program's map, preserving its spatial autocorrelation. `label` ignores spatial structure and is anticonservative. |
+| `--n_perm` | `1000` | Permutations. |
+| `--fdr` | `0.05` | Benjamini–Hochberg FDR across the P(P−1) program pairs. |
+| `--min_log2_oe` | `1.0` | Minimum log2 observed/expected co-occurrence — 1.0 is two-fold. |
+| `--min_prevalence_frac` | `0.01` | Minimum fraction of spots per program. Replaces the absolute `--n_bins`. |
+
+**Why these replaced `--n_bins 1000 --edge_threshold 0.199`.** The old rule zeroed
+every program below its own 90th percentile, which forced *every* program to be
+present in exactly 10% of spots. A conditional co-occurrence probability of
+0.199 was therefore ~2× the chance expectation — a reasonable target, but one
+whose meaning changed silently if the quantile moved. On the CRC test matrix the
+edges that rule retained span log2(O/E) 1.00–2.67, i.e. it *was* a two-fold
+enrichment filter. `--min_log2_oe 1.0` states that target directly and holds it
+fixed regardless of how presence is called. Separately, `--n_bins 1000` was an
+absolute spot count: combined with the 10% presence cap it required ≥10,000
+spots, so it silently produced empty graphs on standard Visium.
+
+To reproduce previously published networks exactly, pass `--legacy_network`
+together with the old `--usage_threshold`, `--n_bins` and `--edge_threshold`.
+
+#### Robustness sweep
+
+```bash
+spotnmf network_sweep --sample_name SAMPLE1 --results_dir ./results
+```
+
+Writes `{sample}_niche_parameter_sweep.csv`: edge count, niche count, edge-set
+Jaccard and partition ARI against the default, across presence rules, quantiles,
+FDR levels and enrichment cutoffs. Read `ari`/`jaccard` **together with**
+`n_edges` — both agreement measures saturate trivially on near-empty graphs, so
+the result to report is the widest region where agreement is high *and* the
+network is non-trivial. The `degenerate` column flags rows too sparse to interpret.
+
+### Python / Notebooks
+
+```python
+import spotnmf as spot
+
+adata = spot.io.read_adata("data/sample1.h5ad", data_mode="h5ad")
+
+results = spot.cli.run_experiment(
+    adata_spatial=adata,
+    k=5,                       # number of programs
+    sample_name="SAMPLE1",
+    results_dir="./results",
+    genome="GRCh38",
+)
+```
+
+Model hyperparameters (`lr`, `h`, `w`, `eps`, …) default to tuned values; pass a
+`model_params` dict to override them. See the **[full pipeline tutorial](docs/source/tutorials/full_pipeline.ipynb)**
+for a complete walkthrough (HVG selection, annotation, spatial plots, and validation).
+
+### Consensus mode (more robust, more accurate)
+
+By default spOT-NMF runs a **single** factorization. In **consensus** mode it fits
+several replicates, clusters them into consensus programs (cNMF-style), and refits
+the per-spot usages with a fixed-spectra **optimal-transport** solve — keeping
+spOT-NMF's OT usage geometry rather than reverting to least squares. On the packaged
+simulated STARmap benchmark it was the top performer across accuracy metrics
+(see `scripts/benchmark/`).
+
+Enable it with `--consensus` on the CLI or `consensus=True` in Python; `--n_iter`
+(default 10) controls the replicate count.
 
 ```bash
 python cli.py plot --sample_name SAMPLE1 --adata_path ./data/sample1.h5ad --results_dir ./results
 ```
 
-**Annotate gene programs (enrichment and gene set overlap):**
+> Consensus runs `n_iter` factorizations, so it takes roughly `n_iter`× longer
+> than a single run. A GPU is recommended for larger datasets.
+
+---
+
+## 📓 Tutorials
+
+Fully worked, **well-commented notebooks** run on the packaged example dataset with
+figures pre-rendered, so GitHub displays them directly in the browser.
+
+* **[Full pipeline tutorial →](docs/source/tutorials/full_pipeline.ipynb)** — data
+  loading, HVG selection, OT-NMF deconvolution, spatial mapping, marker extraction, and
+  validation against ground-truth cell types, end-to-end.
+* **[Proximity (niche) networks →](docs/source/tutorials/proximity_networks.ipynb)** —
+  build a program–program co-occurrence network from the usage matrix, test it against a
+  spatial null, detect niches with Infomap, and render the network + connection heatmap
+  (step-by-step and one-call).
+
+---
+
+## ⚙️ CLI Overview
+
+| Command      | Description                                                  |
+| ------------ | ------------------------------------------------------------ |
+| `spotnmf`    | Full pipeline: deconvolution → annotation → spatial plotting |
+| `deconvolve` | Run OT-NMF and save results                                  |
+| `plot`       | Visualize spatial topic/program usage                        |
+| `annotate`   | Enrich and annotate gene programs                            |
+| `network`    | Infer and visualize niche networks from topic co-occurrence   |
+| `network_sweep` | Parameter-robustness sweep for niche inference             |
+
+Run `spotnmf <command> --help` for per-command options.
+
+---
+
+## 📁 Outputs
+
+* `topics_per_spot_{sample}.csv` — topic/program usage per spot
+* `genescores_per_topic_{sample}.csv` — gene scores per topic
+* `ranked_genescores_{sample}.csv` — ranked marker genes per topic
+* `{sample}_presence_calls.csv` — per-program presence threshold, realised prevalence, and whether the call was clamped
+* `{sample}_cooccurrence_stats.csv` — every program pair with log2(O/E), log odds ratio, Jaccard, permutation z, p and BH q
+* `{sample}_niche_parameter_sweep.csv` — robustness sweep (from `network_sweep`)
+* Pathway enrichment and gene-set overlap tables
+* Spatial plots & QC visualizations
+* Network plots of topic–topic interactions
+
+---
+
+## 🔬 Reproducibility (Manuscript Notebooks)
+
+The **main** branch provides the reusable software package.
+The original Jupyter notebooks used to reproduce manuscript figures are maintained in the **`manuscript`** branch:
 
 ```bash
 python cli.py annotate --sample_name SAMPLE1 --results_dir ./results --genome GRCh38
